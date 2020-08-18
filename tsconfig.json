@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true
+  },
+  "typedocOptions": {
+    "name": "BCMS | SDK",
+    "theme": "./node_modules/typedoc-neo-theme/bin/default",
+    "plugin": "typedoc-neo-theme",
+    "mode": "file",
+    "out": "doc",
+    "outline": [
+      {
+        "Client SDK": {
+          "Overview": "interfaces/bcmsprototype",
+          "User": "interfaces/userhandlerprototype"
+        }
+      }
+    ]
+  },
+  "exclude": ["node_modules", "dist", "public", "lib"]
+}
