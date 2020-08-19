@@ -5,3 +5,5 @@ export * from './storage';
 export * from './handler-manager';
 export * from './group';
 export * from './prop';
+export * from './widget';
+export * from './template';

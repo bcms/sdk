@@ -2,7 +2,12 @@ import { JWT, HandlerManager } from './interfaces';
 import { LocalStorage, Queueable } from './util';
 import Axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { CacheControl } from './cache';
-import { SocketHandler, UserHandler, UserHandlerPrototype } from './handlers';
+import {
+  UserHandler,
+  GroupHandler,
+  WidgetHandler,
+  TemplateHandler,
+} from './handlers';
 
 export interface BCMSConfig {
   cms: {
@@ -14,9 +19,8 @@ export interface BCMSConfig {
   loginPath?: string;
 }
 
-export interface BCMSPrototype {
+export interface BCMSPrototype extends HandlerManager {
   isLoggedIn: () => Promise<boolean>;
-  user: UserHandlerPrototype;
 }
 
 export function BCMS(config: BCMSConfig): BCMSPrototype {
@@ -160,7 +164,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
           return false;
         }
         try {
-          const result: string = await send<string>(
+          const result: {
+            accessToken: string;
+          } = await send(
             {
               url: '/auth/token/refresh',
               method: 'POST',
@@ -170,7 +176,8 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
             },
             true,
           );
-          await storage.set('at', result);
+          console.log(result);
+          await storage.set('at', result.accessToken);
           return true;
         } catch (error) {
           // TODO: Handle refresh token error.
@@ -210,10 +217,13 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       accessToken,
       isLoggedIn,
     ),
+    group: GroupHandler(cacheControl, send),
+    widget: WidgetHandler(cacheControl, send),
+    template: TemplateHandler(cacheControl, send),
   };
 
   return {
     isLoggedIn,
-    user: handlerManager.user,
+    ...handlerManager,
   };
 }
