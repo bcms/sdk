@@ -1,14 +1,58 @@
 import { Storage } from '../interfaces';
 import * as uuid from 'uuid';
 
+interface LSPrototype {
+  all: () => any;
+  getItem: (key: string) => string;
+  setItem: (key: string, value: string) => void;
+  removeItem: (key: string) => void;
+}
+function LS(): LSPrototype {
+  if (typeof localStorage !== 'undefined') {
+    return {
+      all: () => {
+        return localStorage;
+      },
+      getItem: (key) => {
+        return localStorage.getItem(key);
+      },
+      setItem: (key, value) => {
+        return localStorage.setItem(key, value);
+      },
+      removeItem: (key) => {
+        return localStorage.removeItem(key);
+      },
+    };
+  }
+  // tslint:disable-next-line: variable-name
+  const _storage: {
+    [key: string]: string;
+  } = {};
+
+  return {
+    all: () => {
+      return JSON.parse(JSON.stringify(_storage));
+    },
+    getItem: (key) => {
+      if (_storage[key]) {
+        return '' + _storage[key];
+      } else {
+        return undefined;
+      }
+    },
+    setItem: (key, value) => {
+      _storage[key] = '' + value;
+    },
+    removeItem: (key) => {
+      delete _storage[key];
+    },
+  };
+}
 export interface LocalStoragePrototype extends Storage {
   clear: () => void;
 }
-
 export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
-  if (!localStorage) {
-    throw new Error('"localStorage" does not exist.');
-  }
+  const ls = LS();
 
   let subscription: Array<{
     id: string;
@@ -18,7 +62,7 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
 
   return {
     get: (key) => {
-      const value = localStorage.getItem(`${config.prfx}_${key}`);
+      const value = ls.getItem(`${config.prfx}_${key}`);
       if (value) {
         try {
           return JSON.parse(value);
@@ -31,9 +75,9 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
     set: async (key, value) => {
       try {
         if (typeof value === 'object') {
-          localStorage.setItem(`${config.prfx}_${key}`, JSON.stringify(value));
+          ls.setItem(`${config.prfx}_${key}`, JSON.stringify(value));
         } else {
-          localStorage.setItem(`${config.prfx}_${key}`, value);
+          ls.setItem(`${config.prfx}_${key}`, value);
         }
       } catch (error) {
         // tslint:disable-next-line: no-console
@@ -50,7 +94,7 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
     },
     remove: (key) => {
       try {
-        localStorage.removeItem(`${config.prfx}_${key}`);
+        ls.removeItem(`${config.prfx}_${key}`);
       } catch (error) {
         // tslint:disable-next-line: no-console
         console.error(error);
@@ -70,10 +114,10 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
       };
     },
     clear: () => {
-      const l = JSON.parse(JSON.stringify(localStorage));
+      const l = JSON.parse(JSON.stringify(ls.all()));
       for (const key in l) {
         if (key.startsWith(config.prfx)) {
-          localStorage.removeItem(key);
+          ls.removeItem(key);
         }
       }
     },

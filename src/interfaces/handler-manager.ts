@@ -3,6 +3,7 @@ import {
   GroupHandlerPrototype,
   WidgetHandlerPrototype,
   TemplateHandlerPrototype,
+  LanguageHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -11,4 +12,5 @@ export interface HandlerManager {
   group: GroupHandlerPrototype;
   widget: WidgetHandlerPrototype;
   template: TemplateHandlerPrototype;
+  language: LanguageHandlerPrototype;
 }

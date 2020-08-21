@@ -7,6 +7,7 @@ import {
   GroupHandler,
   WidgetHandler,
   TemplateHandler,
+  LanguageHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -45,19 +46,11 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   function unpackAccessToken(at: string) {
     const atParts = at.split('.');
     if (atParts.length === 3) {
-      if (window && window.atob) {
-        accessToken = {
-          header: JSON.parse(window.atob(atParts[0])),
-          payload: JSON.parse(window.atob(atParts[1])),
-          signature: atParts[2],
-        };
-      } else {
-        accessToken = {
-          header: JSON.parse(Buffer.from(atParts[0], 'base64').toString()),
-          payload: JSON.parse(Buffer.from(atParts[1], 'base64').toString()),
-          signature: atParts[2],
-        };
-      }
+      accessToken = {
+        header: JSON.parse(Buffer.from(atParts[0], 'base64').toString()),
+        payload: JSON.parse(Buffer.from(atParts[1], 'base64').toString()),
+        signature: atParts[2],
+      };
     }
   }
   /**
@@ -78,7 +71,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       conf.headers.Authorization = `Bearer ${accessTokenRaw}`;
       if (loggedIn === false || !accessTokenRaw) {
         if (typeof config.loginPath === 'string') {
-          window.location.href = config.loginPath;
+          // tslint:disable-next-line: no-console
+          console.error('Go to login page.');
+          // window.location.href = config.loginPath;
         } else {
           throw {
             status: 401,
@@ -140,7 +135,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       'first_done_free_all',
       async () => {
         let refresh = true;
-        if (accessToken) {
+        if (typeof accessToken !== 'undefined') {
           if (accessToken.payload.iat + accessToken.payload.exp > Date.now()) {
             refresh = false;
           }
@@ -149,7 +144,8 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
           if (at) {
             unpackAccessToken(at);
             if (
-              accessToken.payload.iat + accessToken.payload.exp >
+              (accessToken as JWT).payload.iat +
+                (accessToken as JWT).payload.exp >
               Date.now()
             ) {
               refresh = false;
@@ -176,7 +172,6 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
             },
             true,
           );
-          console.log(result);
           await storage.set('at', result.accessToken);
           return true;
         } catch (error) {
@@ -214,12 +209,15 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       send,
       storage,
       clear,
-      accessToken,
+      () => {
+        return accessToken;
+      },
       isLoggedIn,
     ),
     group: GroupHandler(cacheControl, send),
     widget: WidgetHandler(cacheControl, send),
     template: TemplateHandler(cacheControl, send),
+    language: LanguageHandler(cacheControl, send),
   };
 
   return {

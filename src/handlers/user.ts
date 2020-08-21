@@ -104,7 +104,7 @@ export function UserHandler(
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
   storage: Storage,
   clearData: () => void,
-  accessToken: JWT,
+  getAccessToken: () => JWT,
   isLoggedIn: () => Promise<boolean>,
 ): UserHandlerPrototype {
   const queueable = Queueable<User | User[]>('getAll', 'get');
@@ -158,7 +158,7 @@ export function UserHandler(
           return undefined;
         }
         const user = cacheControl.user.get(
-          id ? id : accessToken.payload.userId,
+          id ? id : getAccessToken().payload.userId,
         );
         if (user) {
           return user;
@@ -246,6 +246,9 @@ export function UserHandler(
       cacheControl.user.remove(id);
     },
     async login(email, password) {
+      if (await isLoggedIn()) {
+        return;
+      }
       const result: {
         accessToken: string;
         refreshToken: string;
