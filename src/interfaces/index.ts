@@ -8,3 +8,4 @@ export * from './prop';
 export * from './widget';
 export * from './template';
 export * from './language';
+export * from './media';

@@ -4,6 +4,7 @@ import {
   WidgetHandlerPrototype,
   TemplateHandlerPrototype,
   LanguageHandlerPrototype,
+  MediaHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -13,4 +14,5 @@ export interface HandlerManager {
   widget: WidgetHandlerPrototype;
   template: TemplateHandlerPrototype;
   language: LanguageHandlerPrototype;
+  media: MediaHandlerPrototype;
 }

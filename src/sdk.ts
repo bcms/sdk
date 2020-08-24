@@ -8,6 +8,7 @@ import {
   WidgetHandler,
   TemplateHandler,
   LanguageHandler,
+  MediaHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -218,6 +219,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     widget: WidgetHandler(cacheControl, send),
     template: TemplateHandler(cacheControl, send),
     language: LanguageHandler(cacheControl, send),
+    media: MediaHandler(cacheControl, send),
   };
 
   return {

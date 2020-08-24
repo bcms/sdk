@@ -9,6 +9,8 @@ export interface CacheHandlerPrototype<T> {
   remove: (id: string) => void;
   clear: () => void;
   clearExpired: () => void;
+  find(query: (e: T) => boolean): T[];
+  findOne(query: (e: T) => boolean): T;
 }
 
 export function EntryCacheHandler<T extends { _id: string }>(
@@ -19,10 +21,10 @@ export function EntryCacheHandler<T extends { _id: string }>(
   return {
     get: (id) => {
       const c = cache.find((e) => e.entry._id === id);
-      return c ? c.entry : undefined;
+      return c ? JSON.parse(JSON.stringify(c.entry)) : undefined;
     },
     getAll: () => {
-      return JSON.parse(JSON.stringify(cache.map((e) => e.entry)));
+      return cache.map((e) => e.entry);
     },
     getMany: (ids) => {
       const entries: T[] = [];
@@ -63,6 +65,22 @@ export function EntryCacheHandler<T extends { _id: string }>(
       for (const i in clearIds) {
         const id = clearIds[i];
         cache.splice(id, 1);
+      }
+    },
+    find(query) {
+      const output: T[] = [];
+      for (const i in cache) {
+        if (query(cache[i].entry)) {
+          output.push(JSON.parse(JSON.stringify(cache[i].entry)));
+        }
+      }
+      return output;
+    },
+    findOne(query) {
+      for (const i in cache) {
+        if (query(cache[i].entry)) {
+          return JSON.parse(JSON.stringify(cache[i].entry));
+        }
       }
     },
   };

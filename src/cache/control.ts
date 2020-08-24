@@ -4,9 +4,10 @@ import {
   WidgetCacheHandler,
   TemplateCacheHandler,
   LanguageCacheHandler,
+  MediaCacheHandler,
 } from './handlers';
 import { CacheHandlerPrototype } from './handler';
-import { User, Group, Widget, Template, Language } from '../interfaces';
+import { User, Group, Widget, Template, Language, Media } from '../interfaces';
 
 export interface CacheControlPrototype {
   clear: () => void;
@@ -15,6 +16,7 @@ export interface CacheControlPrototype {
   widget: CacheHandlerPrototype<Widget>;
   template: CacheHandlerPrototype<Template>;
   language: CacheHandlerPrototype<Language>;
+  media: CacheHandlerPrototype<Media>;
 }
 
 export function CacheControl(): CacheControlPrototype {
@@ -24,6 +26,7 @@ export function CacheControl(): CacheControlPrototype {
   const widget = WidgetCacheHandler(TTL);
   const template = TemplateCacheHandler(TTL);
   const language = LanguageCacheHandler(TTL);
+  const media = MediaCacheHandler(TTL);
 
   return {
     user,
@@ -31,9 +34,14 @@ export function CacheControl(): CacheControlPrototype {
     widget,
     template,
     language,
+    media,
     clear: () => {
       user.clear();
       group.clear();
+      widget.clear();
+      template.clear();
+      language.clear();
+      media.clear();
     },
   };
 }
