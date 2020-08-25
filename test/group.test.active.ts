@@ -67,31 +67,38 @@ describe('Group functions', async () => {
     });
   });
   it('should update the group-2', async () => {
-    const data = await sdk.group.update({
-      _id: group2._id,
-      propChanges: [
-        {
-          add: {
-            label: 'Test STR',
-            array: false,
-            required: true,
-            type: PropType.STRING,
-            value: ['test'],
-          },
-        },
-        {
-          add: {
-            label: 'group 1',
-            array: false,
-            required: true,
-            type: PropType.GROUP_POINTER,
-            value: {
-              _id: group1._id,
-              items: [],
+    try {
+      await sdk.group.update({
+        _id: group2._id,
+        propChanges: [
+          {
+            add: {
+              label: 'Test STR',
+              array: false,
+              required: true,
+              type: PropType.STRING,
+              value: ['test'],
             },
           },
-        },
-      ],
-    });
+          {
+            add: {
+              label: 'group 1',
+              array: false,
+              required: true,
+              type: PropType.GROUP_POINTER,
+              value: {
+                _id: group1._id,
+                items: [],
+              },
+            },
+          },
+        ],
+      });
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      console.log(error.message);
+      return;
+    }
+    throw new Error('Expected this call to throw an error of infinite loop.');
   });
 });
