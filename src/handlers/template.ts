@@ -7,7 +7,11 @@ export interface TemplateHandlerPrototype {
   getAll(): Promise<Template[]>;
   get(id: string): Promise<Template>;
   count(): Promise<number>;
-  add(data: { name: string; desc: string }): Promise<Template>;
+  add(data: {
+    name: string;
+    desc: string;
+    singleEntry: boolean;
+  }): Promise<Template>;
   update(data: {
     _id: string;
     name?: string;
@@ -21,7 +25,11 @@ export function TemplateHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
 ): TemplateHandlerPrototype {
-  const queueable = Queueable<Template | Template[] | number>('getAll', 'get', 'count');
+  const queueable = Queueable<Template | Template[] | number>(
+    'getAll',
+    'get',
+    'count',
+  );
   let countLatch = false;
 
   return {

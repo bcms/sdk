@@ -14,6 +14,7 @@ import {
 export interface BCMSConfig {
   cms: {
     origin: string;
+    mock?: boolean;
   };
   storage?: {
     prfx: string;

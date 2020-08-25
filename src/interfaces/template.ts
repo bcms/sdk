@@ -9,4 +9,5 @@ export interface Template {
   userId: string;
   singleEntry: boolean;
   props: Prop[];
+  _schema: any;
 }

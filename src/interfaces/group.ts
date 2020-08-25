@@ -7,4 +7,5 @@ export interface Group {
   name: string;
   desc: string;
   props: Prop[];
+  _schema: any;
 }
