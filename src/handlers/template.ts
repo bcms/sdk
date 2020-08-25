@@ -8,13 +8,13 @@ export interface TemplateHandlerPrototype {
   get(id: string): Promise<Template>;
   count(): Promise<number>;
   add(data: {
-    name: string;
+    label: string;
     desc: string;
     singleEntry: boolean;
   }): Promise<Template>;
   update(data: {
     _id: string;
-    name?: string;
+    label?: string;
     desc?: string;
     propChanges?: PropChange[];
   }): Promise<Template>;

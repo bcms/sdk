@@ -5,6 +5,7 @@ export interface Template {
   createdAt: number;
   updatedAt: number;
   name: string;
+  label: string;
   desc: string;
   userId: string;
   singleEntry: boolean;

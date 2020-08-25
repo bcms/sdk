@@ -7,10 +7,10 @@ export interface GroupHandlerPrototype {
   getAll(): Promise<Group[]>;
   get(id: string): Promise<Group>;
   count(): Promise<number>;
-  add(data: { name: string; desc: string }): Promise<Group>;
+  add(data: { label: string; desc: string }): Promise<Group>;
   update(data: {
     _id: string;
-    name?: string;
+    label?: string;
     desc?: string;
     propChanges?: PropChange[];
   }): Promise<Group>;

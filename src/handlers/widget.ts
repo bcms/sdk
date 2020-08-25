@@ -7,10 +7,10 @@ export interface WidgetHandlerPrototype {
   getAll(): Promise<Widget[]>;
   get(id: string): Promise<Widget>;
   count(): Promise<number>;
-  add(data: { name: string; desc: string }): Promise<Widget>;
+  add(data: { label: string; desc: string }): Promise<Widget>;
   update(data: {
     _id: string;
-    name?: string;
+    label?: string;
     desc?: string;
     propChanges?: PropChange[];
   }): Promise<Widget>;

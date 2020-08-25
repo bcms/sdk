@@ -5,6 +5,7 @@ export interface Group {
   createdAt: number;
   updatedAt: number;
   name: string;
+  label: string;
   desc: string;
   props: Prop[];
   _schema: any;
