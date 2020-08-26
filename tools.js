@@ -1,4 +1,3 @@
-const Listr = require('listr');
 const childProcess = require('child_process');
 const path = require('path');
 const fse = require('fs-extra');
@@ -44,25 +43,53 @@ const parseArgs = (rawArgs) => {
   }
   return {
     bundle: args['--bundle'] === '' || args['--bundle'] === 'true' || false,
+    build: args['--build'] === '' || args['--build'] === 'true' || false,
     link: args['--link'] === '' || args['--link'] === 'true' || false,
     unlink: args['--unlink'] === '' || args['--unlink'] === 'true' || false,
     publish: args['--publish'] === '' || args['--publish'] === 'true' || false,
   };
 };
-
+/**
+ * @param {Array<{
+ *  title: string;
+ *  task: () => Promise<void>;
+ * }>} tasks
+ */
+const Tasks = (tasks) => {
+  return {
+    run: async () => {
+      for (let i = 0; i < tasks.length; i = i + 1) {
+        const t = tasks[i];
+        console.log(`${i + 1}. ${t.title}`);
+        try {
+          await t.task();
+          console.log(`✓`);
+        } catch (error) {
+          console.log(`⨉`);
+          throw error;
+        }
+      }
+    },
+  };
+};
 const bundle = async () => {
-  const tasks = new Listr([
+  const tasks = Tasks([
     {
       title: 'Remove old bundle.',
       task: async () => {
         await fse.remove(path.join(__dirname, 'dist'));
         await fse.remove(path.join(__dirname, 'doc'));
+        await fse.remove(path.join(__dirname, 'tmp'));
       },
     },
     {
       title: 'Compile Typescript.',
       task: async () => {
-        await exec('npm run build');
+        await exec('npm run build:ts');
+        await fse.copy(
+          path.join(__dirname, 'tmp', 'src'),
+          path.join(__dirname, 'dist'),
+        );
       },
     },
     {
@@ -117,6 +144,27 @@ const bundle = async () => {
   ]);
   await tasks.run();
 };
+const build = async () => {
+  const tasks = Tasks([
+    {
+      title: 'Remove old bundle.',
+      task: async () => {
+        await fse.remove(path.join(__dirname, 'tmp'));
+      },
+    },
+    {
+      title: 'Compile Typescript.',
+      task: async () => {
+        await exec('npm run build:ts');
+        await fse.copy(
+          path.join(__dirname, 'tmp', 'src'),
+          path.join(__dirname, 'dist'),
+        );
+      },
+    },
+  ]);
+  await tasks.run();
+};
 const publish = async () => {
   if (await fse.exists(path.join(__dirname, 'dist', 'node_modules'))) {
     throw new Error(
@@ -130,6 +178,8 @@ async function main() {
   const options = parseArgs(process.argv);
   if (options.bundle === true) {
     await bundle();
+  } else if (options.build === true) {
+    await build();
   } else if (options.link === true) {
     await exec('cd dist && npm i && sudo npm link');
   } else if (options.unlink === true) {

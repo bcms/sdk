@@ -10,7 +10,7 @@ describe('Group functions', async () => {
   Login();
   it('should create a group-1', async () => {
     const data = await sdk.group.add({
-      name: 'Group 1#',
+      label: 'Group 1#',
       desc: 'This is some description.',
     });
     ou.eq(
@@ -25,7 +25,7 @@ describe('Group functions', async () => {
   });
   it('should create a group-2', async () => {
     const data = await sdk.group.add({
-      name: 'Group 2#',
+      label: 'Group 2#',
       desc: 'This is some description.',
     });
     ou.eq(

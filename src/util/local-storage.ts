@@ -57,7 +57,7 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
   let subscription: Array<{
     id: string;
     key: string;
-    handler: (value: any) => void | Promise<void>;
+    handler: (value: any, type: 'set' | 'remove') => void | Promise<void>;
   }> = [];
 
   return {
@@ -86,8 +86,8 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
       }
       for (const i in subscription) {
         const e = subscription[i];
-        if (e.key === key) {
-          await e.handler(value);
+        if (e.key === `${config.prfx}_${key}`) {
+          await e.handler(value, 'set');
         }
       }
       return true;
@@ -100,13 +100,19 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
         console.error(error);
         return false;
       }
+      for (const i in subscription) {
+        const e = subscription[i];
+        if (e.key === `${config.prfx}_${key}`) {
+          e.handler(undefined, 'remove');
+        }
+      }
       return true;
     },
     subscribe: (key, handler) => {
       const id = uuid.v4();
       subscription.push({
         id,
-        key,
+        key: `${config.prfx}_${key}`,
         handler,
       });
       return () => {
@@ -118,6 +124,12 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
       for (const key in l) {
         if (key.startsWith(config.prfx)) {
           ls.removeItem(key);
+          for (const i in subscription) {
+            const e = subscription[i];
+            if (e.key === key) {
+              e.handler(undefined, 'remove');
+            }
+          }
         }
       }
     },

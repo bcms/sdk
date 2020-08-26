@@ -10,7 +10,7 @@ describe('Template functions', async () => {
   Login();
   it('should create a new group that will be used by template', async () => {
     const data = await sdk.group.add({
-      name: 'Group For Template 1',
+      label: 'Group For Template 1',
       desc: 'This is some description.',
     });
     ou.eq(
@@ -138,7 +138,7 @@ describe('Template functions', async () => {
   });
   it('should create a new template', async () => {
     const data = await sdk.template.add({
-      name: 'Test Template 1#',
+      label: 'Test Template 1#',
       desc: 'This is some description.',
       singleEntry: false,
     });

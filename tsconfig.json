@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "target": "es5",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./tmp",
     "baseUrl": "./",
     "incremental": true
   },

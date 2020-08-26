@@ -4,6 +4,6 @@ export interface Storage {
   remove: (key: string) => boolean;
   subscribe?: (
     key: string,
-    handler: (value: any) => void | Promise<void>,
+    handler: (value: any, type: 'set' | 'remove') => void | Promise<void>,
   ) => () => void;
 }

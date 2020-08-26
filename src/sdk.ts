@@ -1,4 +1,4 @@
-import { JWT, HandlerManager } from './interfaces';
+import { JWT, HandlerManager, SocketEventName } from './interfaces';
 import { LocalStorage, Queueable } from './util';
 import Axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { CacheControl } from './cache';
@@ -9,6 +9,7 @@ import {
   TemplateHandler,
   LanguageHandler,
   MediaHandler,
+  SocketHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -24,6 +25,14 @@ export interface BCMSConfig {
 
 export interface BCMSPrototype extends HandlerManager {
   isLoggedIn: () => Promise<boolean>;
+  socket: {
+    subscribe(
+      event: SocketEventName,
+      handler: (data: any) => Promise<void>,
+    ): {
+      unsubscribe(): void;
+    };
+  };
 }
 
 export function BCMS(config: BCMSConfig): BCMSPrototype {
@@ -122,9 +131,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
    */
   async function isLoggedIn(): Promise<boolean> {
     const result = await refreshAccessToken();
-    // if (socket && result === true) {
-    //   await socket.connect(accessTokenRaw, accessToken);
-    // }
+    if (socket && result === true) {
+      await socket.connect(accessTokenRaw, accessToken);
+    }
     return result;
   }
   /**
@@ -197,10 +206,14 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   if (accessTokenRaw) {
     unpackAccessToken(accessTokenRaw);
   }
-  storage.subscribe('at', (value) => {
-    accessTokenRaw = value;
-    unpackAccessToken(value);
-    // TODO: socket.connect(value, accessToken);
+  storage.subscribe('at', (value, type) => {
+    if (type === 'set') {
+      accessTokenRaw = value;
+      unpackAccessToken(value);
+      socket.connect(value, accessToken);
+    } else if (type === 'remove') {
+      socket.disconnect();
+    }
   });
   handlerManager = {
     // socket: SocketHandler({
@@ -222,9 +235,25 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     language: LanguageHandler(cacheControl, send),
     media: MediaHandler(cacheControl, send),
   };
-
+  const socket = SocketHandler(
+    cacheControl,
+    handlerManager,
+    () => {
+      return accessToken;
+    },
+    {
+      url: config.cms.origin,
+      path: '/api/socket/server/',
+    },
+  );
+  isLoggedIn();
   return {
     isLoggedIn,
+    socket: {
+      subscribe: (event, handler) => {
+        return socket.subscribe(event, handler);
+      },
+    },
     ...handlerManager,
   };
 }
