@@ -131,7 +131,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
    */
   async function isLoggedIn(): Promise<boolean> {
     const result = await refreshAccessToken();
-    if (socket && result === true) {
+    if (socket && result === true && !socket.connected()) {
       await socket.connect(accessTokenRaw, accessToken);
     }
     return result;
@@ -210,7 +210,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     if (type === 'set') {
       accessTokenRaw = value;
       unpackAccessToken(value);
-      socket.connect(value, accessToken);
+      if (!socket.connected()) {
+        socket.connect(value, accessToken);
+      }
     } else if (type === 'remove') {
       socket.disconnect();
     }

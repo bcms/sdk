@@ -9,6 +9,7 @@ import { CacheControlPrototype } from '../../cache';
 import { SocketEventHandlers } from './event-handlers';
 import * as uuid from 'uuid';
 import * as io from 'socket.io-client';
+import { Queueable } from '../../util';
 
 export interface SocketHandlerPrototype {
   connect: (accessToken: string, jwt: JWT) => Promise<void>;
@@ -16,7 +17,7 @@ export interface SocketHandlerPrototype {
   connected(): boolean;
   subscribe(
     event: SocketEventName,
-    handler: (data: any) => Promise<void>,
+    handler: (data: SocketEventData) => Promise<void>,
   ): {
     unsubscribe(): void;
   };
@@ -33,6 +34,7 @@ export function SocketHandler(
 ): SocketHandlerPrototype {
   let isConnected = false;
   let socket: SocketIOClient.Socket;
+  const queueable = Queueable<void>('unsubscribe');
   const subscriptions: SocketSubscriptions = {};
   const handlers = SocketEventHandlers(
     cacheControl,
@@ -107,10 +109,12 @@ export function SocketHandler(
         handler,
       });
       return {
-        unsubscribe: () => {
-          subscriptions[event] = subscriptions[event].filter(
-            (sub) => sub.id !== id,
-          );
+        unsubscribe: async () => {
+          await queueable.exec('unsubscribe', 'free_one_by_one', async () => {
+            subscriptions[event] = subscriptions[event].filter(
+              (sub) => sub.id !== id,
+            );
+          });
         },
       };
     },
