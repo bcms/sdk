@@ -232,7 +232,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       cacheControl,
       send,
       storage,
-      clear,
+      () => {
+        clear();
+      },
       () => {
         return accessToken;
       },

@@ -270,16 +270,21 @@ export function UserHandler(
     async logout() {
       const refreshToken = storage.get('rt');
       if (refreshToken) {
-        await send(
-          {
-            url: '/auth/logout',
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
+        try {
+          await send(
+            {
+              url: '/auth/logout',
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${refreshToken}`,
+              },
             },
-          },
-          true,
-        );
+            true,
+          );
+        } catch (error) {
+          // tslint:disable-next-line: no-console
+          console.error(error);
+        }
       }
       clearData();
     },
