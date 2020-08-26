@@ -15,33 +15,30 @@ export interface SocketEventHandlerPrototype {
 export function SocketEventHandlers(
   cacheControl: CacheControlPrototype,
   handlerManager: HandlerManager,
-  getAccessToken: () => JWT,
+  getSocketId: () => string,
   getSubscriptions: () => SocketSubscriptions,
 ): SocketEventHandlerPrototype[] {
-  const preHandler = (data: SocketEventData): JWT => {
-    const jwt = getAccessToken();
-    if (!jwt) {
+  const preHandler = async (
+    data: SocketEventData,
+    execute: () => Promise<void>,
+  ) => {
+    if (data.source === getSocketId()) {
       return;
     }
-    if (data.source === jwt.payload.userId) {
-      return;
-    }
-    return jwt;
+    await execute();
   };
   return [
     {
       name: SocketEventName.LANGUAGE,
       handler: async (data) => {
-        const jwt = preHandler(data);
-        if (!jwt) {
-          return;
-        }
-        cacheControl.language.remove(data.entry._id);
-        if (data.type !== 'remove') {
-          await handlerManager.language.get(data.entry._id);
-        }
-        getSubscriptions()[SocketEventName.LANGUAGE].forEach((sub) => {
-          sub.handler(data);
+        await preHandler(data, async () => {
+          cacheControl.language.remove(data.entry._id);
+          if (data.type !== 'remove') {
+            await handlerManager.language.get(data.entry._id);
+          }
+          getSubscriptions()[SocketEventName.LANGUAGE].forEach((sub) => {
+            sub.handler(data);
+          });
         });
       },
     },

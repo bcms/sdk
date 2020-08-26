@@ -12,6 +12,7 @@ import * as io from 'socket.io-client';
 import { Queueable } from '../../util';
 
 export interface SocketHandlerPrototype {
+  id: () => string;
   connect: (accessToken: string, jwt: JWT) => Promise<void>;
   disconnect(): void;
   connected(): boolean;
@@ -26,7 +27,6 @@ export interface SocketHandlerPrototype {
 export function SocketHandler(
   cacheControl: CacheControlPrototype,
   handlerManager: HandlerManager,
-  getAccessToken: () => JWT,
   server: {
     url: string;
     path: string;
@@ -39,7 +39,9 @@ export function SocketHandler(
   const handlers = SocketEventHandlers(
     cacheControl,
     handlerManager,
-    getAccessToken,
+    () => {
+      return socket.id;
+    },
     () => {
       return subscriptions;
     },
@@ -48,6 +50,11 @@ export function SocketHandler(
     subscriptions[SocketEventName[key]] = [];
   });
   return {
+    id: () => {
+      if (isConnected) {
+        return socket.id;
+      }
+    },
     async connect(accessToken, jwt) {
       if (isConnected === false) {
         isConnected = true;

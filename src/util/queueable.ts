@@ -13,7 +13,7 @@ export interface QueueableQueue {
 export interface QueueablePrototype<T> {
   queue: QueueableQueue;
   freeQueue(key: string, type: 'resolve' | 'reject', value: any): void;
-  nextInQueue(key: string): void;
+  nextInQueue(key: string, type: 'resolve' | 'reject'): void;
   exec(
     key: string,
     type: 'first_done_free_all' | 'free_one_by_one',
@@ -37,11 +37,11 @@ export function Queueable<T>(...queueable): QueueablePrototype<T> {
         queue[key].list.pop()[type](value);
       }
     },
-    nextInQueue(key) {
+    nextInQueue(key, type) {
       if (queue[key].list.length === 0) {
         queue[key].open = false;
       } else {
-        queue[key].list.pop().resolve(null);
+        queue[key].list.pop()[type](null);
       }
     },
     async exec(
@@ -56,7 +56,7 @@ export function Queueable<T>(...queueable): QueueablePrototype<T> {
             resolve,
           });
         });
-        if (type !== 'first_done_free_all') {
+        if (type === 'first_done_free_all') {
           return output;
         }
       }
@@ -66,14 +66,14 @@ export function Queueable<T>(...queueable): QueueablePrototype<T> {
         result = await executable();
       } catch (error) {
         if (type === 'free_one_by_one') {
-          this.nextInQueue(key);
+          this.nextInQueue(key, 'reject');
         } else {
           this.freeQueue(key, 'reject', error);
         }
         throw error;
       }
       if (type === 'free_one_by_one') {
-        this.nextInQueue(key);
+        this.nextInQueue(key, 'resolve');
       } else {
         this.freeQueue(key, 'resolve', result);
       }

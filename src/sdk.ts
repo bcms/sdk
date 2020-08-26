@@ -93,6 +93,13 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
         }
       }
     }
+    if (!conf.headers && socket.id) {
+      conf.headers = {
+        sid: socket.id(),
+      };
+    } else if (socket.id()) {
+      conf.headers.sid = socket.id();
+    }
     conf.url = `${config.cms.origin}/api${conf.url}`;
     try {
       const response = await Axios(conf);
@@ -237,17 +244,10 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     language: LanguageHandler(cacheControl, send),
     media: MediaHandler(cacheControl, send),
   };
-  const socket = SocketHandler(
-    cacheControl,
-    handlerManager,
-    () => {
-      return accessToken;
-    },
-    {
-      url: config.cms.origin,
-      path: '/api/socket/server/',
-    },
-  );
+  const socket = SocketHandler(cacheControl, handlerManager, {
+    url: config.cms.origin,
+    path: '/api/socket/server/',
+  });
   isLoggedIn();
   return {
     isLoggedIn,
