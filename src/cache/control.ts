@@ -5,6 +5,8 @@ import {
   TemplateCacheHandler,
   LanguageCacheHandler,
   MediaCacheHandler,
+  EntryCacheHandler,
+  EntryCacheItem,
 } from './handlers';
 import { CacheHandlerPrototype } from './handler';
 import { User, Group, Widget, Template, Language, Media } from '../interfaces';
@@ -17,6 +19,7 @@ export interface CacheControlPrototype {
   template: CacheHandlerPrototype<Template>;
   language: CacheHandlerPrototype<Language>;
   media: CacheHandlerPrototype<Media>;
+  entry: CacheHandlerPrototype<EntryCacheItem>;
 }
 
 export function CacheControl(): CacheControlPrototype {
@@ -27,6 +30,7 @@ export function CacheControl(): CacheControlPrototype {
   const template = TemplateCacheHandler(TTL);
   const language = LanguageCacheHandler(TTL);
   const media = MediaCacheHandler(TTL);
+  const entry = EntryCacheHandler(TTL);
 
   return {
     user,
@@ -35,6 +39,7 @@ export function CacheControl(): CacheControlPrototype {
     template,
     language,
     media,
+    entry,
     clear: () => {
       user.clear();
       group.clear();

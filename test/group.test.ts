@@ -1,13 +1,17 @@
+import * as crypto from 'crypto';
 import { expect } from 'chai';
 import { sdk, Login, ObjectUtil } from './util';
 import { Group, PropType } from '../src/interfaces';
 
+const hash = crypto.createHash('sha1').update(`${Date.now()}`).update('hex');
 const ou = ObjectUtil();
 let group1: Group;
 let group2: Group;
 
 describe('Group functions', async () => {
   Login();
+  describe('Recursion and linking', async () => {
+  });
   it('should create a group-1', async () => {
     const data = await sdk.group.add({
       label: 'Group 1#',

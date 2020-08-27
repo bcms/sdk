@@ -5,6 +5,7 @@ import {
   TemplateHandlerPrototype,
   LanguageHandlerPrototype,
   MediaHandlerPrototype,
+  EntryHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -15,4 +16,5 @@ export interface HandlerManager {
   template: TemplateHandlerPrototype;
   language: LanguageHandlerPrototype;
   media: MediaHandlerPrototype;
+  entry: EntryHandlerPrototype;
 }

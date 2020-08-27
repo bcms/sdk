@@ -8,5 +8,4 @@ export interface Group {
   label: string;
   desc: string;
   props: Prop[];
-  _schema: any;
 }

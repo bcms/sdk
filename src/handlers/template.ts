@@ -133,7 +133,7 @@ export function TemplateHandler(
           Authorization: '',
         },
       });
-      cacheControl.group.remove(id);
+      cacheControl.template.remove(id);
     },
   };
 }

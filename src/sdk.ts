@@ -10,6 +10,7 @@ import {
   LanguageHandler,
   MediaHandler,
   SocketHandler,
+  EntryHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -245,6 +246,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     template: TemplateHandler(cacheControl, send),
     language: LanguageHandler(cacheControl, send),
     media: MediaHandler(cacheControl, send),
+    entry: EntryHandler(cacheControl, send),
   };
   const socket = SocketHandler(cacheControl, handlerManager, {
     url: config.cms.origin,

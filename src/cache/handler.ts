@@ -1,11 +1,10 @@
-import { CacheEntry } from './interfaces';
-import { totalmem } from 'os';
+import { CacheEntity } from './interfaces';
 
 export interface CacheHandlerPrototype<T> {
   get: (id: string) => T;
   getAll: () => T[];
   getMany: (ids: string[]) => T[];
-  set: (entry: T) => void;
+  set: (entity: T) => void;
   remove: (id: string) => void;
   clear: () => void;
   clearExpired: () => void;
@@ -13,47 +12,53 @@ export interface CacheHandlerPrototype<T> {
   findOne(query: (e: T) => boolean): T;
 }
 
-export function EntryCacheHandler<T extends { _id: string }>(
+export function EntityCacheHandler<T extends { _id: string }>(
   TTL: number,
 ): CacheHandlerPrototype<T> {
-  const cache: Array<CacheEntry<T>> = [];
+  const cache: Array<CacheEntity<T>> = [];
 
   return {
     get: (id) => {
-      const c = cache.find((e) => e.entry._id === id);
-      return c ? JSON.parse(JSON.stringify(c.entry)) : undefined;
+      const c = cache.find((e) => e.entity._id === id);
+      return c ? JSON.parse(JSON.stringify(c.entity)) : undefined;
     },
     getAll: () => {
-      return cache.map((e) => e.entry);
+      return JSON.parse(JSON.stringify(cache.map((e) => e.entity)));
     },
     getMany: (ids) => {
       const entries: T[] = [];
-      return cache.filter((e) => ids.includes(e.entry._id)).map((e) => e.entry);
+      return JSON.parse(
+        JSON.stringify(
+          cache.filter((e) => ids.includes(e.entity._id)).map((e) => e.entity),
+        ),
+      );
     },
-    set: (entry) => {
+    set: (entity) => {
       for (const i in cache) {
-        if (cache[i].entry._id === entry._id) {
+        if (cache[i].entity._id === entity._id) {
           cache[i] = {
             expAt: Date.now() + TTL,
-            entry,
+            entity: JSON.parse(JSON.stringify(entity)),
           };
           return;
         }
       }
       cache.push({
         expAt: Date.now() + TTL,
-        entry,
+        entity,
       });
     },
     remove: (id) => {
       for (let i = 0; i < cache.length; i = i + 1) {
-        if (cache[i].entry._id === id) {
+        if (cache[i].entity._id === id) {
           cache.splice(i, 1);
         }
       }
     },
     clear: () => {
-      cache.splice(0, cache.length);
+      while (cache.length > 0) {
+        cache.pop();
+      }
     },
     clearExpired: () => {
       const clearIds: number[] = [];
@@ -70,16 +75,16 @@ export function EntryCacheHandler<T extends { _id: string }>(
     find(query) {
       const output: T[] = [];
       for (const i in cache) {
-        if (query(cache[i].entry)) {
-          output.push(JSON.parse(JSON.stringify(cache[i].entry)));
+        if (query(cache[i].entity)) {
+          output.push(JSON.parse(JSON.stringify(cache[i].entity)));
         }
       }
-      return output;
+      return JSON.parse(JSON.stringify(output));
     },
     findOne(query) {
       for (const i in cache) {
-        if (query(cache[i].entry)) {
-          return JSON.parse(JSON.stringify(cache[i].entry));
+        if (query(cache[i].entity)) {
+          return JSON.parse(JSON.stringify(cache[i].entity));
         }
       }
     },

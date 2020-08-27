@@ -8,5 +8,4 @@ export interface Widget {
   label: string;
   desc: string;
   props: Prop[];
-  _schema: any;
 }

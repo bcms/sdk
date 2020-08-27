@@ -6,6 +6,7 @@ import { Group, PropChange } from '../interfaces';
 export interface GroupHandlerPrototype {
   getAll(): Promise<Group[]>;
   get(id: string): Promise<Group>;
+  getMany(ids: string[]): Promise<Group[]>;
   count(): Promise<number>;
   add(data: { label: string; desc: string }): Promise<Group>;
   update(data: {
@@ -21,7 +22,7 @@ export function GroupHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
 ): GroupHandlerPrototype {
-  const queueable = Queueable<Group | Group[]>('getAll', 'get');
+  const queueable = Queueable<Group | Group[]>('getAll', 'get', 'getMany');
   let countLatch = false;
 
   return {
@@ -74,6 +75,37 @@ export function GroupHandler(
         cacheControl.group.set(result.group);
         return result.group;
       })) as Group;
+    },
+    async getMany(ids) {
+      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+        if (countLatch === false) {
+          this.getAll();
+        }
+        const groups = cacheControl.group.find((e) => ids.includes(e._id));
+        if (groups.length !== ids.length) {
+          const missingIds: string[] = [];
+          for (const i in ids) {
+            const g = groups.find((e) => e._id === ids[i]);
+            if (!g) {
+              missingIds.push(ids[i]);
+            }
+          }
+          const result: {
+            groups: Group[];
+          } = await send({
+            url: `/group/many/${missingIds.join('-')}`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          for (const i in result.groups) {
+            cacheControl.group.set(result.groups[i]);
+          }
+          return [...result.groups, ...groups];
+        }
+        return groups;
+      })) as Group[];
     },
     async count() {
       const result: {

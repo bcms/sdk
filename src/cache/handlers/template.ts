@@ -1,9 +1,9 @@
-import { CacheHandlerPrototype, EntryCacheHandler } from '../handler';
+import { CacheHandlerPrototype, EntityCacheHandler } from '../handler';
 import { Template } from '../../interfaces';
 
 export function TemplateCacheHandler(
   TTL: number,
 ): CacheHandlerPrototype<Template> {
-  const handler = EntryCacheHandler<Template>(TTL);
+  const handler = EntityCacheHandler<Template>(TTL);
   return { ...handler };
 }

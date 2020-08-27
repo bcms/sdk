@@ -5,6 +5,7 @@ export enum SocketEventName {
   GROUP = 'group',
   WIDGET = 'widget',
   ENTRY = 'entry',
+  INTERNAL = 'internal',
 }
 
 export interface SocketEventData {
