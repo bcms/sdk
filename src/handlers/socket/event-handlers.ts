@@ -5,7 +5,7 @@ import {
   JWT,
   SocketSubscriptions,
 } from '../../interfaces';
-import { CacheControlPrototype } from 'src/cache';
+import { CacheControlPrototype } from '../../cache';
 
 export interface SocketEventHandlerPrototype {
   name: SocketEventName;
@@ -18,69 +18,151 @@ export function SocketEventHandlers(
   getSocketId: () => string,
   getSubscriptions: () => SocketSubscriptions,
 ): SocketEventHandlerPrototype[] {
-  const preHandler = async (
-    data: SocketEventData,
-    execute: () => Promise<void>,
+  const runUpdates = async (
+    updates: Array<{
+      name: string;
+      ids: string[];
+    }>,
   ) => {
-    if (data.source === getSocketId()) {
-      return;
+    console.log('updates', updates, updates.length);
+    const loopFor = 0 + updates.length;
+    // updates.forEach(async (update, i) => {
+    //   console.log(i);
+    //   console.log('update', update, updates.length);
+    //   if (update.ids.length > 0) {
+    //     switch (update.name) {
+    //       case 'groups':
+    //         {
+    //           cacheControl.group.removeMany(update.ids);
+    //           await handlerManager.group.getMany(update.ids);
+    //         }
+    //         break;
+    //       case 'templates':
+    //         {
+    //           cacheControl.template.removeMany(update.ids);
+    //           await handlerManager.template.getMany(update.ids);
+    //         }
+    //         break;
+    //       case 'widgets':
+    //         {
+    //           cacheControl.widget.removeMany(update.ids);
+    //           await handlerManager.widget.getMany(update.ids);
+    //         }
+    //         break;
+    //       case 'entries':
+    //         {
+    //           cacheControl.entry.removeMany(update.ids);
+    //           await handlerManager.entry.getManyLite(update.ids);
+    //         }
+    //         break;
+    //     }
+    //   }
+    // });
+    for (const i in updates) {
+      console.log(i);
+      const update = updates[i];
+      if (update.ids.length > 0) {
+        if (update.name === 'groups') {
+          cacheControl.group.removeMany(update.ids);
+          await handlerManager.group.getMany(update.ids);
+        } 
+        // else if (update.name === 'templates') {
+        //   cacheControl.template.removeMany(update.ids);
+        //   await handlerManager.template.getMany(update.ids);
+        // } else if (update.name === 'widgets') {
+        //   cacheControl.widget.removeMany(update.ids);
+        //   await handlerManager.widget.getMany(update.ids);
+        // } else if (update.name === 'entries') {
+        //   cacheControl.entry.removeMany(update.ids);
+        //   await handlerManager.entry.getManyLite(update.ids);
+        // }
+
+        // switch (update.name) {
+        //   case 'groups':
+        //     {
+        //       cacheControl.group.removeMany(update.ids);
+        //       await handlerManager.group.getMany(update.ids);
+        //     }
+        //     break;
+        //   case 'templates':
+        //     {
+        //       cacheControl.template.removeMany(update.ids);
+        //       await handlerManager.template.getMany(update.ids);
+        //     }
+        //     break;
+        //   case 'widgets':
+        //     {
+        //       cacheControl.widget.removeMany(update.ids);
+        //       await handlerManager.widget.getMany(update.ids);
+        //     }
+        //     break;
+        //   case 'entries':
+        //     {
+        //       cacheControl.entry.removeMany(update.ids);
+        //       await handlerManager.entry.getManyLite(update.ids);
+        //     }
+        //     break;
+        // }
+      }
     }
-    await execute();
   };
   return [
     {
       name: SocketEventName.LANGUAGE,
       handler: async (data) => {
-        await preHandler(data, async () => {
-          cacheControl.language.remove(data.entry._id);
-          if (data.type !== 'remove') {
-            await handlerManager.language.get(data.entry._id);
-          }
-          getSubscriptions()[SocketEventName.LANGUAGE].forEach((sub) => {
-            sub.handler(data);
-          });
+        if (data.source === getSocketId()) {
+          return;
+        }
+        cacheControl.language.remove(data.entry._id);
+        if (data.type !== 'remove') {
+          await handlerManager.language.get(data.entry._id);
+        }
+        getSubscriptions()[SocketEventName.LANGUAGE].forEach((sub) => {
+          sub.handler({ data });
         });
       },
     },
     {
       name: SocketEventName.GROUP,
       handler: async (data) => {
-        await preHandler(data, async () => {
+        if (data.source !== getSocketId()) {
           cacheControl.group.remove(data.entry._id);
-          if (data.type !== 'remove') {
+        }
+        if (data.type === 'update') {
+          if (data.source !== getSocketId()) {
             await handlerManager.group.get(data.entry._id);
-            const updates: {
-              [key: string]: string[];
-            } = {};
-            data.message.split('_').forEach((p1) => {
-              const keyAndValue = p1.split(':');
-              updates[keyAndValue[0]] = keyAndValue[1].split('-');
-              if (updates[keyAndValue[0]][0] === '') {
-                updates[keyAndValue[0]] = [];
-              }
-            });
-            for (const key in updates) {
-              if (updates[key].length > 0) {
-                switch (key) {
-                  case 'groups':
-                    {
-                      for (const j in updates[key]) {
-                        cacheControl.group.remove(updates[key][j]);
-                      }
-                      const groups = await handlerManager.group.getMany(updates[key]);
-                      for (const i in groups) {
-                        cacheControl.group.set(groups[i]);
-                      }
-                      console.log('up', groups);
-                    }
-                    break;
-                }
-              }
-            }
           }
-          console.log(cacheControl.group.getAll());
-          getSubscriptions()[SocketEventName.GROUP].forEach((sub) => {
-            sub.handler(data);
+          await runUpdates(data.message.updated);
+        } else if (data.type === 'add') {
+          if (data.source !== getSocketId()) {
+            await handlerManager.group.get(data.entry._id);
+          }
+        } else if (data.type === 'remove') {
+          await runUpdates(data.message.updated);
+        }
+        getSubscriptions()[SocketEventName.GROUP].forEach((sub) => {
+          /**
+           * On the client side:
+           *
+           * - If `data.type`
+           *    - update:
+           *      - get this Group
+           *      - get all Groups in `updates.groups`
+           *      - get all Widgets in `updates.widgets`
+           *      - get all Templates in `updates.templates`
+           *      - get all Entries in `updates.entries`
+           *    - remove:
+           *      - remove this Group
+           *      - get all Groups in `updates.groups`
+           *      - get all Widgets in `updates.widgets`
+           *      - get all Templates in `updates.templates`
+           *      - get all Entries in `updates.entries`
+           *    - add:
+           *      - get this Group
+           */
+          sub.handler({
+            data,
+            updates: data.message.updated,
           });
         });
       },
@@ -88,29 +170,66 @@ export function SocketEventHandlers(
     {
       name: SocketEventName.TEMPLATE,
       handler: async (data) => {
-        await preHandler(data, async () => {
+        if (data.source !== getSocketId()) {
           cacheControl.template.remove(data.entry._id);
-          if (data.type !== 'remove') {
+        }
+        const entriesToRemove = cacheControl.entry.find(
+          (e) => e.data.templateId === data.entry._id,
+        );
+        for (const i in entriesToRemove) {
+          const entry = entriesToRemove[i];
+          cacheControl.entry.remove(entry._id);
+        }
+        if (data.type === 'update') {
+          if (data.source !== getSocketId()) {
             await handlerManager.template.get(data.entry._id);
-          } else {
-            const entriesToRemove = cacheControl.entry.find(
-              (e) => e.data.templateId === data.entry._id,
-            );
-            for (const i in entriesToRemove) {
-              const entry = entriesToRemove[i];
-              cacheControl.entry.remove(entry._id);
-            }
           }
-          getSubscriptions()[SocketEventName.TEMPLATE].forEach((sub) => {
-            sub.handler(data);
-          });
-          // cacheControl.template.remove(data.entry._id);
-          // if (data.type !== 'remove') {
-          //   await handlerManager.language.get(data.entry._id);
-          // }
-          // getSubscriptions()[SocketEventName.LANGUAGE].forEach((sub) => {
-          //   sub.handler(data);
-          // });
+          await handlerManager.entry.getAllLite(data.entry._id);
+        } else if (data.type === 'add') {
+          if (data.source !== getSocketId()) {
+            await handlerManager.template.get(data.entry._id);
+          }
+        }
+        getSubscriptions()[SocketEventName.TEMPLATE].forEach((sub) => {
+          /**
+           * On the client side:
+           *
+           * - If `data.type`
+           *    - update: get Template and get all Entries
+           *    - remove: remove Template and all its Entries
+           *    - add: get the Template
+           */
+          sub.handler({ data });
+        });
+      },
+    },
+    {
+      name: SocketEventName.WIDGET,
+      handler: async (data) => {
+        if (data.source === getSocketId()) {
+          return;
+        }
+        cacheControl.widget.remove(data.entry._id);
+        if (data.type !== 'remove') {
+          await handlerManager.widget.get(data.entry._id);
+        }
+        getSubscriptions()[SocketEventName.WIDGET].forEach((sub) => {
+          sub.handler({ data });
+        });
+      },
+    },
+    {
+      name: SocketEventName.MEDIA,
+      handler: async (data) => {
+        if (data.source === getSocketId()) {
+          return;
+        }
+        cacheControl.media.remove(data.entry._id);
+        if (data.type !== 'remove') {
+          await handlerManager.media.get(data.entry._id);
+        }
+        getSubscriptions()[SocketEventName.MEDIA].forEach((sub) => {
+          sub.handler({ data });
         });
       },
     },

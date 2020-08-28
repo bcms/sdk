@@ -1,8 +1,10 @@
-import { SocketEventData, SocketEventName } from './event';
+import {
+  SocketEventDataClient,
+} from './event';
 
 export interface SocketSubscription {
   id: string;
-  handler: (data: SocketEventData) => Promise<void>;
+  handler: (data: SocketEventDataClient) => Promise<void>;
 }
 
 export interface SocketSubscriptions {

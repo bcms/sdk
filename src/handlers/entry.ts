@@ -1,11 +1,12 @@
 import { EntryLite, Entry, EntryMeta } from '../interfaces';
 import { Queueable } from '../util';
-import { CacheControlPrototype } from '../cache';
+import { CacheControlPrototype, EntryCacheItem } from '../cache';
 import { AxiosRequestConfig } from 'axios';
 
 export interface EntryHandlerPrototype {
   getAllLite(templateId: string): Promise<EntryLite[]>;
   get(id: string): Promise<Entry>;
+  getManyLite(ids: string[]): Promise<Entry[]>;
   count(templateId): Promise<number>;
   add(data: {
     title: string;
@@ -27,7 +28,11 @@ export function EntryHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
 ): EntryHandlerPrototype {
-  const queueable = Queueable<Entry | EntryLite[]>('getAllLite', 'get');
+  const queueable = Queueable<Entry | EntryLite[]>(
+    'getAllLite',
+    'get',
+    'getMany',
+  );
   const countLatchFor: {
     [key: string]: boolean;
   } = {};
@@ -44,32 +49,27 @@ export function EntryHandler(
           const entriesLite = cacheControl.entry.find(
             (e) => e.data.templateId === templateId,
           );
-          if (
-            countLatchFor[templateId] &&
-            countLatchFor[templateId] === false
-          ) {
-            countLatchFor[templateId] = true;
-            const count = this.count(templateId);
-            if (count.count !== entriesLite.length) {
-              const eResult: {
-                entries: EntryLite[];
-              } = await send({
-                url: `/entry/all/${templateId}/lite`,
-                method: 'GET',
-                headers: {
-                  Authorization: '',
-                },
+          countLatchFor[templateId] = true;
+          const count = this.count(templateId);
+          if (count.count !== entriesLite.length) {
+            const eResult: {
+              entries: EntryLite[];
+            } = await send({
+              url: `/entry/all/${templateId}/lite`,
+              method: 'GET',
+              headers: {
+                Authorization: '',
+              },
+            });
+            for (const i in eResult.entries) {
+              const entry = eResult.entries[i];
+              cacheControl.entry.set({
+                _id: entry._id,
+                lite: true,
+                data: entry,
               });
-              for (const i in eResult.entries) {
-                const entry = eResult.entries[i];
-                cacheControl.entry.set({
-                  _id: entry._id,
-                  lite: true,
-                  data: entry,
-                });
-              }
-              return eResult.entries;
             }
+            return eResult.entries;
           }
           return entriesLite.map((e) => e.data);
         },
@@ -100,6 +100,42 @@ export function EntryHandler(
         }
         return entry.data;
       })) as Entry;
+    },
+    async getManyLite(ids) {
+      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+        const entries = cacheControl.entry.find((e) => ids.includes(e._id));
+        if (entries.length !== ids.length) {
+          const missingIds: string[] = [];
+          for (const i in ids) {
+            const e = entries.find((t) => t._id === ids[i]);
+            if (!e) {
+              missingIds.push(ids[i]);
+            }
+          }
+          const result: {
+            entries: Entry[];
+          } = await send({
+            url: `/entry/many/lite/${missingIds.join('-')}`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          for (const i in result.entries) {
+            cacheControl.entry.set({
+              _id: result.entries[i]._id,
+              data: result.entries[i],
+              lite: true,
+            });
+            entries.push({
+              _id: result.entries[i]._id,
+              data: result.entries[i],
+              lite: true,
+            });
+          }
+        }
+        return entries.map((e) => e.data);
+      })) as Entry[];
     },
     async count(templateId) {
       if (templateId) {

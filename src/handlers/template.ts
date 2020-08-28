@@ -6,6 +6,7 @@ import { Queueable } from '../util';
 export interface TemplateHandlerPrototype {
   getAll(): Promise<Template[]>;
   get(id: string): Promise<Template>;
+  getMany(ids: string[]): Promise<Template[]>;
   count(): Promise<number>;
   add(data: {
     label: string;
@@ -28,6 +29,7 @@ export function TemplateHandler(
   const queueable = Queueable<Template | Template[] | number>(
     'getAll',
     'get',
+    'getMany',
     'count',
   );
   let countLatch = false;
@@ -82,6 +84,39 @@ export function TemplateHandler(
         cacheControl.template.set(result.template);
         return result.template;
       })) as Template;
+    },
+    async getMany(ids) {
+      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+        if (countLatch === false) {
+          this.getAll();
+        }
+        const templates = cacheControl.template.find((e) =>
+          ids.includes(e._id),
+        );
+        if (templates.length !== ids.length) {
+          const missingIds: string[] = [];
+          for (const i in ids) {
+            const t = templates.find((e) => e._id === ids[i]);
+            if (!t) {
+              missingIds.push(ids[i]);
+            }
+          }
+          const result: {
+            templates: Template[];
+          } = await send({
+            url: `/template/many/${missingIds.join('-')}`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          for (const i in result.templates) {
+            cacheControl.group.set(result.templates[i]);
+            templates.push(JSON.parse(JSON.stringify(result.templates[i])));
+          }
+        }
+        return templates;
+      })) as Template[];
     },
     async count() {
       return (await queueable.exec('count', 'first_done_free_all', async () => {

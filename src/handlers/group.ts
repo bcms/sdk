@@ -36,9 +36,11 @@ export function GroupHandler(
             countLatch = true;
             const count = await this.count();
             if (count === groups.length) {
+              console.log('getAll done 3');
               return groups;
             }
           } else if (groups.length > 0) {
+            console.log('getAll done 2');
             return groups;
           }
           const result: {
@@ -53,6 +55,7 @@ export function GroupHandler(
           result.groups.forEach((group) => {
             cacheControl.group.set(group);
           });
+          console.log('getAll done 1');
           return result.groups;
         },
       )) as Group[];
@@ -77,37 +80,54 @@ export function GroupHandler(
       })) as Group;
     },
     async getMany(ids) {
-      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
-        if (countLatch === false) {
-          this.getAll();
-        }
-        const groups = cacheControl.group.find((e) => ids.includes(e._id));
-        if (groups.length !== ids.length) {
-          const missingIds: string[] = [];
-          for (const i in ids) {
-            const g = groups.find((e) => e._id === ids[i]);
-            if (!g) {
-              missingIds.push(ids[i]);
-            }
-          }
-          const result: {
-            groups: Group[];
-          } = await send({
-            url: `/group/many/${missingIds.join('-')}`,
-            method: 'GET',
-            headers: {
-              Authorization: '',
-            },
-          });
-          for (const i in result.groups) {
-            cacheControl.group.set(result.groups[i]);
-          }
-          return [...result.groups, ...groups];
-        }
-        return groups;
-      })) as Group[];
+      console.log('HERE 3');
+      const result: {
+        groups: Group[];
+      } = await send({
+        url: `/group/many/${ids.join('-')}`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      console.log('Group done');
+      return result.groups
+      // return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+      //   // if (countLatch === false) {
+      //   //   await this.getAll();
+      //   // }
+      //   // console.log('h4');
+      //   // const groups = cacheControl.group.find((e) => ids.includes(e._id));
+      //   // if (groups.length !== ids.length) {
+      //   //   console.log('h5');
+      //   //   const missingIds: string[] = [];
+      //   //   for (const i in ids) {
+      //   //     const g = groups.find((e) => e._id === ids[i]);
+      //   //     if (!g) {
+      //   //       missingIds.push('' + ids[i]);
+      //   //     }
+      //   //   }
+      //   //   console.log('h6');
+      //   //   const result: {
+      //   //     groups: Group[];
+      //   //   } = await send({
+      //   //     url: `/group/many/${missingIds.join('-')}`,
+      //   //     method: 'GET',
+      //   //     headers: {
+      //   //       Authorization: '',
+      //   //     },
+      //   //   });
+      //   //   for (const i in result.groups) {
+      //   //     cacheControl.group.set(result.groups[i]);
+      //   //     groups.push(result.groups[i]);
+      //   //   }
+      //   // }
+      //   // console.log('HERE 2');
+      //   // return groups;
+      // })) as Group[];
     },
     async count() {
+      console.log('count start');
       const result: {
         count: number;
       } = await send({
@@ -117,6 +137,7 @@ export function GroupHandler(
           Authorization: '',
         },
       });
+      console.log('count done');
       return result.count;
     },
     async add(data) {

@@ -1,9 +1,9 @@
 import {
   JWT,
   SocketEventName,
-  SocketEventData,
   HandlerManager,
   SocketSubscriptions,
+  SocketEventDataClient,
 } from '../../interfaces';
 import { CacheControlPrototype } from '../../cache';
 import { SocketEventHandlers } from './event-handlers';
@@ -18,7 +18,7 @@ export interface SocketHandlerPrototype {
   connected(): boolean;
   subscribe(
     event: SocketEventName,
-    handler: (data: SocketEventData) => Promise<void>,
+    handler: (event: SocketEventDataClient) => Promise<void>,
   ): {
     unsubscribe(): void;
   };
@@ -88,8 +88,8 @@ export function SocketHandler(
               console.log('Disconnected from Socket server.');
             });
             handlers.forEach((h) => {
-              socket.on(h.name, (data: any) => {
-                h.handler(data);
+              socket.on(h.name, async (data: any) => {
+                await h.handler(data);
               });
             });
           } catch (error) {

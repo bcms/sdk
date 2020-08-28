@@ -6,6 +6,7 @@ import { Queueable } from '../util';
 export interface WidgetHandlerPrototype {
   getAll(): Promise<Widget[]>;
   get(id: string): Promise<Widget>;
+  getMany(ids: string[]): Promise<Widget[]>;
   count(): Promise<number>;
   add(data: { label: string; desc: string }): Promise<Widget>;
   update(data: {
@@ -21,7 +22,7 @@ export function WidgetHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
 ): WidgetHandlerPrototype {
-  const queueable = Queueable<Widget | Widget[]>('getAll', 'get');
+  const queueable = Queueable<Widget | Widget[]>('getAll', 'get', 'getMany');
   let countLatch = false;
 
   return {
@@ -74,6 +75,37 @@ export function WidgetHandler(
         cacheControl.widget.set(result.widget);
         return result.widget;
       })) as Widget;
+    },
+    async getMany(ids) {
+      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+        if (countLatch === false) {
+          this.getAll();
+        }
+        const widgets = cacheControl.widget.find((e) => ids.includes(e._id));
+        if (widgets.length !== ids.length) {
+          const missingIds: string[] = [];
+          for (const i in ids) {
+            const w = widgets.find((e) => e._id === ids[i]);
+            if (!w) {
+              missingIds.push(ids[i]);
+            }
+          }
+          const result: {
+            widgets: Widget[];
+          } = await send({
+            url: `/widget/many/${missingIds.join('-')}`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          for (const i in result.widgets) {
+            cacheControl.group.set(result.widgets[i]);
+            widgets.push(JSON.parse(JSON.stringify(result.widgets[i])));
+          }
+        }
+        return widgets;
+      })) as Widget[];
     },
     async count() {
       const result: {

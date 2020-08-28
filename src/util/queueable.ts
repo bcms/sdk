@@ -49,6 +49,7 @@ export function Queueable<T>(...queueable): QueueablePrototype<T> {
       type,
       executable,
     ) {
+      console.log('q1 start', key, type);
       if (queue[key].open === true) {
         const output: any = await new Promise<T>((resolve, reject) => {
           queue[key].list.push({
@@ -77,6 +78,7 @@ export function Queueable<T>(...queueable): QueueablePrototype<T> {
       } else {
         this.freeQueue(key, 'resolve', result);
       }
+      console.log('q1 resolved', key, type);
       return result;
     },
   };

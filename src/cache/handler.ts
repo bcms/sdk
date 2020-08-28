@@ -6,6 +6,7 @@ export interface CacheHandlerPrototype<T> {
   getMany: (ids: string[]) => T[];
   set: (entity: T) => void;
   remove: (id: string) => void;
+  removeMany(ids: string[]): void;
   clear: () => void;
   clearExpired: () => void;
   find(query: (e: T) => boolean): T[];
@@ -51,6 +52,13 @@ export function EntityCacheHandler<T extends { _id: string }>(
     remove: (id) => {
       for (let i = 0; i < cache.length; i = i + 1) {
         if (cache[i].entity._id === id) {
+          cache.splice(i, 1);
+        }
+      }
+    },
+    removeMany(ids) {
+      for (let i = 0; i < cache.length; i = i + 1) {
+        if (ids.includes(cache[i].entity._id)) {
           cache.splice(i, 1);
         }
       }

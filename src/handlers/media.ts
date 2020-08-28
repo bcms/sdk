@@ -171,6 +171,9 @@ export function MediaHandler(
       const result: Buffer = await send({
         url: `/media/${id}/bin`,
         method: 'GET',
+        headers: {
+          Authorization: '',
+        },
         responseType: 'arraybuffer',
       });
       return result;

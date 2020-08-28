@@ -49,7 +49,7 @@ function LS(): LSPrototype {
   };
 }
 export interface LocalStoragePrototype extends Storage {
-  clear: () => void;
+  clear: () => Promise<void>;
 }
 export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
   const ls = LS();
@@ -92,7 +92,7 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
       }
       return true;
     },
-    remove: (key) => {
+    remove: async (key) => {
       try {
         ls.removeItem(`${config.prfx}_${key}`);
       } catch (error) {
@@ -103,23 +103,23 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
       for (const i in subscription) {
         const e = subscription[i];
         if (e.key === `${config.prfx}_${key}`) {
-          e.handler(undefined, 'remove');
+          await e.handler(undefined, 'remove');
         }
       }
       return true;
     },
-    subscribe: (key, handler) => {
+    subscribe: async (key, handler) => {
       const id = uuid.v4();
       subscription.push({
         id,
         key: `${config.prfx}_${key}`,
         handler,
       });
-      return () => {
+      return async () => {
         subscription = subscription.filter((e) => e.id !== id);
       };
     },
-    clear: () => {
+    clear: async () => {
       const l = JSON.parse(JSON.stringify(ls.all()));
       for (const key in l) {
         if (key.startsWith(config.prfx)) {
@@ -127,7 +127,7 @@ export function LocalStorage(config: { prfx: string }): LocalStoragePrototype {
           for (const i in subscription) {
             const e = subscription[i];
             if (e.key === key) {
-              e.handler(undefined, 'remove');
+              await e.handler(undefined, 'remove');
             }
           }
         }
