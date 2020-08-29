@@ -1,10 +1,11 @@
 export interface ObjectUtilPrototype {
-  validate(obj: any, comp: any);
+  eq(obj: any, comp: any, level?: string);
+  checkType(obj: any, comp: any, level?: string);
 }
 
-export function ObjectUtil() {
+export function ObjectUtil(): ObjectUtilPrototype {
   return {
-    eq(obj: any, comp: any, level?: string) {
+    eq(obj, comp, level?) {
       if (!level) {
         level = 'root';
       }
@@ -57,7 +58,7 @@ export function ObjectUtil() {
         }
       }
     },
-    checkType(obj: any, comp: any, level?: string) {
+    checkType(obj, comp, level?) {
       if (!level) {
         level = 'root';
       }

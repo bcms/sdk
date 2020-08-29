@@ -74,7 +74,6 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     conf: AxiosRequestConfig,
     doNotInjectAuth?: boolean,
   ): Promise<T> {
-    console.log('send', conf.url);
     if (
       !doNotInjectAuth &&
       conf.headers &&
@@ -105,7 +104,6 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     conf.url = `${config.cms.origin}/api${conf.url}`;
     try {
       const response = await Axios(conf);
-      console.log('send done', conf.url);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

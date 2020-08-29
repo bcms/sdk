@@ -24,10 +24,7 @@ export function SocketEventHandlers(
       ids: string[];
     }>,
   ) => {
-    console.log('updates', updates, updates.length);
     updates.forEach(async (update, i) => {
-      console.log(i);
-      console.log('update', update, updates.length);
       if (update.ids.length > 0) {
         switch (update.name) {
           case 'groups':
