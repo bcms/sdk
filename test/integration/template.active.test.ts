@@ -38,7 +38,7 @@ describe('Template functions', async () => {
     group1 = result.grp1;
     group2 = result.grp2;
   });
-  it('should update');
+  it('should update and remove props from the template and check if it is updated', async () => {});
 });
 
 export const TemplateSteps = {
@@ -174,5 +174,54 @@ export const TemplateSteps = {
       template,
       ...groupResult,
     };
+  },
+  async upAndRemProps(template: Template) {
+    const template = await sdk.template.update({
+      _id: template._id,
+      propChanges: [
+        {
+          update: {
+            label: {
+              old: 'Draftt',
+              new: 'Draft',
+            },
+            required: false,
+          },
+        },
+        {
+          remove: 'admin',
+        },
+      ],
+    });
+    ou.eq(template, {
+      name: template.name,
+      desc: 'This is some description.',
+      props: [
+        {
+          label: 'Draft',
+          name: 'draft',
+          array: false,
+          required: true,
+          type: PropType.BOOLEAN,
+          value: [true],
+        },
+        {
+          label: 'Person',
+          name: 'person',
+          array: false,
+          required: true,
+          type: PropType.GROUP_POINTER,
+          value: {
+            _id: group2._id,
+            items: [
+              {
+                props: group2.props,
+              },
+            ],
+          },
+        },
+      ],
+    });
+    return template;
   },
 };
