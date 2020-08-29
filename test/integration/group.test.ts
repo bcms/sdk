@@ -2,9 +2,11 @@ import * as crypto from 'crypto';
 import { expect } from 'chai';
 import { sdk, Login, ObjectUtil } from '../util';
 import { Group, PropType } from '../../src/interfaces';
+import { GroupSteps as groupSteps } from './steps';
 
 const hash = crypto.createHash('sha1').update(`${Date.now()}`).digest('hex');
 const ou = ObjectUtil();
+const GroupSteps = groupSteps(sdk, hash, ou);
 let group1: Group;
 let group2: Group;
 
@@ -27,7 +29,10 @@ describe('Group functions', async () => {
     group2 = result.grp2;
   });
   it('should update and remove props in 1st group and check it 2nd group is updated', async () => {
-    const result = await GroupSteps.upAndRemPropsIn1stAndCheck2nd(group1, group2);
+    const result = await GroupSteps.upAndRemPropsIn1stAndCheck2nd(
+      group1,
+      group2,
+    );
     group1 = result.grp1;
     group2 = result.grp2;
   });
