@@ -80,51 +80,40 @@ export function GroupHandler(
       })) as Group;
     },
     async getMany(ids) {
-      console.log('HERE 3');
-      const result: {
-        groups: Group[];
-      } = await send({
-        url: `/group/many/${ids.join('-')}`,
-        method: 'GET',
-        headers: {
-          Authorization: '',
-        },
-      });
-      console.log('Group done');
-      return result.groups
-      // return (await queueable.exec('getMany', 'free_one_by_one', async () => {
-      //   // if (countLatch === false) {
-      //   //   await this.getAll();
-      //   // }
-      //   // console.log('h4');
-      //   // const groups = cacheControl.group.find((e) => ids.includes(e._id));
-      //   // if (groups.length !== ids.length) {
-      //   //   console.log('h5');
-      //   //   const missingIds: string[] = [];
-      //   //   for (const i in ids) {
-      //   //     const g = groups.find((e) => e._id === ids[i]);
-      //   //     if (!g) {
-      //   //       missingIds.push('' + ids[i]);
-      //   //     }
-      //   //   }
-      //   //   console.log('h6');
-      //   //   const result: {
-      //   //     groups: Group[];
-      //   //   } = await send({
-      //   //     url: `/group/many/${missingIds.join('-')}`,
-      //   //     method: 'GET',
-      //   //     headers: {
-      //   //       Authorization: '',
-      //   //     },
-      //   //   });
-      //   //   for (const i in result.groups) {
-      //   //     cacheControl.group.set(result.groups[i]);
-      //   //     groups.push(result.groups[i]);
-      //   //   }
-      //   // }
-      //   // console.log('HERE 2');
-      //   // return groups;
-      // })) as Group[];
+      console.log('HERE 3')
+      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+        if (countLatch === false) {
+          await this.getAll();
+        }
+        console.log('h4');
+        const groups = cacheControl.group.find((e) => ids.includes(e._id));
+        if (groups.length !== ids.length) {
+          console.log('h5');
+          const missingIds: string[] = [];
+          for (const i in ids) {
+            const g = groups.find((e) => e._id === ids[i]);
+            if (!g) {
+              missingIds.push('' + ids[i]);
+            }
+          }
+          console.log('h6');
+          const result: {
+            groups: Group[];
+          } = await send({
+            url: `/group/many/${missingIds.join('-')}`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          for (const i in result.groups) {
+            cacheControl.group.set(result.groups[i]);
+            groups.push(result.groups[i]);
+          }
+        }
+        console.log('HERE 2');
+        return groups;
+      })) as Group[];
     },
     async count() {
       console.log('count start');

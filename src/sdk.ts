@@ -153,7 +153,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   async function refreshAccessToken(): Promise<boolean> {
     return await queueable.exec(
       'refreshAccessToken',
-      'first_done_free_all',
+      'free_one_by_one',
       async () => {
         let refresh = true;
         if (typeof accessToken !== 'undefined') {

@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
-import { sdk, Login, ObjectUtil } from './util';
-import { Template, Entry, PropType, EntryMeta } from '../src/interfaces';
+import { sdk, Login, ObjectUtil } from '../util';
+import { Template, Entry, PropType, EntryMeta } from '../../src/interfaces';
 import { expect } from 'chai';
 
 const hash = crypto.createHash('sha1').update(`${Date.now()}`).digest('hex');

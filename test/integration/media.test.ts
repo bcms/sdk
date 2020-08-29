@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as util from 'util';
 import * as path from 'path';
-import { Login, sdk, ObjectUtil } from './util';
+import { Login, sdk, ObjectUtil } from '../util';
 import * as FormData from 'form-data';
-import { Media } from '../src/interfaces';
+import { Media } from '../../src/interfaces';
 
 const mediaTemplate = {
   hasChildren: true,

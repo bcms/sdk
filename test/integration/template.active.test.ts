@@ -1,23 +1,23 @@
 import * as crypto from 'crypto';
 import { expect } from 'chai';
-import { sdk, Login, ObjectUtil } from './util';
-import { PropType, Template, Group } from '../src/interfaces';
+import { sdk, Login, ObjectUtil, General } from '../util';
+import { PropType, Template, Group } from '../../src/interfaces';
 
 const hash = crypto
   .createHash('sha1')
   .update('' + Date.now())
   .digest('hex');
 const ou = ObjectUtil();
+const general = General();
 let template: Template;
 let group: Group;
 let group2: Group;
 
 describe('Template functions', async () => {
   Login();
-  beforeEach(() => {
-    console.log('Each')
-  })
   it('should create a 1st group that will be used by template', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     group = await sdk.group.add({
       label: `Group For Template 1 ${hash}`,
       desc: 'This is some description.',
@@ -32,6 +32,8 @@ describe('Template functions', async () => {
     );
   });
   it('should create a 2nd group that will be used in a 1st group', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     group2 = await sdk.group.add({
       label: `Group For Group 1 ${hash}`,
       desc: 'This is some description.',
@@ -46,6 +48,8 @@ describe('Template functions', async () => {
     );
   });
   it('should update the 2nd group', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     group2 = await sdk.group.update({
       _id: group2._id,
       propChanges: [
@@ -62,6 +66,8 @@ describe('Template functions', async () => {
     });
   });
   it('should update the 1st group', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     group = await sdk.group.update({
       _id: group._id,
       propChanges: [
@@ -89,6 +95,8 @@ describe('Template functions', async () => {
     });
   });
   it('should create a new template', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     template = await sdk.template.add({
       label: `Test Template 1# ${hash}`,
       desc: 'This is some description.',
@@ -104,6 +112,8 @@ describe('Template functions', async () => {
     );
   });
   it('should update the template', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     template = await sdk.template.update({
       _id: template._id,
       label: `Test Template 1a ${hash}`,
@@ -194,6 +204,8 @@ describe('Template functions', async () => {
     });
   });
   it('should update the 2nd group and check if template is updated', async () => {
+    await general.delay(1000);
+    console.log('\n\n\n');
     group2 = await sdk.group.update({
       _id: group2._id,
       propChanges: [

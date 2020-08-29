@@ -34,7 +34,7 @@ export function ObjectUtil() {
               }
               if (comp[i] !== obj[i]) {
                 throw new Error(
-                  `[ ${level} ] --> "${comp[i]}" in not equal to "${obj[i]}".`,
+                  `[ ${level}[${i}] ] --> "${comp[i]}" in not equal to "${obj[i]}".`,
                 );
               }
             }

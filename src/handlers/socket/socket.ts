@@ -87,7 +87,7 @@ export function SocketHandler(
               // tslint:disable-next-line: no-console
               console.log('Disconnected from Socket server.');
             });
-            handlers.forEach((h) => {
+            handlers.forEach(async (h) => {
               socket.on(h.name, async (data: any) => {
                 await h.handler(data);
               });

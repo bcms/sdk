@@ -25,86 +25,38 @@ export function SocketEventHandlers(
     }>,
   ) => {
     console.log('updates', updates, updates.length);
-    const loopFor = 0 + updates.length;
-    // updates.forEach(async (update, i) => {
-    //   console.log(i);
-    //   console.log('update', update, updates.length);
-    //   if (update.ids.length > 0) {
-    //     switch (update.name) {
-    //       case 'groups':
-    //         {
-    //           cacheControl.group.removeMany(update.ids);
-    //           await handlerManager.group.getMany(update.ids);
-    //         }
-    //         break;
-    //       case 'templates':
-    //         {
-    //           cacheControl.template.removeMany(update.ids);
-    //           await handlerManager.template.getMany(update.ids);
-    //         }
-    //         break;
-    //       case 'widgets':
-    //         {
-    //           cacheControl.widget.removeMany(update.ids);
-    //           await handlerManager.widget.getMany(update.ids);
-    //         }
-    //         break;
-    //       case 'entries':
-    //         {
-    //           cacheControl.entry.removeMany(update.ids);
-    //           await handlerManager.entry.getManyLite(update.ids);
-    //         }
-    //         break;
-    //     }
-    //   }
-    // });
-    for (const i in updates) {
+    updates.forEach(async (update, i) => {
       console.log(i);
-      const update = updates[i];
+      console.log('update', update, updates.length);
       if (update.ids.length > 0) {
-        if (update.name === 'groups') {
-          cacheControl.group.removeMany(update.ids);
-          await handlerManager.group.getMany(update.ids);
-        } 
-        // else if (update.name === 'templates') {
-        //   cacheControl.template.removeMany(update.ids);
-        //   await handlerManager.template.getMany(update.ids);
-        // } else if (update.name === 'widgets') {
-        //   cacheControl.widget.removeMany(update.ids);
-        //   await handlerManager.widget.getMany(update.ids);
-        // } else if (update.name === 'entries') {
-        //   cacheControl.entry.removeMany(update.ids);
-        //   await handlerManager.entry.getManyLite(update.ids);
-        // }
-
-        // switch (update.name) {
-        //   case 'groups':
-        //     {
-        //       cacheControl.group.removeMany(update.ids);
-        //       await handlerManager.group.getMany(update.ids);
-        //     }
-        //     break;
-        //   case 'templates':
-        //     {
-        //       cacheControl.template.removeMany(update.ids);
-        //       await handlerManager.template.getMany(update.ids);
-        //     }
-        //     break;
-        //   case 'widgets':
-        //     {
-        //       cacheControl.widget.removeMany(update.ids);
-        //       await handlerManager.widget.getMany(update.ids);
-        //     }
-        //     break;
-        //   case 'entries':
-        //     {
-        //       cacheControl.entry.removeMany(update.ids);
-        //       await handlerManager.entry.getManyLite(update.ids);
-        //     }
-        //     break;
-        // }
+        switch (update.name) {
+          case 'groups':
+            {
+              cacheControl.group.removeMany(update.ids);
+              await handlerManager.group.getMany(update.ids);
+            }
+            break;
+          case 'templates':
+            {
+              cacheControl.template.removeMany(update.ids);
+              await handlerManager.template.getMany(update.ids);
+            }
+            break;
+          case 'widgets':
+            {
+              cacheControl.widget.removeMany(update.ids);
+              await handlerManager.widget.getMany(update.ids);
+            }
+            break;
+          case 'entries':
+            {
+              cacheControl.entry.removeMany(update.ids);
+              await handlerManager.entry.getManyLite(update.ids);
+            }
+            break;
+        }
       }
-    }
+    });
   };
   return [
     {

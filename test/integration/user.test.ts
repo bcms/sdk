@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
-import { sdk, Login, ObjectUtil, env } from './util';
-import { User, RoleName, PermissionName } from '../src/interfaces';
+import { sdk, Login, ObjectUtil, env } from '../util';
+import { User, RoleName, PermissionName } from '../../src/interfaces';
 
 const objectUtil = ObjectUtil();
 

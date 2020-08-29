@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import { expect } from 'chai';
-import { sdk, Login, ObjectUtil } from './util';
-import { Group, PropType } from '../src/interfaces';
+import { sdk, Login, ObjectUtil } from '../util';
+import { Group, PropType } from '../../src/interfaces';
 
 const hash = crypto.createHash('sha1').update(`${Date.now()}`).update('hex');
 const ou = ObjectUtil();

@@ -12,8 +12,10 @@
     "publish": "node tools.js --publish",
     "link": "node tools.js --link",
     "unlink": "node tools.js --unlink",
-    "test": "mocha -r ts-node/register test/*.test.ts --recursive --exit",
-    "test:active": "mocha -r ts-node/register test/*.test.active.ts --recursive --exit"
+    "test": "mocha -r ts-node/register test/integration/*.test.ts --recursive --exit",
+    "test:active": "mocha -r ts-node/register test/integration/*.active.test.ts --recursive --exit",
+    "test:unit": "mocha -r ts-node/register test/unit/*.test.ts --recursive --exit",
+    "test:active:unit": "mocha -r ts-node/register test/unit/*.active.test.ts --recursive --exit"
   },
   "keywords": [],
   "author": "",
