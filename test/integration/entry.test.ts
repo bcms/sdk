@@ -149,6 +149,22 @@ describe('Entry functions', async () => {
         lng: 'en',
         props: [
           {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['First Entry'],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['first-entry'],
+          },
+          {
             label: 'Draft',
             name: 'draft',
             array: false,
@@ -194,6 +210,22 @@ describe('Entry functions', async () => {
         lng: 'sr',
         props: [
           {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
+          {
             label: 'Draft',
             name: 'draft',
             array: false,
@@ -237,16 +269,12 @@ describe('Entry functions', async () => {
       },
     ];
     entry = await sdk.entry.add({
-      slug: 'first-blog',
-      title: 'First Blog',
       templateId: template._id,
       meta,
     });
     ou.eq(
       entry,
       {
-        slug: 'first-blog',
-        title: 'First Blog',
         templateId: template._id,
         meta,
       },
@@ -321,6 +349,22 @@ describe('Entry functions', async () => {
         lng: 'en',
         props: [
           {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['First Entry'],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['first-entry'],
+          },
+          {
             label: 'Draft',
             name: 'draft',
             array: false,
@@ -365,6 +409,22 @@ describe('Entry functions', async () => {
       {
         lng: 'sr',
         props: [
+          {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
           {
             label: 'Draft',
             name: 'draft',
@@ -411,8 +471,6 @@ describe('Entry functions', async () => {
     ou.eq(
       entry,
       {
-        slug: 'first-blog',
-        title: 'First Blog',
         templateId: template._id,
         meta,
       },
@@ -440,6 +498,22 @@ describe('Entry functions', async () => {
         lng: 'en',
         props: [
           {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['First Entry'],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['first-entry'],
+          },
+          {
             label: 'Draft',
             name: 'draft',
             array: false,
@@ -492,6 +566,22 @@ describe('Entry functions', async () => {
       {
         lng: 'sr',
         props: [
+          {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
           {
             label: 'Draft',
             name: 'draft',
@@ -546,8 +636,6 @@ describe('Entry functions', async () => {
     ou.eq(
       entry,
       {
-        slug: 'first-blog',
-        title: 'First Blog',
         templateId: template._id,
         meta,
       },
@@ -562,6 +650,22 @@ describe('Entry functions', async () => {
       {
         lng: 'en',
         props: [
+          {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['First Entry'],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: ['first-entry'],
+          },
           {
             label: 'Draft',
             name: 'draft',
@@ -584,6 +688,22 @@ describe('Entry functions', async () => {
         lng: 'sr',
         props: [
           {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          },
+          {
             label: 'Draft',
             name: 'draft',
             array: false,
@@ -605,8 +725,6 @@ describe('Entry functions', async () => {
     ou.eq(
       entry,
       {
-        slug: 'first-blog',
-        title: 'First Blog',
         templateId: template._id,
         meta,
       },

@@ -5,3 +5,4 @@ export * from './template';
 export * from './language';
 export * from './media';
 export * from './entry';
+export * from './api-key';

@@ -40,7 +40,7 @@ describe('Media functions', async () => {
   });
   it('should create a new file inside of the root', async () => {
     const buffer = await util.promisify(fs.readFile)(
-      path.join(__dirname, 'assets', 'test.jpeg'),
+      path.join(__dirname, '..', 'assets', 'test.jpeg'),
     );
     const fd = new FormData();
     fd.append('media', buffer, 'test.jpeg');

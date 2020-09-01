@@ -9,15 +9,11 @@ export interface EntryHandlerPrototype {
   getManyLite(ids: string[]): Promise<Entry[]>;
   count(templateId): Promise<number>;
   add(data: {
-    title: string;
-    slug: string;
     templateId: string;
     meta: EntryMeta[];
   }): Promise<Entry>;
   update(data: {
     _id: string;
-    title: string;
-    slug: string;
     templateId: string;
     meta: EntryMeta[];
   }): Promise<Entry>;

@@ -11,6 +11,7 @@ import {
   MediaHandler,
   SocketHandler,
   EntryHandler,
+  ApiKeyHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -247,6 +248,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     language: LanguageHandler(cacheControl, send),
     media: MediaHandler(cacheControl, send),
     entry: EntryHandler(cacheControl, send),
+    apiKey: ApiKeyHandler(cacheControl, send),
   };
   const socket = SocketHandler(cacheControl, handlerManager, {
     url: config.cms.origin,

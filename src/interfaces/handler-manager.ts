@@ -6,6 +6,7 @@ import {
   LanguageHandlerPrototype,
   MediaHandlerPrototype,
   EntryHandlerPrototype,
+  ApiKeyHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -17,4 +18,5 @@ export interface HandlerManager {
   language: LanguageHandlerPrototype;
   media: MediaHandlerPrototype;
   entry: EntryHandlerPrototype;
+  apiKey: ApiKeyHandlerPrototype;
 }
