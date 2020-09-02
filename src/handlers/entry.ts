@@ -205,7 +205,7 @@ export function EntryHandler(
           Authorization: '',
         },
       });
-      cacheControl.entry.remove(id);
+      await cacheControl.entry.remove(id);
     },
   };
 }

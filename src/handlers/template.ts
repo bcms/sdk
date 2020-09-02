@@ -168,7 +168,7 @@ export function TemplateHandler(
           Authorization: '',
         },
       });
-      cacheControl.template.remove(id);
+      await cacheControl.template.remove(id);
     },
   };
 }

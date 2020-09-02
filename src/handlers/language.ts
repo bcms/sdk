@@ -122,7 +122,7 @@ export function LanguageHandler(
           Authorization: '',
         },
       });
-      cacheControl.language.remove(id);
+      await cacheControl.language.remove(id);
     },
   };
 }

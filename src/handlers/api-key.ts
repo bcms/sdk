@@ -132,7 +132,7 @@ export function ApiKeyHandler(
           Authorization: '',
         },
       });
-      cacheControl.apiKey.remove(id);
+      await cacheControl.apiKey.remove(id);
     },
   };
 }

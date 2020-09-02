@@ -155,7 +155,7 @@ export function WidgetHandler(
           Authorization: '',
         },
       });
-      cacheControl.widget.remove(id);
+      await cacheControl.widget.remove(id);
     },
   };
 }

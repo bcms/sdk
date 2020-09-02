@@ -101,7 +101,7 @@ export function GroupHandler(
           });
           for (const i in result.groups) {
             cacheControl.group.set(result.groups[i]);
-            groups.push(result.groups[i]);
+            groups.push(JSON.parse(JSON.stringify(result.groups[i])));
           }
         }
         return groups;
@@ -155,7 +155,7 @@ export function GroupHandler(
           Authorization: '',
         },
       });
-      cacheControl.group.remove(id);
+      await cacheControl.group.remove(id);
     },
   };
 }

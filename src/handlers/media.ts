@@ -7,6 +7,7 @@ export interface MediaHandlerPrototype {
   getAll(): Promise<Media[]>;
   getAllAggregated(): Promise<MediaAggregate[]>;
   getAllByParentId(parentId: string): Promise<Media[]>;
+  getMany(ids: string[]): Promise<Media[]>;
   get(id: string): Promise<Media>;
   getAggregated(id: string): Promise<MediaAggregate>;
   getBinary(id: string): Promise<Buffer>;
@@ -15,18 +16,12 @@ export interface MediaHandlerPrototype {
    * Add new file to the server and the database. If parent ID
    * is not provided, file will be added to the root.
    */
-  addFile(
-    // file: {
-    //   blob: Blob;
-    //   name: string;
-    // },
-    formData: FormData,
-    parentId?: string,
-  ): Promise<Media>;
+  addFile(formData: FormData, parentId?: string): Promise<Media>;
   /**
    * Create a new DIR Media on the server and in database.
    */
   addDir(data: { name: string; parentId?: string }): Promise<Media>;
+  update(data: { _id: string; rename: string }): Promise<Media>;
   /**
    * Will remove specified Media and its dependencies from
    * the database. Have in mind that deleting a DIR, all
@@ -42,7 +37,14 @@ export function MediaHandler(
   const mUtil = MediaUtil();
   const queueable = Queueable<
     Media | Media[] | MediaAggregate | MediaAggregate[]
-  >('getAll', 'getAllAggregated', 'getAllByParentId', 'get', 'getAggregated');
+  >(
+    'getAll',
+    'getAllAggregated',
+    'getAllByParentId',
+    'get',
+    'getAggregated',
+    'getMany',
+  );
   let countLatch = false;
 
   return {
@@ -121,6 +123,46 @@ export function MediaHandler(
           );
         },
       )) as Media[];
+    },
+    async getMany(ids) {
+      return (await queueable.exec('getMany', 'free_one_by_one', async () => {
+        if (countLatch === false) {
+          await this.getAll();
+        }
+        const missingIds: string[] = [];
+        const media: Media[] = [];
+        ids.forEach((id) => {
+          const m = cacheControl.media.get(id);
+          if (!m) {
+            missingIds.push(id);
+          } else {
+            media.push(m);
+          }
+        });
+        // const media = cacheControl.media.find((e) => {
+        //   if (ids.includes(e._id)) {
+        //     return true;
+        //   }
+        //   missingIds.push(e._id);
+        //   return false;
+        // });
+        if (missingIds.length > 0) {
+          const result: {
+            media: Media[];
+          } = await send({
+            url: `/media/many/${missingIds.join('-')}`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          for (const i in result.media) {
+            cacheControl.media.set(result.media[i]);
+            media.push(JSON.parse(JSON.stringify(result.media[i])));
+          }
+        }
+        return media;
+      })) as Media[];
     },
     async get(id) {
       return (await queueable.exec('get', 'free_one_by_one', async () => {
@@ -216,6 +258,20 @@ export function MediaHandler(
       cacheControl.media.set(result.media);
       return JSON.parse(JSON.stringify(result.media));
     },
+    async update(data) {
+      const result: {
+        media: Media;
+      } = await send({
+        url: `/media/${data._id}`,
+        method: 'PUT',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      cacheControl.media.set(result.media);
+      return JSON.parse(JSON.stringify(result.media));
+    },
     async count() {
       const result: {
         count: number;
@@ -236,7 +292,7 @@ export function MediaHandler(
           Authorization: '',
         },
       });
-      cacheControl.media.remove(id);
+      await cacheControl.media.remove(id);
     },
   };
 }

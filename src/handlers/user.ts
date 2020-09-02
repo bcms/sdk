@@ -243,7 +243,7 @@ export function UserHandler(
           Authorization: '',
         },
       });
-      cacheControl.user.remove(id);
+      await cacheControl.user.remove(id);
     },
     async login(email, password) {
       if (await isLoggedIn()) {

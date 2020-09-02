@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as util from 'util';
 import * as path from 'path';
-import { Login, sdk, ObjectUtil } from '../util';
+import { Login, sdk, ObjectUtil, General } from '../util';
 import * as FormData from 'form-data';
 import { Media } from '../../src/interfaces';
 
@@ -50,7 +50,7 @@ describe('Media functions', async () => {
   });
   it('should create a new file inside of the "dir2"', async () => {
     const buffer = await util.promisify(fs.readFile)(
-      path.join(__dirname, 'assets', 'test.jpeg'),
+      path.join(__dirname, '..', 'assets', 'test.jpeg'),
     );
     const fd = new FormData();
     fd.append('media', buffer, 'test.jpeg');
@@ -133,6 +133,60 @@ describe('Media functions', async () => {
           },
         ],
       },
+      'data',
+    );
+  });
+  it('should update "dir1" and child if update is successful', async () => {
+    dir1 = await sdk.media.update({
+      _id: dir1._id,
+      rename: 'dir11',
+    });
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 200);
+    });
+    const data = await sdk.media.getAll();
+    ou.eq(
+      data,
+      [
+        {
+          type: 'IMG',
+          mimetype: 'image/jpeg',
+          name: 'test.jpeg',
+          path: '/',
+          isInRoot: true,
+          hasChildren: false,
+          parentId: '',
+        },
+        {
+          type: 'DIR',
+          mimetype: 'dir',
+          name: 'dir11',
+          path: '/dir11',
+          isInRoot: true,
+          hasChildren: true,
+          parentId: '',
+        },
+        {
+          type: 'DIR',
+          mimetype: 'dir',
+          name: 'dir2',
+          path: '/dir11/dir2',
+          isInRoot: false,
+          hasChildren: true,
+          parentId: dir1._id,
+        },
+        {
+          type: 'IMG',
+          mimetype: 'image/jpeg',
+          name: 'test.jpeg',
+          path: '/dir11/dir2',
+          isInRoot: false,
+          hasChildren: false,
+          parentId: dir2._id,
+        },
+      ],
       'data',
     );
   });

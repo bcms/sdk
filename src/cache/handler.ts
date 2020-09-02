@@ -1,4 +1,5 @@
 import { CacheEntity } from './interfaces';
+import { Queueable } from '../util';
 
 export interface CacheHandlerPrototype<T> {
   get: (id: string) => T;
@@ -17,6 +18,7 @@ export function EntityCacheHandler<T extends { _id: string }>(
   TTL: number,
 ): CacheHandlerPrototype<T> {
   const cache: Array<CacheEntity<T>> = [];
+  const queueable = Queueable<void>('remove', 'removeMany');
 
   return {
     get: (id) => {
@@ -49,19 +51,29 @@ export function EntityCacheHandler<T extends { _id: string }>(
         entity,
       });
     },
-    remove: (id) => {
-      for (let i = 0; i < cache.length; i = i + 1) {
-        if (cache[i].entity._id === id) {
-          cache.splice(i, 1);
+    remove: async (id) => {
+      await queueable.exec('remove', 'free_one_by_one', async () => {
+        for (let i = 0; i < cache.length; i = i + 1) {
+          if (cache[i].entity._id === id) {
+            cache.splice(i, 1);
+            break;
+          }
         }
-      }
+      });
     },
-    removeMany(ids) {
-      for (let i = 0; i < cache.length; i = i + 1) {
-        if (ids.includes(cache[i].entity._id)) {
-          cache.splice(i, 1);
+    async removeMany(ids) {
+      await queueable.exec('removeMany', 'free_one_by_one', async () => {
+        const removeIndexes: number[] = [];
+        for (let i = 0; i < cache.length; i = i + 1) {
+          if (ids.includes(cache[i].entity._id)) {
+            removeIndexes.push(i);
+            // cache.splice(i, 1);
+          }
         }
-      }
+        for (let i = removeIndexes.length - 1; i > -1; i = i - 1) {
+          cache.splice(removeIndexes[i], 1);
+        }
+      });
     },
     clear: () => {
       while (cache.length > 0) {
