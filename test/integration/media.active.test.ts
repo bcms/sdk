@@ -54,7 +54,9 @@ describe('Media functions', async () => {
     );
     const fd = new FormData();
     fd.append('media', buffer, 'test.jpeg');
-    const data = await sdk.media.addFile(fd as any, dir2._id);
+    const data = await sdk.media.addFile(fd as any, dir2._id, (eventData) => {
+      console.log(eventData);
+    });
     ou.checkType(data, mediaTemplate, 'data');
     media2 = data;
   });

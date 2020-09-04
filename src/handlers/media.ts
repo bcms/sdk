@@ -19,7 +19,7 @@ export interface MediaHandlerPrototype {
   addFile(
     formData: FormData,
     parentId?: string,
-    uploadProgressCallback?: () => void,
+    uploadProgressCallback?: (data: any) => void,
   ): Promise<Media>;
   /**
    * Create a new DIR Media on the server and in database.
@@ -244,7 +244,10 @@ export function MediaHandler(
       const result: {
         media: Media;
       } = await send({
-        onUploadProgress: uploadProgressCallback,
+        onUploadProgress: (eventData) => {
+          console.log('HERE');
+          uploadProgressCallback(eventData);
+        },
         url: `/media/file${
           typeof parentId !== 'undefined' ? `?parentId=${parentId}` : ''
         }`,
