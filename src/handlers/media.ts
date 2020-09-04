@@ -245,7 +245,6 @@ export function MediaHandler(
         media: Media;
       } = await send({
         onUploadProgress: (eventData) => {
-          console.log('HERE');
           uploadProgressCallback(eventData);
         },
         url: `/media/file${
