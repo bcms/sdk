@@ -16,7 +16,11 @@ export interface MediaHandlerPrototype {
    * Add new file to the server and the database. If parent ID
    * is not provided, file will be added to the root.
    */
-  addFile(formData: FormData, parentId?: string): Promise<Media>;
+  addFile(
+    formData: FormData,
+    parentId?: string,
+    uploadProgressCallback?: () => void,
+  ): Promise<Media>;
   /**
    * Create a new DIR Media on the server and in database.
    */
@@ -234,12 +238,13 @@ export function MediaHandler(
       cacheControl.media.set(result.media);
       return JSON.parse(JSON.stringify(result.media));
     },
-    async addFile(formData, parentId?) {
+    async addFile(formData, parentId?, uploadProgressCallback?) {
       // const fd = new FormData();
       // fd.append('media', file.blob, file.name);
       const result: {
         media: Media;
       } = await send({
+        onUploadProgress: uploadProgressCallback,
         url: `/media/file${
           typeof parentId !== 'undefined' ? `?parentId=${parentId}` : ''
         }`,
