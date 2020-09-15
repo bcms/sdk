@@ -3,6 +3,9 @@ import { CacheControlPrototype } from '../cache';
 import { AxiosRequestConfig } from 'axios';
 import { Queueable } from '../util';
 
+/**
+ * An interface which handles actions upon User data.
+ */
 export interface UserHandlerPrototype {
   /**
    * Get all CMS Users.
@@ -15,7 +18,7 @@ export interface UserHandlerPrototype {
   get(id?: string): Promise<User>;
   /**
    * Update specified User information. Have in mind that some
-   * properties are protected and accessible only by ADMIN User
+   * properties are protected and accessible only by an `ADMIN` User
    * (for ex. `data.customPool.policy.*`).
    */
   update(data: {
@@ -54,7 +57,8 @@ export interface UserHandlerPrototype {
   }): Promise<User>;
   /**
    * Add new User to the CMS. Have in mind that only ADMIN User
-   * can call this method successfully.
+   * can call this method successfully. When created, new User will
+   * have a `role` of a `USER`.
    */
   add(data: {
     email: string;
@@ -67,7 +71,7 @@ export interface UserHandlerPrototype {
     };
   }): Promise<User>;
   /**
-   * Upgrade specified User role from USER to an ADMIN. Have in
+   * Upgrade specified User `role` from `USER` to an `ADMIN`. Have in
    * mind that only ADMIN User can call this method successfully.
    */
   makeAnAdmin(id: string): Promise<User>;
@@ -75,7 +79,7 @@ export interface UserHandlerPrototype {
    * If there are no ADMIN Users in the database, by calling this
    * method, admin secret will be generated on the server and
    * printed to console. This secret is needed to calling
-   * `createAdmin` method.
+   * `createAdmin` method and is places in `code` property.
    */
   generateAdminSecret(): Promise<void>;
   /**
@@ -84,6 +88,10 @@ export interface UserHandlerPrototype {
    * no ADMIN Users exist in the database.
    */
   createAdmin(data: {
+    /**
+     * String from terminal provided by the server after calling
+     * `generateAdminSecret` method.
+     */
     code: string;
     email: string;
     password: string;
@@ -91,11 +99,25 @@ export interface UserHandlerPrototype {
     lastName: string;
   }): Promise<void>;
   /**
-   * Delete specified User. Have in mind that only ADMIN User can
-   * call this method successfully.
+   * Delete specified User. Have in mind that only User with a
+   * `role` of and `ADMIN` can call this method successfully.
+   * Also, `ADMIN` User cannot delete itself but can only be
+   * deleted by other  `ADMIN` User.
    */
   delete(id: string): Promise<void>;
+  /**
+   * Exchange user credentials for tokens. After successfully
+   * calling this method, client can access protected resources.
+   * If client has a `role` of a `USER` make sure to check
+   * User Policy to see which protected resources can be
+   * accessed by the current client. Policy is located in a
+   * User object under `user.customPool.policy.*`.
+   */
   login(email: string, password: string): Promise<void>;
+  /**
+   * If called successfully, cache will be cleared, tokens will be deleted,
+   * socket disconnected and logout signal will be sent to the backend
+   */
   logout(): Promise<void>;
 }
 

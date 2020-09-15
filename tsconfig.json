@@ -7,11 +7,12 @@
     "experimentalDecorators": true,
     "target": "es5",
     "sourceMap": true,
-    "outDir": "./tmp",
+    "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true
   },
   "typedocOptions": {
+    "inputFiles": ["./src"],
     "name": "BCMS | SDK",
     "theme": "./node_modules/typedoc-neo-theme/bin/default",
     "plugin": "typedoc-neo-theme",
@@ -21,10 +22,18 @@
       {
         "Client SDK": {
           "Overview": "interfaces/bcmsprototype",
-          "User": "interfaces/userhandlerprototype"
+          "User": "interfaces/userhandlerprototype",
+          "API Key": "interfaces/apikeyhandlerprototype",
+          "Entry": "interfaces/entryhandlerprototype",
+          "Group": "interfaces/grouphandlerprototype",
+          "Language": "interfaces/languagehandlerprototype",
+          "Media": "interfaces/mediahandlerprototype",
+          "Template": "interfaces/templatehandlerprototype",
+          "Widget": "interfaces/widgethandlerprototype"
         }
       }
     ]
   },
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "public", "lib", "tmp"]
 }

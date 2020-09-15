@@ -146,27 +146,31 @@ const bundle = async () => {
 };
 const build = async () => {
   const tasks = Tasks([
-    {
-      title: 'Remove old bundle.',
-      task: async () => {
-        await fse.remove(path.join(__dirname, 'tmp'));
-      },
-    },
+    // {
+    //   title: 'Remove old bundle.',
+    //   task: async () => {
+    //     await fse.remove(path.join(__dirname, 'tmp'));
+    //   },
+    // },
     {
       title: 'Compile Typescript.',
       task: async () => {
         await exec('npm run build:ts');
-        await fse.copy(
-          path.join(__dirname, 'tmp', 'src'),
-          path.join(__dirname, 'dist'),
-        );
+        // await fse.copy(
+        //   path.join(__dirname, 'tmp', 'src'),
+        //   path.join(__dirname, 'dist'),
+        // );
       },
     },
   ]);
   await tasks.run();
 };
 const publish = async () => {
-  if (await fse.exists(path.join(__dirname, 'dist', 'node_modules'))) {
+  if (
+    await util.promisify(fs.exists)(
+      path.join(__dirname, 'dist', 'node_modules'),
+    )
+  ) {
     throw new Error(
       `Please remove "${path.join(__dirname, 'dist', 'node_modules')}"`,
     );

@@ -25,6 +25,11 @@ export interface BCMSConfig {
   loginPath?: string;
 }
 
+/**
+ * This is the main entry point. From this object, all public
+ * API is exposed to the client.
+ */
+
 export interface BCMSPrototype extends HandlerManager {
   isLoggedIn: () => Promise<boolean>;
   socket: {
@@ -210,6 +215,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     cacheControl.clear();
     accessToken = undefined;
     accessTokenRaw = undefined;
+    socket.disconnect();
   }
 
   if (accessTokenRaw) {
