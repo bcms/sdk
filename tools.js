@@ -86,10 +86,10 @@ const bundle = async () => {
       title: 'Compile Typescript.',
       task: async () => {
         await exec('npm run build:ts');
-        await fse.copy(
-          path.join(__dirname, 'tmp', 'src'),
-          path.join(__dirname, 'dist'),
-        );
+        // await fse.copy(
+        //   path.join(__dirname, 'tmp', 'src'),
+        //   path.join(__dirname, 'dist'),
+        // );
       },
     },
     {

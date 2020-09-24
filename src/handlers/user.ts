@@ -1,7 +1,7 @@
 import { User, UserPolicyCRUD, Storage, JWT } from '../interfaces';
 import { CacheControlPrototype } from '../cache';
 import { AxiosRequestConfig } from 'axios';
-import { Queueable } from '../util';
+import { GeneralUtil, Queueable } from '../util';
 
 /**
  * An interface which handles actions upon User data.
@@ -119,6 +119,7 @@ export interface UserHandlerPrototype {
    * socket disconnected and logout signal will be sent to the backend
    */
   logout(): Promise<void>;
+  isInitialized(): Promise<boolean>;
 }
 
 export function UserHandler(
@@ -133,6 +134,15 @@ export function UserHandler(
   let userCountLatch = false;
 
   return {
+    async isInitialized() {
+      const result: {
+        initialized: boolean;
+      } = await send({
+        url: '/user/is-initialized',
+        method: 'GET',
+      });
+      return result.initialized;
+    },
     async getAll() {
       return (await queueable.exec(
         'getAll',
@@ -279,9 +289,9 @@ export function UserHandler(
           url: '/auth/login',
           method: 'POST',
           headers: {
-            Authorization: `Basic ${Buffer.from(
+            Authorization: `Basic ${GeneralUtil.b64.encode(
               email + ':' + password,
-            ).toString('base64')}`,
+            )}`,
           },
         },
         true,

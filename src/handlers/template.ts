@@ -111,7 +111,7 @@ export function TemplateHandler(
             },
           });
           for (const i in result.templates) {
-            cacheControl.group.set(result.templates[i]);
+            cacheControl.template.set(result.templates[i]);
             templates.push(JSON.parse(JSON.stringify(result.templates[i])));
           }
         }

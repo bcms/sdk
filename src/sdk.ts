@@ -1,5 +1,5 @@
 import { JWT, HandlerManager, SocketEventName } from './interfaces';
-import { LocalStorage, Queueable } from './util';
+import { GeneralUtil, LocalStorage, Queueable } from './util';
 import Axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { CacheControl } from './cache';
 import {
@@ -65,8 +65,8 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     const atParts = at.split('.');
     if (atParts.length === 3) {
       accessToken = {
-        header: JSON.parse(Buffer.from(atParts[0], 'base64').toString()),
-        payload: JSON.parse(Buffer.from(atParts[1], 'base64').toString()),
+        header: JSON.parse(GeneralUtil.b64.decode(atParts[0])),
+        payload: JSON.parse(GeneralUtil.b64.decode(atParts[1])),
         signature: atParts[2],
       };
     }
