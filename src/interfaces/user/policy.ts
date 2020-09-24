@@ -8,6 +8,6 @@ export interface UserPolicyCRUD {
 export interface UserPolicy {
   media: UserPolicyCRUD;
   customPortal: UserPolicyCRUD;
-  entries: Array<{ _id: string } & UserPolicyCRUD>;
+  templates: Array<{ _id: string } & UserPolicyCRUD>;
   webhooks: Array<{ _id: string } & UserPolicyCRUD>;
 }

@@ -33,6 +33,7 @@ export interface BCMSConfig {
 export interface BCMSPrototype extends HandlerManager {
   isLoggedIn: () => Promise<boolean>;
   socket: {
+    id: () => string;
     subscribe(
       event: SocketEventName,
       handler: (data: any) => Promise<void>,
@@ -264,6 +265,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   return {
     isLoggedIn,
     socket: {
+      id: socket.id,
       subscribe: (event, handler) => {
         return socket.subscribe(event, handler);
       },
