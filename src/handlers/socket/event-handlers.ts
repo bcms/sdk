@@ -24,42 +24,44 @@ export function SocketEventHandlers(
       ids: string[];
     }>,
   ) => {
-    updates.forEach(async (update, i) => {
-      if (update.ids.length > 0) {
-        switch (update.name) {
-          case 'groups':
-            {
-              await cacheControl.group.removeMany(update.ids);
-              await handlerManager.group.getMany(update.ids);
-            }
-            break;
-          case 'templates':
-            {
-              await cacheControl.template.removeMany(update.ids);
-              await handlerManager.template.getMany(update.ids);
-            }
-            break;
-          case 'widgets':
-            {
-              await cacheControl.widget.removeMany(update.ids);
-              await handlerManager.widget.getMany(update.ids);
-            }
-            break;
-          case 'entries':
-            {
-              await cacheControl.entry.removeMany(update.ids);
-              await handlerManager.entry.getManyLite(update.ids);
-            }
-            break;
-          case 'media':
-            {
-              await cacheControl.media.removeMany(update.ids);
-              await handlerManager.media.getMany(update.ids);
-            }
-            break;
+    if (updates && updates instanceof Array) {
+      updates.forEach(async (update, i) => {
+        if (update.ids.length > 0) {
+          switch (update.name) {
+            case 'groups':
+              {
+                await cacheControl.group.removeMany(update.ids);
+                await handlerManager.group.getMany(update.ids);
+              }
+              break;
+            case 'templates':
+              {
+                await cacheControl.template.removeMany(update.ids);
+                await handlerManager.template.getMany(update.ids);
+              }
+              break;
+            case 'widgets':
+              {
+                await cacheControl.widget.removeMany(update.ids);
+                await handlerManager.widget.getMany(update.ids);
+              }
+              break;
+            case 'entries':
+              {
+                await cacheControl.entry.removeMany(update.ids);
+                await handlerManager.entry.getManyLite(update.ids);
+              }
+              break;
+            case 'media':
+              {
+                await cacheControl.media.removeMany(update.ids);
+                await handlerManager.media.getMany(update.ids);
+              }
+              break;
+          }
         }
-      }
-    });
+      });
+    }
   };
   return [
     {

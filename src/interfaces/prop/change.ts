@@ -1,4 +1,4 @@
-import { Prop, PropSchema, PropType } from './prop';
+import { PropType } from './prop';
 
 export interface PropChange {
   add?: {
@@ -14,6 +14,7 @@ export interface PropChange {
       old: string;
       new: string;
     };
+    move: number;
     required: boolean;
   };
 }
@@ -62,6 +63,10 @@ export const PropChangeSchema = {
             __required: true,
           },
         },
+      },
+      move: {
+        __type: 'number',
+        __required: true,
       },
       required: {
         __type: 'boolean',
