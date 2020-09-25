@@ -203,5 +203,20 @@ export function SocketEventHandlers(
         });
       },
     },
+    {
+      name: SocketEventName.USER,
+      handler: async (data) => {
+        if (data.source === getSocketId()) {
+          return;
+        }
+        await cacheControl.user.remove(data.entry._id);
+        if (data.type !== 'remove') {
+          await handlerManager.user.get(data.entry._id);
+        }
+        getSubscriptions()[SocketEventName.USER].forEach((sub) => {
+          sub.handler({ data });
+        });
+      },
+    },
   ];
 }
