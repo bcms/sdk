@@ -11,3 +11,4 @@ export * from './language';
 export * from './media';
 export * from './entry';
 export * from './api-key';
+export * from './function';

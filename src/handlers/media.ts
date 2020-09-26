@@ -299,7 +299,7 @@ export function MediaHandler(
           Authorization: '',
         },
       });
-      await cacheControl.media.remove(id);
+      cacheControl.media.remove(id);
     },
   };
 }

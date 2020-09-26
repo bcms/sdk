@@ -5,19 +5,16 @@ import { AxiosRequestConfig } from 'axios';
 
 export interface EntryHandlerPrototype {
   getAllLite(templateId: string): Promise<EntryLite[]>;
-  get(id: string): Promise<Entry>;
+  get(data: { templateId: string; id: string }): Promise<Entry>;
   getManyLite(ids: string[]): Promise<Entry[]>;
   count(templateId): Promise<number>;
-  add(data: {
-    templateId: string;
-    meta: EntryMeta[];
-  }): Promise<Entry>;
+  add(data: { templateId: string; meta: EntryMeta[] }): Promise<Entry>;
   update(data: {
     _id: string;
     templateId: string;
     meta: EntryMeta[];
   }): Promise<Entry>;
-  deleteById(id: string): Promise<void>;
+  deleteById(data: { templateId: string; id: string }): Promise<void>;
 }
 
 export function EntryHandler(
@@ -71,17 +68,17 @@ export function EntryHandler(
         },
       )) as EntryLite[];
     },
-    async get(id) {
-      if (!id) {
+    async get(data) {
+      if (!data.id) {
         throw new Error('Parameter "id" was not provided.');
       }
       return (await queueable.exec('get', 'free_one_by_one', async () => {
-        const entry = cacheControl.entry.get(id);
+        const entry = cacheControl.entry.get(data.id);
         if (!entry || entry.lite === true) {
           const result: {
             entry: Entry;
           } = await send({
-            url: `/entry/${id}`,
+            url: `/entry/${data.templateId}/${data.id}`,
             method: 'GET',
             headers: {
               Authorization: '',
@@ -162,7 +159,7 @@ export function EntryHandler(
       const result: {
         entry: Entry;
       } = await send({
-        url: '/entry',
+        url: `/entry/${data.templateId}`,
         method: 'POST',
         headers: {
           Authorization: '',
@@ -180,7 +177,7 @@ export function EntryHandler(
       const result: {
         entry: Entry;
       } = await send({
-        url: '/entry',
+        url: `/entry/${data.templateId}`,
         method: 'PUT',
         headers: {
           Authorization: '',
@@ -194,18 +191,18 @@ export function EntryHandler(
       });
       return result.entry;
     },
-    async deleteById(id) {
-      if (!id) {
+    async deleteById(data) {
+      if (!data.id) {
         throw new Error('Parameter "id" was not provided.');
       }
       await send({
-        url: `/entry/${id}`,
+        url: `/entry/${data.templateId}/${data.id}`,
         method: 'DELETE',
         headers: {
           Authorization: '',
         },
       });
-      await cacheControl.entry.remove(id);
+      await cacheControl.entry.remove(data.id);
     },
   };
 }

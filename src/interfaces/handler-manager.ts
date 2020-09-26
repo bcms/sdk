@@ -7,6 +7,7 @@ import {
   MediaHandlerPrototype,
   EntryHandlerPrototype,
   ApiKeyHandlerPrototype,
+  FunctionHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -19,4 +20,5 @@ export interface HandlerManager {
   media: MediaHandlerPrototype;
   entry: EntryHandlerPrototype;
   apiKey: ApiKeyHandlerPrototype;
+  apiFunction: FunctionHandlerPrototype;
 }

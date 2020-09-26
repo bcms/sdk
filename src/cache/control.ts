@@ -18,7 +18,9 @@ import {
   Language,
   Media,
   ApiKey,
+  APIFunction,
 } from '../interfaces';
+import { FunctionCacheHandler } from './handlers/function';
 
 export interface CacheControlPrototype {
   clear: () => void;
@@ -30,6 +32,7 @@ export interface CacheControlPrototype {
   media: CacheHandlerPrototype<Media>;
   entry: CacheHandlerPrototype<EntryCacheItem>;
   apiKey: CacheHandlerPrototype<ApiKey>;
+  apiFunction: CacheHandlerPrototype<APIFunction>;
 }
 
 export function CacheControl(): CacheControlPrototype {
@@ -42,6 +45,7 @@ export function CacheControl(): CacheControlPrototype {
   const media = MediaCacheHandler(TTL);
   const entry = EntryCacheHandler(TTL);
   const apiKey = ApiKeyCacheHandler(TTL);
+  const apiFunction = FunctionCacheHandler(TTL);
 
   return {
     user,
@@ -52,6 +56,7 @@ export function CacheControl(): CacheControlPrototype {
     media,
     entry,
     apiKey,
+    apiFunction,
     clear: () => {
       user.clear();
       group.clear();
@@ -59,6 +64,9 @@ export function CacheControl(): CacheControlPrototype {
       template.clear();
       language.clear();
       media.clear();
+      entry.clear();
+      apiKey.clear();
+      apiFunction.clear();
     },
   };
 }

@@ -12,6 +12,7 @@ import {
   SocketHandler,
   EntryHandler,
   ApiKeyHandler,
+  FunctionHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -256,11 +257,19 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     media: MediaHandler(cacheControl, send),
     entry: EntryHandler(cacheControl, send),
     apiKey: ApiKeyHandler(cacheControl, send),
+    apiFunction: FunctionHandler(cacheControl, send),
   };
-  const socket = SocketHandler(cacheControl, handlerManager, {
-    url: config.cms.origin,
-    path: '/api/socket/server/',
-  });
+  const socket = SocketHandler(
+    cacheControl,
+    handlerManager,
+    {
+      url: config.cms.origin,
+      path: '/api/socket/server/',
+    },
+    () => {
+      return accessToken;
+    },
+  );
   isLoggedIn();
   return {
     isLoggedIn,

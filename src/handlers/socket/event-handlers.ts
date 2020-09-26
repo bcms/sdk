@@ -17,6 +17,7 @@ export function SocketEventHandlers(
   handlerManager: HandlerManager,
   getSocketId: () => string,
   getSubscriptions: () => SocketSubscriptions,
+  getAccessToken: () => JWT,
 ): SocketEventHandlerPrototype[] {
   const runUpdates = async (
     updates: Array<{
@@ -216,6 +217,24 @@ export function SocketEventHandlers(
         getSubscriptions()[SocketEventName.USER].forEach((sub) => {
           sub.handler({ data });
         });
+      },
+    },
+    {
+      name: SocketEventName.API_KEY,
+      handler: async (data) => {
+        const at = getAccessToken();
+        if (at && at.payload.roles[0].name === 'ADMIN') {
+          if (data.source === getSocketId()) {
+            return;
+          }
+          await cacheControl.apiKey.remove(data.entry._id);
+          if (data.type !== 'remove') {
+            await handlerManager.user.get(data.entry._id);
+          }
+          getSubscriptions()[SocketEventName.USER].forEach((sub) => {
+            sub.handler({ data });
+          });
+        }
       },
     },
   ];

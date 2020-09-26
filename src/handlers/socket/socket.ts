@@ -31,6 +31,7 @@ export function SocketHandler(
     url: string;
     path: string;
   },
+  getAccessToken: () => JWT,
 ): SocketHandlerPrototype {
   let isConnected = false;
   let socket: SocketIOClient.Socket;
@@ -45,6 +46,7 @@ export function SocketHandler(
     () => {
       return subscriptions;
     },
+    getAccessToken,
   );
   Object.keys(SocketEventName).forEach((key) => {
     subscriptions[SocketEventName[key]] = [];

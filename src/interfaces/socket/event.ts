@@ -7,6 +7,7 @@ export enum SocketEventName {
   ENTRY = 'entry',
   INTERNAL = 'internal',
   MEDIA = 'media',
+  API_KEY = 'apiKey',
 }
 
 export interface SocketEventData {
