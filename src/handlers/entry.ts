@@ -42,8 +42,13 @@ export function EntryHandler(
           const entriesLite = cacheControl.entry.find(
             (e) => e.data.templateId === templateId,
           );
+          if (countLatchFor[templateId]) {
+            return entriesLite.map((e) => {
+              return e.data;
+            });
+          }
           countLatchFor[templateId] = true;
-          const count = this.count(templateId);
+          const count = await this.count();
           if (count.count !== entriesLite.length) {
             const eResult: {
               entries: EntryLite[];

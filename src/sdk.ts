@@ -131,7 +131,6 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
         }
       } else {
         // tslint:disable-next-line: no-console
-        console.error(err);
         throw {
           status: -1,
           code: '-1',

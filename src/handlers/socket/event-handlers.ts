@@ -29,25 +29,25 @@ export function SocketEventHandlers(
       updates.forEach(async (update, i) => {
         if (update.ids.length > 0) {
           switch (update.name) {
-            case 'groups':
+            case 'group':
               {
                 await cacheControl.group.removeMany(update.ids);
                 await handlerManager.group.getMany(update.ids);
               }
               break;
-            case 'templates':
+            case 'template':
               {
                 await cacheControl.template.removeMany(update.ids);
                 await handlerManager.template.getMany(update.ids);
               }
               break;
-            case 'widgets':
+            case 'widget':
               {
                 await cacheControl.widget.removeMany(update.ids);
                 await handlerManager.widget.getMany(update.ids);
               }
               break;
-            case 'entries':
+            case 'entry':
               {
                 await cacheControl.entry.removeMany(update.ids);
                 await handlerManager.entry.getManyLite(update.ids);
@@ -129,7 +129,7 @@ export function SocketEventHandlers(
       name: SocketEventName.TEMPLATE,
       handler: async (data) => {
         if (data.source !== getSocketId()) {
-          await cacheControl.template.remove(data.entry._id);
+          cacheControl.template.remove(data.entry._id);
         }
         const entriesToRemove = cacheControl.entry.find(
           (e) => e.data.templateId === data.entry._id,
@@ -143,6 +143,7 @@ export function SocketEventHandlers(
             await handlerManager.template.get(data.entry._id);
           }
           await handlerManager.entry.getAllLite(data.entry._id);
+          await runUpdates(data.message.updated);
         } else if (data.type === 'add') {
           if (data.source !== getSocketId()) {
             await handlerManager.template.get(data.entry._id);
