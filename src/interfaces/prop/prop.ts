@@ -2,6 +2,8 @@ import { PropEnum } from './enum';
 import { PropGroupPointer } from './group-pointer';
 import { PropEntryPointer } from './entry-pointer';
 import { PropMedia } from './media';
+import { PropQuill } from './quill';
+import { PropWidget } from './widget';
 
 export enum PropType {
   STRING = 'STRING',
@@ -14,6 +16,19 @@ export enum PropType {
 
   GROUP_POINTER = 'GROUP_POINTER',
   ENTRY_POINTER = 'ENTRY_POINTER',
+
+  HEADING_1 = 'HEADING_1',
+  HEADING_2 = 'HEADING_2',
+  HEADING_3 = 'HEADING_3',
+  HEADING_4 = 'HEADING_4',
+  HEADING_5 = 'HEADING_5',
+
+  PARAGRAPH = 'PARAGRAPH',
+
+  LIST = 'LIST',
+  EMBED = 'EMBED',
+  CODE = 'CODE',
+  WIDGET = 'WIDGET',
 }
 
 export interface Prop {
@@ -29,28 +44,7 @@ export interface Prop {
     | PropEnum
     | PropGroupPointer
     | PropEntryPointer
-    | PropMedia[];
+    | PropMedia[]
+    | PropQuill
+    | PropWidget;
 }
-
-export const PropSchema = {
-  type: {
-    __type: 'string',
-    __required: true,
-  },
-  required: {
-    __type: 'boolean',
-    __required: true,
-  },
-  name: {
-    __type: 'string',
-    __required: true,
-  },
-  label: {
-    __type: 'string',
-    __required: true,
-  },
-  array: {
-    __type: 'boolean',
-    __required: true,
-  },
-};

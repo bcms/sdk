@@ -21,5 +21,5 @@ export interface Entry {
   templateId: string;
   userId: string;
   meta: EntryMeta[];
-  content?: any[];
+  content?: Prop[];
 }
