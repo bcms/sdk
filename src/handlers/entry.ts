@@ -48,7 +48,7 @@ export function EntryHandler(
             });
           }
           countLatchFor[templateId] = true;
-          const count = await this.count();
+          const count = await this.count(templateId);
           if (count.count !== entriesLite.length) {
             const eResult: {
               entries: EntryLite[];
