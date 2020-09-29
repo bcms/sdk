@@ -4,3 +4,5 @@ export * from './enum';
 export * from './group-pointer';
 export * from './change';
 export * from './media';
+export * from './quill';
+export * from './widget';

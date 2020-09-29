@@ -4,6 +4,10 @@ export interface EntryMeta {
   lng: string;
   props: Prop[];
 }
+export interface EntryContent {
+  lng: string;
+  props: Prop[];
+}
 
 export interface EntryLite {
   _id: string;
@@ -21,5 +25,5 @@ export interface Entry {
   templateId: string;
   userId: string;
   meta: EntryMeta[];
-  content?: Prop[];
+  content?: EntryContent[];
 }
