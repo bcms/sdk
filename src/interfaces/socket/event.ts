@@ -16,6 +16,9 @@ export interface SocketEventData {
   source: string;
   entry: {
     _id: string;
+    additional?: {
+      templateId?: string;
+    };
   };
 }
 

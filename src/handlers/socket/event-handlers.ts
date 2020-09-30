@@ -238,5 +238,30 @@ export function SocketEventHandlers(
         }
       },
     },
+    {
+      name: SocketEventName.ENTRY,
+      handler: async (data) => {
+        if (data.source === getSocketId()) {
+          return;
+        }
+        const cachedEntry = cacheControl.entry.get(data.entry._id);
+        if (cachedEntry) {
+          cacheControl.entry.remove(data.entry._id);
+          if (data.type !== 'remove') {
+            if (cachedEntry.lite === true) {
+              await handlerManager.entry.getManyLite([data.entry._id]);
+            } else {
+              await handlerManager.entry.get({
+                id: data.entry._id,
+                templateId: data.entry.additional.templateId,
+              });
+            }
+          }
+        }
+        getSubscriptions()[SocketEventName.ENTRY].forEach((sub) => {
+          sub.handler({ data });
+        });
+      },
+    },
   ];
 }

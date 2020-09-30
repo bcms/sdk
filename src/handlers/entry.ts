@@ -1,4 +1,4 @@
-import { EntryLite, Entry, EntryMeta } from '../interfaces';
+import { EntryLite, Entry, EntryMeta, EntryContent } from '../interfaces';
 import { Queueable } from '../util';
 import { CacheControlPrototype, EntryCacheItem } from '../cache';
 import { AxiosRequestConfig } from 'axios';
@@ -8,11 +8,16 @@ export interface EntryHandlerPrototype {
   get(data: { templateId: string; id: string }): Promise<Entry>;
   getManyLite(ids: string[]): Promise<Entry[]>;
   count(templateId): Promise<number>;
-  add(data: { templateId: string; meta: EntryMeta[] }): Promise<Entry>;
+  add(data: {
+    templateId: string;
+    meta: EntryMeta[];
+    content: EntryContent[];
+  }): Promise<Entry>;
   update(data: {
     _id: string;
     templateId: string;
     meta: EntryMeta[];
+    content: EntryContent[];
   }): Promise<Entry>;
   deleteById(data: { templateId: string; id: string }): Promise<void>;
 }
