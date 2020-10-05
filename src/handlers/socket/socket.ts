@@ -19,9 +19,8 @@ export interface SocketHandlerPrototype {
   connect: (accessToken: string, jwt: JWT) => Promise<void>;
   disconnect(): void;
   connected(): boolean;
-  register(handler: SocketEventHandlerPrototype);
   subscribe(
-    event: SocketEventName,
+    event: SocketEventName | string,
     handler: (event: SocketEventDataClient) => Promise<void>,
   ): {
     unsubscribe(): void;
@@ -60,13 +59,6 @@ export function SocketHandler(
       if (isConnected) {
         return socket.id;
       }
-    },
-    register(handler) {
-      // TODO: Fix socket registration
-      handlers.push(handler);
-      socket.on(handler.name, async (data: any) => {
-        await handler.handler(data);
-      });
     },
     async connect(accessToken, jwt) {
       if (isConnected === false) {

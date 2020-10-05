@@ -263,5 +263,25 @@ export function SocketEventHandlers(
         });
       },
     },
+    {
+      name: SocketEventName.PLUGIN,
+      handler: async (rawData) => {
+        const data: {
+          name: string;
+          payload: any;
+        } = rawData as any;
+        const subs = getSubscriptions();
+        for (const key in subs) {
+          if (
+            key.startsWith('plugin_') &&
+            key.split('_').slice(1).join('_') === data.name
+          ) {
+            subs[key].forEach((sub) => {
+              sub.handler(data.payload);
+            });
+          }
+        }
+      },
+    },
   ];
 }

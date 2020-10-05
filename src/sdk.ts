@@ -13,6 +13,7 @@ import {
   EntryHandler,
   ApiKeyHandler,
   FunctionHandler,
+  SocketEventHandlerPrototype,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -33,6 +34,7 @@ export interface BCMSConfig {
 
 export interface BCMSPrototype extends HandlerManager {
   isLoggedIn: () => Promise<boolean>;
+  send<T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean): Promise<T>;
   socket: {
     id: () => string;
     subscribe(
@@ -272,6 +274,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   isLoggedIn();
   return {
     isLoggedIn,
+    send,
     socket: {
       id: socket.id,
       subscribe: (event, handler) => {
