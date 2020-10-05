@@ -6,7 +6,10 @@ import {
   SocketEventDataClient,
 } from '../../interfaces';
 import { CacheControlPrototype } from '../../cache';
-import { SocketEventHandlers } from './event-handlers';
+import {
+  SocketEventHandlerPrototype,
+  SocketEventHandlers,
+} from './event-handlers';
 import * as uuid from 'uuid';
 import * as io from 'socket.io-client';
 import { Queueable } from '../../util';
@@ -16,6 +19,7 @@ export interface SocketHandlerPrototype {
   connect: (accessToken: string, jwt: JWT) => Promise<void>;
   disconnect(): void;
   connected(): boolean;
+  register(handler: SocketEventHandlerPrototype);
   subscribe(
     event: SocketEventName,
     handler: (event: SocketEventDataClient) => Promise<void>,
@@ -56,6 +60,13 @@ export function SocketHandler(
       if (isConnected) {
         return socket.id;
       }
+    },
+    register(handler) {
+      // TODO: Fix socket registration
+      handlers.push(handler);
+      socket.on(handler.name, async (data: any) => {
+        await handler.handler(data);
+      });
     },
     async connect(accessToken, jwt) {
       if (isConnected === false) {
