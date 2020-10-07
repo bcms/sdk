@@ -10,7 +10,7 @@ export interface MediaHandlerPrototype {
   getMany(ids: string[]): Promise<Media[]>;
   get(id: string): Promise<Media>;
   getAggregated(id: string): Promise<MediaAggregate>;
-  getBinary(id: string): Promise<Buffer>;
+  getBinary(id: string, size?: 'small'): Promise<Buffer>;
   count(): Promise<number>;
   /**
    * Add new file to the server and the database. If parent ID
@@ -213,9 +213,9 @@ export function MediaHandler(
         },
       )) as MediaAggregate;
     },
-    async getBinary(id) {
+    async getBinary(id, size) {
       const result: Buffer = await send({
-        url: `/media/${id}/bin`,
+        url: `/media/${id}/bin${size ? '/' + size : ''}`,
         method: 'GET',
         headers: {
           Authorization: '',
