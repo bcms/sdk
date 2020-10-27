@@ -171,6 +171,10 @@ export function SocketEventHandlers(
         await cacheControl.widget.remove(data.entry._id);
         if (data.type !== 'remove') {
           await handlerManager.widget.get(data.entry._id);
+        } else {
+          if (data.message.updated) {
+            await runUpdates(data.message.updated);
+          }
         }
         getSubscriptions()[SocketEventName.WIDGET].forEach((sub) => {
           sub.handler({ data });
