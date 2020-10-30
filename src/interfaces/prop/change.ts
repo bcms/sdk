@@ -16,6 +16,7 @@ export interface PropChange {
     };
     move: number;
     required: boolean;
+    enumItems?: string[];
   };
 }
 
@@ -71,6 +72,13 @@ export const PropChangeSchema = {
       required: {
         __type: 'boolean',
         __required: true,
+      },
+      enumItems: {
+        __type: 'array',
+        __required: false,
+        __children: {
+          __type: 'string',
+        },
       },
     },
   },
