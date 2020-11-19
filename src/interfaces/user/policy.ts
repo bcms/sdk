@@ -10,4 +10,5 @@ export interface UserPolicy {
   customPortal: UserPolicyCRUD;
   templates: Array<{ _id: string } & UserPolicyCRUD>;
   webhooks: Array<{ _id: string } & UserPolicyCRUD>;
+  plugins: Array<{ name: string } & UserPolicyCRUD>;
 }
