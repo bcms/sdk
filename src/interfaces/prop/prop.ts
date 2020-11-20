@@ -29,6 +29,8 @@ export enum PropType {
   EMBED = 'EMBED',
   CODE = 'CODE',
   WIDGET = 'WIDGET',
+
+  RICH_TEXT = 'RICH_TEXT',
 }
 
 export interface Prop {
