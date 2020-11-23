@@ -1,11 +1,12 @@
 import { EntryLite, Entry, EntryMeta, EntryContent } from '../interfaces';
 import { Queueable } from '../util';
-import { CacheControlPrototype, EntryCacheItem } from '../cache';
+import { CacheControlPrototype } from '../cache';
 import { AxiosRequestConfig } from 'axios';
 
 export interface EntryHandlerPrototype {
   getAllLite(templateId: string): Promise<EntryLite[]>;
   get(data: { templateId: string; id: string }): Promise<Entry>;
+  getLite(data: { templateId: string; id: string }): Promise<EntryLite>;
   getManyLite(ids: string[]): Promise<Entry[]>;
   count(templateId): Promise<number>;
   add(data: {
@@ -29,6 +30,7 @@ export function EntryHandler(
   const queueable = Queueable<Entry | EntryLite[]>(
     'getAllLite',
     'get',
+    'getLite',
     'getMany',
   );
   const countLatchFor: {
@@ -103,6 +105,32 @@ export function EntryHandler(
         }
         return entry.data;
       })) as Entry;
+    },
+    async getLite(data) {
+      if (!data.id) {
+        throw new Error('Parameter "id" was not provided.');
+      }
+      return (await queueable.exec('getLite', 'free_one_by_one', async () => {
+        const entry = cacheControl.entry.get(data.id);
+        if (!entry) {
+          const result: {
+            entry: EntryLite;
+          } = await send({
+            url: `/entry/${data.templateId}/${data.id}/lite`,
+            method: 'GET',
+            headers: {
+              Authorization: '',
+            },
+          });
+          cacheControl.entry.set({
+            _id: result.entry._id,
+            lite: true,
+            data: result.entry,
+          });
+          return result.entry;
+        }
+        return entry.data;
+      })) as EntryLite;
     },
     async getManyLite(ids) {
       return (await queueable.exec('getMany', 'free_one_by_one', async () => {

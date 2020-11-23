@@ -15,7 +15,8 @@
     "test": "mocha -r ts-node/register test/integration/*.test.ts --recursive --exit",
     "test:active": "mocha -r ts-node/register test/integration/*.active.test.ts --recursive --exit",
     "test:unit": "mocha -r ts-node/register test/unit/*.test.ts --recursive --exit",
-    "test:active:unit": "mocha -r ts-node/register test/unit/*.active.test.ts --recursive --exit"
+    "test:active:unit": "mocha -r ts-node/register test/unit/*.active.test.ts --recursive --exit",
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",
@@ -33,13 +34,15 @@
     "@types/node": "^12.12.24",
     "@types/socket.io-client": "^1.4.33",
     "@types/uuid": "^3.4.9",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
     "chai": "^4.2.0",
     "env-cmd": "^10.0.1",
+    "eslint": "^7.14.0",
     "form-data": "^3.0.0",
     "fs-extra": "^9.0.0",
     "mocha": "^8.1.1",
     "ts-node": "^8.6.1",
-    "tslint": "^5.20.1",
     "typedoc": "^0.15.8",
     "typedoc-neo-theme": "^1.0.9",
     "typescript": "^3.7.4"

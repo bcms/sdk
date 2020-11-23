@@ -1,9 +1,18 @@
 import { CacheControlPrototype } from '../cache';
 import { AxiosRequestConfig } from 'axios';
 import { Queueable } from '../util';
-import { Group, PropChange } from '../interfaces';
+import { Group, PropChange, Template, Widget } from '../interfaces';
+import { TemplateHandlerPrototype } from './template';
+import { WidgetHandlerPrototype } from './widget';
 
 export interface GroupHandlerPrototype {
+  whereIsItUsed(
+    id: string,
+  ): Promise<{
+    templates: Template[];
+    groups: Group[];
+    widgets: Widget[];
+  }>;
   getAll(): Promise<Group[]>;
   get(id: string): Promise<Group>;
   getMany(ids: string[]): Promise<Group[]>;
@@ -21,11 +30,45 @@ export interface GroupHandlerPrototype {
 export function GroupHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
+  templateHandler: TemplateHandlerPrototype,
+  widgetHandler: WidgetHandlerPrototype,
 ): GroupHandlerPrototype {
   const queueable = Queueable<Group | Group[]>('getAll', 'get', 'getMany');
   let countLatch = false;
 
-  return {
+  const self: GroupHandlerPrototype = {
+    async whereIsItUsed(id) {
+      const result: {
+        templateIds: string[];
+        groupIds: string[];
+        widgetIds: string[];
+      } = await send({
+        url: `/group/${id}/where-is-it-used`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      const output: {
+        templates: Template[];
+        groups: Group[];
+        widgets: Widget[];
+      } = {
+        groups: [],
+        templates: [],
+        widgets: [],
+      };
+      for (const i in result.templateIds) {
+        output.templates.push(await templateHandler.get(result.templateIds[i]));
+      }
+      for (const i in result.groupIds) {
+        output.groups.push(await self.get(result.groupIds[i]));
+      }
+      for (const i in result.widgetIds) {
+        output.widgets.push(await widgetHandler.get(result.widgetIds[i]));
+      }
+      return output;
+    },
     async getAll() {
       return (await queueable.exec(
         'getAll',
@@ -158,4 +201,5 @@ export function GroupHandler(
       await cacheControl.group.remove(id);
     },
   };
+  return self;
 }

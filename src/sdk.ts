@@ -13,7 +13,6 @@ import {
   EntryHandler,
   ApiKeyHandler,
   FunctionHandler,
-  SocketEventHandlerPrototype,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -60,7 +59,44 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   });
   let accessToken: JWT;
   let accessTokenRaw = storage.get('at');
-  let handlerManager: HandlerManager;
+  const entryHandler = EntryHandler(cacheControl, send);
+  const widgetHandler = WidgetHandler(cacheControl, send, entryHandler);
+  const templateHandler = TemplateHandler(cacheControl, send);
+  const groupHandler = GroupHandler(
+    cacheControl,
+    send,
+    templateHandler,
+    widgetHandler,
+  );
+  const languageHandler = LanguageHandler(cacheControl, send);
+  const mediaHandler = MediaHandler(cacheControl, send);
+  const apiKeyHandler = ApiKeyHandler(cacheControl, send);
+  const apiFunctionHandler = FunctionHandler(cacheControl, send);
+  const handlerManager: HandlerManager = {
+    // socket: SocketHandler({
+    //   cacheControl,
+    // }),
+    user: UserHandler(
+      cacheControl,
+      send,
+      storage,
+      () => {
+        clear();
+      },
+      () => {
+        return accessToken;
+      },
+      isLoggedIn,
+    ),
+    group: groupHandler,
+    widget: widgetHandler,
+    template: templateHandler,
+    language: languageHandler,
+    media: mediaHandler,
+    entry: entryHandler,
+    apiKey: apiKeyHandler,
+    apiFunction: apiFunctionHandler,
+  };
 
   /**
    * Will decode encoded Access Token aka Raw Access Token.
@@ -235,31 +271,6 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       socket.disconnect();
     }
   });
-  handlerManager = {
-    // socket: SocketHandler({
-    //   cacheControl,
-    // }),
-    user: UserHandler(
-      cacheControl,
-      send,
-      storage,
-      () => {
-        clear();
-      },
-      () => {
-        return accessToken;
-      },
-      isLoggedIn,
-    ),
-    group: GroupHandler(cacheControl, send),
-    widget: WidgetHandler(cacheControl, send),
-    template: TemplateHandler(cacheControl, send),
-    language: LanguageHandler(cacheControl, send),
-    media: MediaHandler(cacheControl, send),
-    entry: EntryHandler(cacheControl, send),
-    apiKey: ApiKeyHandler(cacheControl, send),
-    apiFunction: FunctionHandler(cacheControl, send),
-  };
   const socket = SocketHandler(
     cacheControl,
     handlerManager,

@@ -1,9 +1,11 @@
-import { PropChange, Widget } from '../interfaces';
+import { EntryLite, PropChange, Widget } from '../interfaces';
 import { CacheControlPrototype } from '../cache';
 import { AxiosRequestConfig } from 'axios';
 import { Queueable } from '../util';
+import { EntryHandlerPrototype } from './entry';
 
 export interface WidgetHandlerPrototype {
+  whereIsItUsed(id: string): Promise<EntryLite[]>;
   getAll(): Promise<Widget[]>;
   get(id: string): Promise<Widget>;
   getMany(ids: string[]): Promise<Widget[]>;
@@ -21,11 +23,38 @@ export interface WidgetHandlerPrototype {
 export function WidgetHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
+  entryHandler: EntryHandlerPrototype,
 ): WidgetHandlerPrototype {
   const queueable = Queueable<Widget | Widget[]>('getAll', 'get', 'getMany');
   let countLatch = false;
 
   return {
+    async whereIsItUsed(id) {
+      const result: {
+        entries: Array<{
+          id: string;
+          templateId: string;
+          lngCodes: string[];
+        }>;
+      } = await send({
+        url: `/widget/${id}/where-is-it-used`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      const output: EntryLite[] = [];
+      for (const i in result.entries) {
+        const e = result.entries[i];
+        output.push(
+          await entryHandler.getLite({
+            id: e.id,
+            templateId: e.templateId,
+          }),
+        );
+      }
+      return output;
+    },
     async getAll() {
       return (await queueable.exec(
         'getAll',
