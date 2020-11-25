@@ -1,14 +1,22 @@
-import { EntryLite, Entry, EntryMeta, EntryContent } from '../interfaces';
+import {
+  EntryLite,
+  Entry,
+  EntryMeta,
+  EntryContent,
+  SocketEventName,
+} from '../interfaces';
 import { Queueable } from '../util';
 import { CacheControlPrototype } from '../cache';
 import { AxiosRequestConfig } from 'axios';
+import { SocketHandlerPrototype } from './socket';
 
 export interface EntryHandlerPrototype {
+  pushChange<T>(data: { tree: string; data: T }): void;
   getAllLite(templateId: string): Promise<EntryLite[]>;
   get(data: { templateId: string; id: string }): Promise<Entry>;
   getLite(data: { templateId: string; id: string }): Promise<EntryLite>;
   getManyLite(ids: string[]): Promise<Entry[]>;
-  count(templateId): Promise<number>;
+  count(templateId: string): Promise<number>;
   add(data: {
     templateId: string;
     meta: EntryMeta[];
@@ -26,6 +34,7 @@ export interface EntryHandlerPrototype {
 export function EntryHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
+  socketHandler: SocketHandlerPrototype,
 ): EntryHandlerPrototype {
   const queueable = Queueable<Entry | EntryLite[]>(
     'getAllLite',
@@ -38,6 +47,9 @@ export function EntryHandler(
   } = {};
 
   return {
+    pushChange(data) {
+      socketHandler.emit(SocketEventName.ENTRY_CHANGE, data);
+    },
     async getAllLite(templateId) {
       if (!templateId) {
         throw new Error('Parameter "templateId" was not provided.');

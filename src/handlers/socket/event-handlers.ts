@@ -4,12 +4,15 @@ import {
   HandlerManager,
   JWT,
   SocketSubscriptions,
+  SocketEventEntryChangeData,
 } from '../../interfaces';
 import { CacheControlPrototype } from '../../cache';
 
 export interface SocketEventHandlerPrototype {
   name: SocketEventName;
-  handler: (data: SocketEventData) => Promise<void>;
+  handler: (
+    data: SocketEventData | SocketEventEntryChangeData,
+  ) => Promise<void>;
 }
 
 export function SocketEventHandlers(
@@ -26,7 +29,7 @@ export function SocketEventHandlers(
     }>,
   ) => {
     if (updates && updates instanceof Array) {
-      updates.forEach(async (update, i) => {
+      updates.forEach(async (update) => {
         if (update.ids.length > 0) {
           switch (update.name) {
             case 'group':
@@ -67,7 +70,8 @@ export function SocketEventHandlers(
   return [
     {
       name: SocketEventName.LANGUAGE,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source === getSocketId()) {
           return;
         }
@@ -82,7 +86,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.GROUP,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source !== getSocketId()) {
           await cacheControl.group.remove(data.entry._id);
         }
@@ -127,7 +132,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.TEMPLATE,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source !== getSocketId()) {
           cacheControl.template.remove(data.entry._id);
         }
@@ -164,7 +170,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.WIDGET,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source === getSocketId()) {
           return;
         }
@@ -183,7 +190,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.MEDIA,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source !== getSocketId()) {
           await cacheControl.media.remove(data.entry._id);
           if (data.type !== 'remove') {
@@ -211,7 +219,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.USER,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source === getSocketId()) {
           return;
         }
@@ -226,7 +235,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.API_KEY,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         const at = getAccessToken();
         if (at && at.payload.roles[0].name === 'ADMIN') {
           if (data.source === getSocketId()) {
@@ -244,7 +254,8 @@ export function SocketEventHandlers(
     },
     {
       name: SocketEventName.ENTRY,
-      handler: async (data) => {
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
         if (data.source === getSocketId()) {
           return;
         }
@@ -284,6 +295,17 @@ export function SocketEventHandlers(
               sub.handler(data.payload);
             });
           }
+        }
+      },
+    },
+    {
+      name: SocketEventName.ENTRY_CHANGE,
+      handler: async (rawData) => {
+        const data = rawData as SocketEventEntryChangeData;
+        if (data.source !== getSocketId()) {
+          getSubscriptions()[SocketEventName.ENTRY_CHANGE].forEach((sub) => {
+            sub.handler(data);
+          });
         }
       },
     },

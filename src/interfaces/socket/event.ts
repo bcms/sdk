@@ -9,10 +9,12 @@ export enum SocketEventName {
   MEDIA = 'media',
   API_KEY = 'apiKey',
   PLUGIN = 'plugin',
+  ENTRY_CHANGE = 'entryChange',
 }
 
 export interface SocketEventData {
   type: 'add' | 'update' | 'remove';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   message: any;
   source: string;
   entry: {
@@ -23,7 +25,15 @@ export interface SocketEventData {
   };
 }
 
+export interface SocketEventEntryChangeData {
+  tree: string;
+  source: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+}
+
 export interface SocketEventDataClient {
   data: SocketEventData;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }

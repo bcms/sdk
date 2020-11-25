@@ -59,7 +59,41 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   });
   let accessToken: JWT;
   let accessTokenRaw = storage.get('at');
-  const entryHandler = EntryHandler(cacheControl, send);
+  const handlerManager: HandlerManager = {
+    user: undefined,
+    group: undefined,
+    widget: undefined,
+    template: undefined,
+    language: undefined,
+    media: undefined,
+    entry: undefined,
+    apiKey: undefined,
+    apiFunction: undefined,
+  };
+  const userHandler = UserHandler(
+    cacheControl,
+    send,
+    storage,
+    () => {
+      clear();
+    },
+    () => {
+      return accessToken;
+    },
+    isLoggedIn,
+  );
+  const socket = SocketHandler(
+    cacheControl,
+    handlerManager,
+    {
+      url: config.cms.origin,
+      path: '/api/socket/server/',
+    },
+    () => {
+      return accessToken;
+    },
+  );
+  const entryHandler = EntryHandler(cacheControl, send, socket);
   const widgetHandler = WidgetHandler(cacheControl, send, entryHandler);
   const templateHandler = TemplateHandler(cacheControl, send);
   const groupHandler = GroupHandler(
@@ -72,32 +106,16 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   const mediaHandler = MediaHandler(cacheControl, send);
   const apiKeyHandler = ApiKeyHandler(cacheControl, send);
   const apiFunctionHandler = FunctionHandler(cacheControl, send);
-  const handlerManager: HandlerManager = {
-    // socket: SocketHandler({
-    //   cacheControl,
-    // }),
-    user: UserHandler(
-      cacheControl,
-      send,
-      storage,
-      () => {
-        clear();
-      },
-      () => {
-        return accessToken;
-      },
-      isLoggedIn,
-    ),
-    group: groupHandler,
-    widget: widgetHandler,
-    template: templateHandler,
-    language: languageHandler,
-    media: mediaHandler,
-    entry: entryHandler,
-    apiKey: apiKeyHandler,
-    apiFunction: apiFunctionHandler,
-  };
 
+  handlerManager.user = userHandler;
+  handlerManager.apiFunction = apiFunctionHandler;
+  handlerManager.apiKey = apiKeyHandler;
+  handlerManager.entry = entryHandler;
+  handlerManager.group = groupHandler;
+  handlerManager.language = languageHandler;
+  handlerManager.media = mediaHandler;
+  handlerManager.template = templateHandler;
+  handlerManager.widget = widgetHandler;
   /**
    * Will decode encoded Access Token aka Raw Access Token.
    */
@@ -271,24 +289,13 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       socket.disconnect();
     }
   });
-  const socket = SocketHandler(
-    cacheControl,
-    handlerManager,
-    {
-      url: config.cms.origin,
-      path: '/api/socket/server/',
-    },
-    () => {
-      return accessToken;
-    },
-  );
   isLoggedIn();
   return {
     isLoggedIn,
     send,
     socket: {
       id: socket.id,
-      subscribe: (event, handler) => {
+      subscribe(event, handler) {
         return socket.subscribe(event, handler);
       },
     },
