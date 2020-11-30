@@ -103,7 +103,14 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     widgetHandler,
   );
   const languageHandler = LanguageHandler(cacheControl, send);
-  const mediaHandler = MediaHandler(cacheControl, send);
+  const mediaHandler = MediaHandler(
+    cacheControl,
+    send,
+    () => {
+      return accessTokenRaw;
+    },
+    config.cms.origin,
+  );
   const apiKeyHandler = ApiKeyHandler(cacheControl, send);
   const apiFunctionHandler = FunctionHandler(cacheControl, send);
 
