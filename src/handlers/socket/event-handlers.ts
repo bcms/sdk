@@ -272,6 +272,12 @@ export function SocketEventHandlers(
               });
             }
           }
+        } else {
+          await handlerManager.entry.getLite({
+            templateId: data.entry.additional.templateId
+            ,
+            id: data.entry._id,
+          });
         }
         getSubscriptions()[SocketEventName.ENTRY].forEach((sub) => {
           sub.handler({ data });
