@@ -106,7 +106,8 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   const mediaHandler = MediaHandler(
     cacheControl,
     send,
-    () => {
+    async () => {
+      await refreshAccessToken();
       return accessTokenRaw;
     },
     config.cms.origin,

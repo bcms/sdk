@@ -4,7 +4,7 @@ import { AxiosRequestConfig } from 'axios';
 import { Queueable, MediaUtil } from '../util';
 
 export interface MediaHandlerPrototype {
-  getUrlWithAccessToken(media: Media, size?: 'small'): string;
+  getUrlWithAccessToken(media: Media, size?: 'small'): Promise<string>;
   getAll(): Promise<Media[]>;
   getAllAggregated(): Promise<MediaAggregate[]>;
   getAllByParentId(parentId: string): Promise<Media[]>;
@@ -38,7 +38,7 @@ export interface MediaHandlerPrototype {
 export function MediaHandler(
   cacheControl: CacheControlPrototype,
   send: <T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean) => Promise<T>,
-  getAccessToken: () => string,
+  getAccessToken: () => Promise<string>,
   cmsOrigin: string,
 ): MediaHandlerPrototype {
   const mUtil = MediaUtil();
@@ -55,10 +55,10 @@ export function MediaHandler(
   let countLatch = false;
 
   return {
-    getUrlWithAccessToken(media, size) {
+    async getUrlWithAccessToken(media, size) {
       return `${cmsOrigin}/api/media/${media._id}/bin${
         size ? '/' + size : ''
-      }/act?act=${getAccessToken()}`;
+      }/act?act=${await getAccessToken()}`;
     },
     async getAll() {
       return (await queueable.exec(
