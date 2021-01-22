@@ -13,6 +13,7 @@ import {
   EntryHandler,
   ApiKeyHandler,
   FunctionHandler,
+  StatusHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -69,6 +70,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     entry: undefined,
     apiKey: undefined,
     apiFunction: undefined,
+    status: undefined,
   };
   const userHandler = UserHandler(
     cacheControl,
@@ -114,6 +116,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   );
   const apiKeyHandler = ApiKeyHandler(cacheControl, send);
   const apiFunctionHandler = FunctionHandler(cacheControl, send);
+  const statusHandler = StatusHandler(cacheControl, send);
 
   handlerManager.user = userHandler;
   handlerManager.apiFunction = apiFunctionHandler;
@@ -124,6 +127,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   handlerManager.media = mediaHandler;
   handlerManager.template = templateHandler;
   handlerManager.widget = widgetHandler;
+  handlerManager.status = statusHandler;
   /**
    * Will decode encoded Access Token aka Raw Access Token.
    */

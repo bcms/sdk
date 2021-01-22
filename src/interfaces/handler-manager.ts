@@ -8,6 +8,7 @@ import {
   EntryHandlerPrototype,
   ApiKeyHandlerPrototype,
   FunctionHandlerPrototype,
+  StatusHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -21,4 +22,5 @@ export interface HandlerManager {
   entry: EntryHandlerPrototype;
   apiKey: ApiKeyHandlerPrototype;
   apiFunction: FunctionHandlerPrototype;
+  status: StatusHandlerPrototype;
 }

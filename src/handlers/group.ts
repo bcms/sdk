@@ -198,7 +198,7 @@ export function GroupHandler(
           Authorization: '',
         },
       });
-      await cacheControl.group.remove(id);
+      cacheControl.group.remove(id);
     },
   };
   return self;

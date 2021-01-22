@@ -80,7 +80,9 @@ export function SocketEventHandlers(
           await handlerManager.language.get(data.entry._id);
         }
         getSubscriptions()[SocketEventName.LANGUAGE].forEach((sub) => {
-          sub.handler({ data });
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
         });
       },
     },
@@ -123,10 +125,14 @@ export function SocketEventHandlers(
            *    - add:
            *      - get this Group
            */
-          sub.handler({
-            data,
-            updates: data.message.updated,
-          });
+          sub
+            .handler({
+              data,
+              updates: data.message.updated,
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         });
       },
     },
@@ -164,7 +170,9 @@ export function SocketEventHandlers(
            *    - remove: remove Template and all its Entries
            *    - add: get the Template
            */
-          sub.handler({ data });
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
         });
       },
     },
@@ -184,7 +192,9 @@ export function SocketEventHandlers(
           }
         }
         getSubscriptions()[SocketEventName.WIDGET].forEach((sub) => {
-          sub.handler({ data });
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
         });
       },
     },
@@ -213,7 +223,9 @@ export function SocketEventHandlers(
           }
         }
         getSubscriptions()[SocketEventName.MEDIA].forEach((sub) => {
-          sub.handler({ data });
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
         });
       },
     },
@@ -229,7 +241,9 @@ export function SocketEventHandlers(
           await handlerManager.user.get(data.entry._id);
         }
         getSubscriptions()[SocketEventName.USER].forEach((sub) => {
-          sub.handler({ data });
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
         });
       },
     },
@@ -242,12 +256,14 @@ export function SocketEventHandlers(
           if (data.source === getSocketId()) {
             return;
           }
-          await cacheControl.apiKey.remove(data.entry._id);
+          cacheControl.apiKey.remove(data.entry._id);
           if (data.type !== 'remove') {
             await handlerManager.user.get(data.entry._id);
           }
           getSubscriptions()[SocketEventName.USER].forEach((sub) => {
-            sub.handler({ data });
+            sub.handler({ data }).catch((error) => {
+              console.error(error);
+            });
           });
         }
       },
@@ -274,13 +290,14 @@ export function SocketEventHandlers(
           }
         } else {
           await handlerManager.entry.getLite({
-            templateId: data.entry.additional.templateId
-            ,
+            templateId: data.entry.additional.templateId,
             id: data.entry._id,
           });
         }
         getSubscriptions()[SocketEventName.ENTRY].forEach((sub) => {
-          sub.handler({ data });
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
         });
       },
     },
@@ -298,10 +315,30 @@ export function SocketEventHandlers(
             key.split('_').slice(1).join('_') === data.name
           ) {
             subs[key].forEach((sub) => {
-              sub.handler(data.payload);
+              sub.handler(data.payload).catch((error) => {
+                console.error(error);
+              });
             });
           }
         }
+      },
+    },
+    {
+      name: SocketEventName.STATUS,
+      handler: async (rawData) => {
+        const data = rawData as SocketEventData;
+        if (data.source === getSocketId()) {
+          return;
+        }
+        cacheControl.status.remove(data.entry._id);
+        if (data.type !== 'remove') {
+          await handlerManager.status.get(data.entry._id);
+        }
+        getSubscriptions()[SocketEventName.STATUS].forEach((sub) => {
+          sub.handler({ data }).catch((error) => {
+            console.error(error);
+          });
+        });
       },
     },
     {
@@ -310,7 +347,9 @@ export function SocketEventHandlers(
         const data = rawData as SocketEventEntryChangeData;
         if (data.source !== getSocketId()) {
           getSubscriptions()[SocketEventName.ENTRY_CHANGE].forEach((sub) => {
-            sub.handler(data);
+            sub.handler(data).catch((error) => {
+              console.error(error);
+            });
           });
         }
       },
