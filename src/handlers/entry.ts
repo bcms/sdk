@@ -54,43 +54,35 @@ export function EntryHandler(
       if (!templateId) {
         throw new Error('Parameter "templateId" was not provided.');
       }
-      return (await queueable.exec(
-        'getAllLite',
-        'free_one_by_one',
-        async () => {
-          const entriesLite = cacheControl.entry.find(
-            (e) => e.data.templateId === templateId,
-          );
-          if (countLatchFor[templateId]) {
-            return entriesLite.map((e) => {
-              return e.data;
-            });
-          }
-          countLatchFor[templateId] = true;
-          const count = await this.count(templateId);
-          if (count.count !== entriesLite.length) {
-            const eResult: {
-              entries: EntryLite[];
-            } = await send({
-              url: `/entry/all/${templateId}/lite`,
-              method: 'GET',
-              headers: {
-                Authorization: '',
-              },
-            });
-            for (const i in eResult.entries) {
-              const entry = eResult.entries[i];
-              cacheControl.entry.set({
-                _id: entry._id,
-                lite: true,
-                data: entry,
-              });
-            }
-            return eResult.entries;
-          }
-          return entriesLite.map((e) => e.data);
+      const entriesLite = cacheControl.entry.find(
+        (e) => e.data.templateId === templateId,
+      );
+      if (!countLatchFor[templateId]) {
+        countLatchFor[templateId] = true;
+      } else if (entriesLite.length > 0) {
+        console.log(2, countLatchFor, cacheControl.entry.getAll());
+        return entriesLite.map((e) => {
+          return e.data;
+        });
+      }
+      const eResult: {
+        entries: EntryLite[];
+      } = await send({
+        url: `/entry/all/${templateId}/lite`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
         },
-      )) as EntryLite[];
+      });
+      for (const i in eResult.entries) {
+        const entry = eResult.entries[i];
+        cacheControl.entry.set({
+          _id: entry._id,
+          lite: true,
+          data: entry,
+        });
+      }
+      return eResult.entries;
     },
     async get(data) {
       if (!data.id) {
