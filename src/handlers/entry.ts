@@ -60,7 +60,6 @@ export function EntryHandler(
       if (!countLatchFor[templateId]) {
         countLatchFor[templateId] = true;
       } else if (entriesLite.length > 0) {
-        console.log(2, countLatchFor, cacheControl.entry.getAll());
         return entriesLite.map((e) => {
           return e.data;
         });

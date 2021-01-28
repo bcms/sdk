@@ -179,6 +179,7 @@ export function SocketEventHandlers(
     {
       name: SocketEventName.WIDGET,
       handler: async (rawData) => {
+        console.log();
         const data = rawData as SocketEventData;
         if (data.source === getSocketId()) {
           return;
@@ -186,10 +187,9 @@ export function SocketEventHandlers(
         await cacheControl.widget.remove(data.entry._id);
         if (data.type !== 'remove') {
           await handlerManager.widget.get(data.entry._id);
-        } else {
-          if (data.message.updated) {
-            await runUpdates(data.message.updated);
-          }
+        }
+        if (data.message.updated) {
+          await runUpdates(data.message.updated);
         }
         getSubscriptions()[SocketEventName.WIDGET].forEach((sub) => {
           sub.handler({ data }).catch((error) => {
