@@ -19,12 +19,14 @@ export interface EntryHandlerPrototype {
   count(templateId: string): Promise<number>;
   add(data: {
     templateId: string;
+    status?: string;
     meta: EntryMeta[];
     content: EntryContent[];
   }): Promise<Entry>;
   update(data: {
     _id: string;
     templateId: string;
+    status?: string;
     meta: EntryMeta[];
     content: EntryContent[];
   }): Promise<Entry>;

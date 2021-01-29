@@ -16,6 +16,7 @@ export interface EntryLite {
   templateId: string;
   userId: string;
   meta: EntryMeta[];
+  status?: string;
 }
 
 export interface Entry {
@@ -26,4 +27,5 @@ export interface Entry {
   userId: string;
   meta: EntryMeta[];
   content?: EntryContent[];
+  status?: string;
 }
