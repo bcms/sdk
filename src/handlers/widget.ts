@@ -6,17 +6,33 @@ import { EntryHandlerPrototype } from './entry';
 
 export interface WidgetHandlerPrototype {
   whereIsItUsed(id: string): Promise<EntryLite[]>;
+
   getAll(): Promise<Widget[]>;
+
   get(id: string): Promise<Widget>;
+
   getMany(ids: string[]): Promise<Widget[]>;
+
   count(): Promise<number>;
-  add(data: { label: string; desc: string }): Promise<Widget>;
+
+  add(data: {
+    label: string;
+    desc: string;
+    previewImage: string;
+    previewScript: string;
+    previewStyle: string;
+  }): Promise<Widget>;
+
   update(data: {
     _id: string;
     label?: string;
     desc?: string;
+    previewImage?: string;
+    previewScript?: string;
+    previewStyle?: string;
     propChanges?: PropChange[];
   }): Promise<Widget>;
+
   deleteById(id: string): Promise<void>;
 }
 

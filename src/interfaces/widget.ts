@@ -7,5 +7,8 @@ export interface Widget {
   name: string;
   label: string;
   desc: string;
+  previewImage: string;
+  previewScript: string;
+  previewStyle: string;
   props: Prop[];
 }
