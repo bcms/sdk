@@ -18,6 +18,7 @@ export interface WidgetHandlerPrototype {
   add(data: {
     label: string;
     desc: string;
+    singleEntry: boolean;
     previewImage: string;
     previewScript: string;
     previewStyle: string;
