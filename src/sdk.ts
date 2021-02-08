@@ -301,7 +301,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       socket.disconnect();
     }
   });
-  isLoggedIn();
+  isLoggedIn().catch(error => {
+    console.error(error);
+  });
   return {
     isLoggedIn,
     send,
