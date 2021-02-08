@@ -146,7 +146,7 @@ export function WidgetHandler(
             },
           });
           for (const i in result.widgets) {
-            cacheControl.group.set(result.widgets[i]);
+            cacheControl.widget.set(result.widgets[i]);
             widgets.push(JSON.parse(JSON.stringify(result.widgets[i])));
           }
         }
