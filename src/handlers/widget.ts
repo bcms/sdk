@@ -6,15 +6,10 @@ import { EntryHandlerPrototype } from './entry';
 
 export interface WidgetHandlerPrototype {
   whereIsItUsed(id: string): Promise<EntryLite[]>;
-
   getAll(): Promise<Widget[]>;
-
   get(id: string): Promise<Widget>;
-
   getMany(ids: string[]): Promise<Widget[]>;
-
   count(): Promise<number>;
-
   add(data: {
     label: string;
     desc: string;
@@ -23,7 +18,6 @@ export interface WidgetHandlerPrototype {
     previewScript: string;
     previewStyle: string;
   }): Promise<Widget>;
-
   update(data: {
     _id: string;
     label?: string;
@@ -33,7 +27,6 @@ export interface WidgetHandlerPrototype {
     previewStyle?: string;
     propChanges?: PropChange[];
   }): Promise<Widget>;
-
   deleteById(id: string): Promise<void>;
 }
 
