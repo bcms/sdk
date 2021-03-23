@@ -179,7 +179,6 @@ export function SocketEventHandlers(
     {
       name: SocketEventName.WIDGET,
       handler: async (rawData) => {
-        console.log();
         const data = rawData as SocketEventData;
         if (data.source === getSocketId()) {
           return;
