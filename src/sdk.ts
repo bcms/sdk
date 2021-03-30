@@ -14,6 +14,7 @@ import {
   ApiKeyHandler,
   FunctionHandler,
   StatusHandler,
+  ShimHandler,
 } from './handlers';
 
 export interface BCMSConfig {
@@ -71,6 +72,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     apiKey: undefined,
     apiFunction: undefined,
     status: undefined,
+    shim: undefined,
   };
   const userHandler = UserHandler(
     cacheControl,
@@ -117,6 +119,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   const apiKeyHandler = ApiKeyHandler(cacheControl, send);
   const apiFunctionHandler = FunctionHandler(cacheControl, send);
   const statusHandler = StatusHandler(cacheControl, send);
+  const shimHandler = ShimHandler(cacheControl, send, storage, isLoggedIn);
 
   handlerManager.user = userHandler;
   handlerManager.apiFunction = apiFunctionHandler;
@@ -128,6 +131,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
   handlerManager.template = templateHandler;
   handlerManager.widget = widgetHandler;
   handlerManager.status = statusHandler;
+  handlerManager.shim = shimHandler;
   /**
    * Will decode encoded Access Token aka Raw Access Token.
    */
@@ -301,7 +305,7 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
       socket.disconnect();
     }
   });
-  isLoggedIn().catch(error => {
+  isLoggedIn().catch((error) => {
     console.error(error);
   });
   return {

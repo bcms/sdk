@@ -9,6 +9,7 @@ import {
   ApiKeyHandlerPrototype,
   FunctionHandlerPrototype,
   StatusHandlerPrototype,
+  ShimHandlerPrototype,
 } from '../handlers';
 
 export interface HandlerManager {
@@ -23,4 +24,5 @@ export interface HandlerManager {
   apiKey: ApiKeyHandlerPrototype;
   apiFunction: FunctionHandlerPrototype;
   status: StatusHandlerPrototype;
+  shim: ShimHandlerPrototype;
 }
