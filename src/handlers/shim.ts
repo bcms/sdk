@@ -30,6 +30,7 @@ export function ShimHandler(
           },
           true,
         );
+        // asd
         await storage.set('at', result.accessToken);
         await storage.set('rt', result.refreshToken);
       },
