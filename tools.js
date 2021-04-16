@@ -4,17 +4,29 @@ const fse = require('fs-extra');
 const fs = require('fs');
 const util = require('util');
 
-const exec = async (cmd, output) => {
+/**
+ * @typedef {{
+ *  title: string;
+ *  task: () => Promise<void>;
+ * }} Task
+ */
+
+/**
+ * @param {string} cmd
+ * @param {string[]} args
+ * @param {import('child_process').SpawnOptions?} options
+ */
+async function spawn(cmd, args, options) {
   return new Promise((resolve, reject) => {
-    const proc = childProcess.exec(cmd);
-    if (output) {
-      proc.stdout.on('data', (data) => {
-        output('stdout', data);
-      });
-      proc.stderr.on('data', (data) => {
-        output('stderr', data);
-      });
-    }
+    const proc = childProcess.spawn(
+      cmd,
+      args,
+      options
+        ? options
+        : {
+          stdio: 'inherit',
+        },
+    );
     proc.on('close', (code) => {
       if (code !== 0) {
         reject(code);
@@ -23,9 +35,28 @@ const exec = async (cmd, output) => {
       }
     });
   });
-};
-
-const parseArgs = (rawArgs) => {
+}
+/**
+ * @param {Task[]} tasks
+ */
+function Tasks(tasks) {
+  return {
+    run: async () => {
+      for (let i = 0; i < tasks.length; i = i + 1) {
+        const t = tasks[i];
+        console.log(`${i + 1}. ${t.title}`);
+        try {
+          await t.task();
+          console.log(`✓`);
+        } catch (error) {
+          console.log(`⨉`);
+          throw error;
+        }
+      }
+    },
+  };
+}
+function parseArgs(rawArgs) {
   const args = {};
   let i = 2;
   while (i < rawArgs.length) {
@@ -42,37 +73,23 @@ const parseArgs = (rawArgs) => {
     }
   }
   return {
-    bundle: args['--bundle'] === '' || args['--bundle'] === 'true' || false,
-    build: args['--build'] === '' || args['--build'] === 'true' || false,
+    bundle:
+      args['--bundle'] === '' || args['--bundle'] === 'true' || false,
     link: args['--link'] === '' || args['--link'] === 'true' || false,
-    unlink: args['--unlink'] === '' || args['--unlink'] === 'true' || false,
-    publish: args['--publish'] === '' || args['--publish'] === 'true' || false,
+    unlink:
+      args['--unlink'] === '' || args['--unlink'] === 'true' || false,
+    publish:
+      args['--publish'] === '' ||
+      args['--publish'] === 'true' ||
+      false,
+    build:
+      args['--build'] === '' || args['--build'] === 'true' || false,
+    sudo: args['--sudo'] === '' || args['--sudo'] === 'true' || false,
+    pack: args['--pack'] === '' || args['--pack'] === 'true' || false,
   };
-};
-/**
- * @param {Array<{
- *  title: string;
- *  task: () => Promise<void>;
- * }>} tasks
- */
-const Tasks = (tasks) => {
-  return {
-    run: async () => {
-      for (let i = 0; i < tasks.length; i = i + 1) {
-        const t = tasks[i];
-        console.log(`${i + 1}. ${t.title}`);
-        try {
-          await t.task();
-          console.log(`✓`);
-        } catch (error) {
-          console.log(`⨉`);
-          throw error;
-        }
-      }
-    },
-  };
-};
-const bundle = async () => {
+}
+
+async function bundle() {
   const tasks = Tasks([
     {
       title: 'Remove old bundle.',
@@ -85,25 +102,15 @@ const bundle = async () => {
     {
       title: 'Compile Typescript.',
       task: async () => {
-        await exec('npm run build:ts');
-        // await fse.copy(
-        //   path.join(__dirname, 'tmp', 'src'),
-        //   path.join(__dirname, 'dist'),
-        // );
+        await spawn('npm', ['run', 'build:ts']);
       },
     },
     {
       title: 'Compile Typedoc.',
       task: async () => {
-        await exec('npm run typedoc-generate');
+        await spawn('npm', ['run', 'typedoc-generate']);
       },
     },
-    // {
-    //   title: 'Compile Webpack',
-    //   task: async () => {
-    //     await exec('npm run webpack-build')
-    //   }
-    // },
     {
       title: 'Copy package.json',
       task: async () => {
@@ -144,52 +151,84 @@ const bundle = async () => {
   ]);
   await tasks.run();
 };
-const build = async () => {
-  const tasks = Tasks([
-    // {
-    //   title: 'Remove old bundle.',
-    //   task: async () => {
-    //     await fse.remove(path.join(__dirname, 'tmp'));
-    //   },
-    // },
-    {
-      title: 'Compile Typescript.',
-      task: async () => {
-        await exec('npm run build:ts');
-        // await fse.copy(
-        //   path.join(__dirname, 'tmp', 'src'),
-        //   path.join(__dirname, 'dist'),
-        // );
-      },
-    },
-  ]);
-  await tasks.run();
-};
-const publish = async () => {
+async function pack() {
+  await spawn('npm', ['pack'], {
+    cwd: path.join(process.cwd(), 'dist'),
+    stdio: 'inherit',
+  });
+}
+/**
+ * @param {boolean} sudo
+ * @returns {Promise<void>}
+ */
+async function link(sudo) {
+  await spawn('npm', ['i'], {
+    cwd: path.join(process.cwd(), 'dist'),
+    stdio: 'inherit',
+  });
+  if (sudo) {
+    await spawn('sudo', ['npm', 'link'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
+  } else {
+    await spawn('npm', ['link'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
+  }
+}
+/**
+ * @param {boolean} sudo
+ * @returns {Promise<void>}
+ */
+async function unlink(sudo) {
+  if (sudo) {
+    await spawn('sudo', ['npm', 'link'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
+  } else {
+    await spawn('npm', ['unlink'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
+  }
+}
+async function publish() {
   if (
     await util.promisify(fs.exists)(
       path.join(__dirname, 'dist', 'node_modules'),
     )
   ) {
     throw new Error(
-      `Please remove "${path.join(__dirname, 'dist', 'node_modules')}"`,
+      `Please remove "${path.join(
+        __dirname,
+        'dist',
+        'node_modules',
+      )}"`,
     );
   }
-  await exec('cd dist && npm publish --access=public');
-};
+  await spawn('npm', ['publish', '--access=private'], {
+    cwd: path.join(process.cwd(), 'dist'),
+    stdio: 'inherit',
+  });
+}
 
 async function main() {
   const options = parseArgs(process.argv);
   if (options.bundle === true) {
     await bundle();
-  } else if (options.build === true) {
-    await build();
   } else if (options.link === true) {
-    await exec('cd dist && npm i && sudo npm link');
+    await link(options.sudo);
   } else if (options.unlink === true) {
-    await exec('cd dist && sudo npm unlink');
+    await unlink(options.sudo);
   } else if (options.publish === true) {
     await publish();
+  } else if (options.build === true) {
+    // await build();
+  } else if (options.pack === true) {
+    await pack();
   }
 }
 main().catch((error) => {
