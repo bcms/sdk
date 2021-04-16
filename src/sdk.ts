@@ -34,6 +34,7 @@ export interface BCMSConfig {
  */
 
 export interface BCMSPrototype extends HandlerManager {
+  getAccessToken(): JWT | undefined;
   isLoggedIn: () => Promise<boolean>;
   send<T>(conf: AxiosRequestConfig, doNotInjectAuth?: boolean): Promise<T>;
   socket: {
@@ -309,6 +310,9 @@ export function BCMS(config: BCMSConfig): BCMSPrototype {
     console.error(error);
   });
   return {
+    getAccessToken() {
+      return accessToken;
+    },
     isLoggedIn,
     send,
     socket: {
