@@ -23,6 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
+    "buffer": "^6.0.3",
     "socket.io-client": "^4.0.1",
     "uuid": "^8.3.2"
   },
