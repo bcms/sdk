@@ -9,6 +9,7 @@
   ],
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "no-shadow": "error"
+    "no-shadow": "error",
+    "strict": "error"
   }
 }
