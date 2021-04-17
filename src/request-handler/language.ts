@@ -1,25 +1,25 @@
 import type {
-  BCMSApiKey,
-  BCMSSdkApiKeyRequestHandlerAddData,
-  BCMSSdkApiKeyRequestHandlerPrototype,
-  BCMSSdkApiKeyRequestHandlerUpdateData,
+  BCMSLanguage,
   BCMSSdkCacheControllerPrototype,
   BCMSSdkDefaultRequestHandlerConfig,
+  BCMSSdkLanguageRequestHandlerAddData,
+  BCMSSdkLanguageRequestHandlerPrototype,
+  BCMSSdkLanguageRequestHandlerUpdateData,
   BCMSSdkSendFunction,
 } from '../types';
 import { BCMSSdkDefaultRequestHandler } from './default';
 
-export function BCMSSdkApiKeyRequestHandler(
+export function BCMSSdkLanguageRequestHandler(
   config: BCMSSdkDefaultRequestHandlerConfig,
   cache: BCMSSdkCacheControllerPrototype,
   send: BCMSSdkSendFunction,
 ) {
   const defaultHandler = BCMSSdkDefaultRequestHandler<
-    BCMSApiKey,
-    BCMSSdkApiKeyRequestHandlerAddData,
-    BCMSSdkApiKeyRequestHandlerUpdateData
-  >(config, cache.apiKey, send);
-  const self: BCMSSdkApiKeyRequestHandlerPrototype = {
+    BCMSLanguage,
+    BCMSSdkLanguageRequestHandlerAddData,
+    BCMSSdkLanguageRequestHandlerUpdateData
+  >(config, cache.language, send);
+  const self: BCMSSdkLanguageRequestHandlerPrototype = {
     ...defaultHandler,
   };
   return self;

@@ -9,6 +9,7 @@ import type {
   BCMSMedia,
   BCMSStatus,
   BCMSTemplate,
+  BCMSUser,
   BCMSWidget,
 } from '../models';
 
@@ -23,5 +24,6 @@ export interface BCMSSdkCacheControllerPrototype {
   media: BCMSSdkCacheHandlerPrototype<BCMSMedia>;
   status: BCMSSdkCacheHandlerPrototype<BCMSStatus>;
   template: BCMSSdkCacheHandlerPrototype<BCMSTemplate>;
+  user: BCMSSdkCacheHandlerPrototype<BCMSUser>;
   widget: BCMSSdkCacheHandlerPrototype<BCMSWidget>;
 }

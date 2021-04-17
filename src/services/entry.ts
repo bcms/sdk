@@ -1,6 +1,6 @@
 import type { BCMSSdkEntryServicePrototype } from '../types';
 
-function entryService() {
+export function BCMSSdkEntryService() {
   const self: BCMSSdkEntryServicePrototype = {
     toLite(entry) {
       return {
@@ -16,5 +16,3 @@ function entryService() {
   };
   return self;
 }
-
-export const BCMSSdkEntryService = entryService();

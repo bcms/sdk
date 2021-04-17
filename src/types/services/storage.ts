@@ -6,7 +6,7 @@ export interface BCMSSdkStoragePrototype {
   get<T>(key: string): T | null;
   set(key: string, value: unknown): Promise<boolean>;
   remove(key: string): Promise<void>;
-  subscribe?<T>(
+  subscribe<T>(
     key: string,
     handler: BCMSSdkStorageSubscriptionHandler<T>,
   ): () => void;

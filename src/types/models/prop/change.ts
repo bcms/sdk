@@ -1,6 +1,6 @@
 import type { BCMSPropType } from './prop';
 
-export interface PropChange {
+export interface BCMSPropChange {
   add?: {
     label: string;
     type: BCMSPropType;

@@ -1,4 +1,5 @@
 import type {
+  BCMSMedia,
   BCMSMediaAggregate,
   BCMSSdkMediaServicePrototype,
 } from '../types';
@@ -59,6 +60,30 @@ export function BCMSSdkMediaService() {
         }
       }
       return aggregated;
+    },
+    getChildren(parentId, allMedia, depth) {
+      if (!depth) {
+        depth = 0;
+      }
+      if (depth > 100) {
+        throw Error('Depth is > 100');
+      }
+      const children = allMedia.filter((e) => e.parentId === parentId);
+      const output: BCMSMedia[] = [...children];
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.hasChildren) {
+          const childChildren = self.getChildren(
+            child._id,
+            allMedia,
+            depth + 1,
+          );
+          for (let j = 0; j < childChildren.length; j++) {
+            output.push(childChildren[j]);
+          }
+        }
+      }
+      return output;
     },
   };
   return self;

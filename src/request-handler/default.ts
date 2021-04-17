@@ -25,33 +25,33 @@ export function BCMSSdkDefaultRequestHandler<
       if (getAllLatch) {
         return cache.getAll();
       }
-      const query: Entity[] = await send({
+      const query: { items: Entity[] } = await send({
         url: config.baseUri + '/all',
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
-      query.forEach((e) => {
+      query.items.forEach((e) => {
         cache.set(e);
       });
       getAllLatch = true;
-      return query;
+      return query.items;
     },
     async get(id) {
       const entity = cache.get(id);
       if (entity) {
         return entity;
       }
-      const query: Entity = await send({
+      const query: { item: Entity } = await send({
         url: config.baseUri + `/${id}`,
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
-      cache.set(query);
-      return query;
+      cache.set(query.item);
+      return query.item;
     },
     async getMany(ids) {
       const missingIds: string[] = [];
@@ -62,7 +62,7 @@ export function BCMSSdkDefaultRequestHandler<
         }
       }
       if (missingIds.length > 0) {
-        const query: Entity[] = await send({
+        const query: { items: Entity[] } = await send({
           url: config.baseUri + '/many',
           method: 'GET',
           headers: {
@@ -70,7 +70,7 @@ export function BCMSSdkDefaultRequestHandler<
             ids: missingIds.join('_'),
           },
         });
-        query.forEach((e) => {
+        query.items.forEach((e) => {
           cache.set(e);
           entities.push(e);
         });
@@ -78,7 +78,7 @@ export function BCMSSdkDefaultRequestHandler<
       return entities;
     },
     async create(data) {
-      const query: Entity = await send({
+      const query: { item: Entity } = await send({
         url: config.baseUri,
         method: 'POST',
         headers: {
@@ -86,11 +86,11 @@ export function BCMSSdkDefaultRequestHandler<
         },
         data,
       });
-      cache.set(query);
-      return query;
+      cache.set(query.item);
+      return query.item;
     },
     async update(data) {
-      const query: Entity = await send({
+      const query: { item: Entity } = await send({
         url: config.baseUri,
         method: 'PUT',
         headers: {
@@ -98,8 +98,8 @@ export function BCMSSdkDefaultRequestHandler<
         },
         data,
       });
-      cache.set(query);
-      return query;
+      cache.set(query.item);
+      return query.item;
     },
     async deleteById(id) {
       await send({
@@ -112,13 +112,14 @@ export function BCMSSdkDefaultRequestHandler<
       cache.remove(id);
     },
     async count() {
-      return await send({
+      const query: { count: number } = await send({
         url: config.baseUri + '/count',
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
+      return query.count;
     },
   };
   return self;

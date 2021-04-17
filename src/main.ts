@@ -2,7 +2,11 @@ import { Buffer } from 'buffer';
 import Axios from 'axios';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import type { BCMSJwt, BCMSSdkConfig, BCMSSdkPrototype } from './types';
-import { BCMSSdkStorage } from './services';
+import {
+  BCMSSdkEntryService,
+  BCMSSdkMediaService,
+  BCMSSdkStorage,
+} from './services';
 import { BCMSSdkSocket } from './socket';
 import { BCMSSdkCacheController } from './cache';
 import { BCMSSdkRequestHandlerManager } from './request-handler';
@@ -15,7 +19,17 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
         : 'bcms',
   });
   const cache = BCMSSdkCacheController();
-  const rhManager = BCMSSdkRequestHandlerManager(cache, send);
+  const mediaService = BCMSSdkMediaService();
+  const entryService = BCMSSdkEntryService();
+  const rhManager = BCMSSdkRequestHandlerManager(
+    cache,
+    send,
+    mediaService,
+    entryService,
+    getAccessToken,
+    getAccessTokenRaw,
+    config && config.cms && config.cms.origin ? config.cms.origin : '',
+  );
   const socket = BCMSSdkSocket(
     {
       server: {
@@ -28,10 +42,13 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
     getAccessToken,
   );
   let accessToken: BCMSJwt | null = null;
-  let accessTokenRaw: string | null = null;
+  let accessTokenRaw: string | null = storage.get('rt');
 
   function getAccessToken() {
     return JSON.parse(JSON.stringify(accessToken));
+  }
+  function getAccessTokenRaw() {
+    return '' + accessTokenRaw;
   }
   /**
    * Will decode encoded Access Token aka Raw Access Token.
@@ -167,6 +184,23 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
     }
   }
 
+  if (accessTokenRaw) {
+    unpackAccessToken(accessTokenRaw);
+  }
+  storage.subscribe('at', (value: string, type) => {
+    if (type === 'set') {
+      accessTokenRaw = value;
+      accessToken = unpackAccessToken(value);
+      if (!socket.connected() && accessToken) {
+        socket.connect(value).catch((error) => {
+          console.error(error);
+        });
+      }
+    } else if (type === 'remove') {
+      socket.disconnect();
+    }
+  });
+
   const self: BCMSSdkPrototype = {
     getAccessToken,
     send,
@@ -175,6 +209,11 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
         return '';
       },
     },
+    services: {
+      entry: entryService,
+      media: mediaService,
+    },
+    ...rhManager,
   };
   return self;
 }

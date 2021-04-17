@@ -1,25 +1,25 @@
 import type {
-  BCMSApiKey,
-  BCMSSdkApiKeyRequestHandlerAddData,
-  BCMSSdkApiKeyRequestHandlerPrototype,
-  BCMSSdkApiKeyRequestHandlerUpdateData,
   BCMSSdkCacheControllerPrototype,
   BCMSSdkDefaultRequestHandlerConfig,
   BCMSSdkSendFunction,
+  BCMSWidget,
+  BCMSSdkWidgetRequestHandlerAddData,
+  BCMSSdkWidgetRequestHandlerPrototype,
+  BCMSSdkWidgetRequestHandlerUpdateData,
 } from '../types';
 import { BCMSSdkDefaultRequestHandler } from './default';
 
-export function BCMSSdkApiKeyRequestHandler(
+export function BCMSSdkWidgetRequestHandler(
   config: BCMSSdkDefaultRequestHandlerConfig,
   cache: BCMSSdkCacheControllerPrototype,
   send: BCMSSdkSendFunction,
 ) {
   const defaultHandler = BCMSSdkDefaultRequestHandler<
-    BCMSApiKey,
-    BCMSSdkApiKeyRequestHandlerAddData,
-    BCMSSdkApiKeyRequestHandlerUpdateData
-  >(config, cache.apiKey, send);
-  const self: BCMSSdkApiKeyRequestHandlerPrototype = {
+    BCMSWidget,
+    BCMSSdkWidgetRequestHandlerAddData,
+    BCMSSdkWidgetRequestHandlerUpdateData
+  >(config, cache.widget, send);
+  const self: BCMSSdkWidgetRequestHandlerPrototype = {
     ...defaultHandler,
   };
   return self;

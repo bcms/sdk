@@ -3,13 +3,14 @@ import type {
   BCMSEntryLite,
   BCMSSdkCacheControllerPrototype,
   BCMSSdkEntryRequestHandlerPrototype,
+  BCMSSdkEntryServicePrototype,
   BCMSSdkSendFunction,
 } from '../types';
-import { BCMSSdkEntryService } from '../services';
 
 export function BCMSSdkEntryRequestHandler(
   cache: BCMSSdkCacheControllerPrototype,
   send: BCMSSdkSendFunction,
+  entryService: BCMSSdkEntryServicePrototype,
 ) {
   const getAllLatch: {
     [templateId: string]: boolean;
@@ -19,7 +20,7 @@ export function BCMSSdkEntryRequestHandler(
       if (getAllLatch[templateId]) {
         return cache.entryLite.find((e) => e.item.templateId === templateId);
       }
-      const query: BCMSEntryLite[] = await send({
+      const query: { items: BCMSEntryLite[] } = await send({
         url: `/entry/all/${templateId}/lite`,
         method: 'GET',
         headers: {
@@ -27,10 +28,10 @@ export function BCMSSdkEntryRequestHandler(
         },
       });
       getAllLatch[templateId] = true;
-      query.forEach((e) => {
+      query.items.forEach((e) => {
         cache.entryLite.set(e);
       });
-      return query;
+      return query.items;
     },
     async getManyLite(templateId, ids) {
       const cacheEntities = cache.entryLite.find(
@@ -43,7 +44,7 @@ export function BCMSSdkEntryRequestHandler(
             missingIds.push(ids[i]);
           }
         }
-        const query: BCMSEntryLite[] = await send({
+        const query: { items: BCMSEntryLite[] } = await send({
           url: `/entry/${templateId}/many/lite`,
           method: 'GET',
           headers: {
@@ -51,7 +52,7 @@ export function BCMSSdkEntryRequestHandler(
             ids: missingIds.join('_'),
           },
         });
-        query.forEach((e) => {
+        query.items.forEach((e) => {
           cache.entryLite.set(e);
           cacheEntities.push(e);
         });
@@ -63,33 +64,33 @@ export function BCMSSdkEntryRequestHandler(
       if (entity) {
         return entity;
       }
-      const query: BCMSEntryLite = await send({
+      const query: { item: BCMSEntryLite } = await send({
         url: `/entry/${templateId}/${id}/lite`,
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
-      cache.entryLite.set(query);
-      return query;
+      cache.entryLite.set(query.item);
+      return query.item;
     },
     async get(templateId, id) {
       const entity = cache.entry.get(id);
       if (entity) {
         return entity;
       }
-      const query: BCMSEntry = await send({
+      const query: { item: BCMSEntry } = await send({
         url: `/entry/${templateId}/${id}`,
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
-      cache.entry.set(query);
-      return query;
+      cache.entry.set(query.item);
+      return query.item;
     },
     async create(data) {
-      const query: BCMSEntry = await send({
+      const query: { item: BCMSEntry } = await send({
         url: `/entry/${data.templateId}`,
         method: 'POST',
         headers: {
@@ -97,13 +98,12 @@ export function BCMSSdkEntryRequestHandler(
         },
         data,
       });
-      cache.entry.set(query);
-      cache.entryLite.set(BCMSSdkEntryService.toLite(query));
-      cache.entryLite.set(BCMSSdkEntryService.toLite(query));
-      return query;
+      cache.entry.set(query.item);
+      cache.entryLite.set(entryService.toLite(query.item));
+      return query.item;
     },
     async update(data) {
-      const query: BCMSEntry = await send({
+      const query: { item: BCMSEntry } = await send({
         url: `/entry/${data.templateId}`,
         method: 'PUT',
         headers: {
@@ -111,12 +111,12 @@ export function BCMSSdkEntryRequestHandler(
         },
         data,
       });
-      cache.entry.set(query);
-      cache.entryLite.set(BCMSSdkEntryService.toLite(query));
-      return query;
+      cache.entry.set(query.item);
+      cache.entryLite.set(entryService.toLite(query.item));
+      return query.item;
     },
     async deleteById(templateId, id) {
-      const query: BCMSEntry = await send({
+      await send({
         url: `/entry/${templateId}/${id}`,
         method: 'DELETE',
         headers: {
@@ -131,14 +131,14 @@ export function BCMSSdkEntryRequestHandler(
         return cache.entryLite.find((e) => e.item.templateId === templateId)
           .length;
       }
-      const query: number = await send({
+      const query: { count: number } = await send({
         url: `/entry/${templateId}/count`,
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
-      return query;
+      return query.count;
     },
   };
   return self;

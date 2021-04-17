@@ -9,6 +9,7 @@ import {
   BCMSSdkMediaCacheHandler,
   BCMSSdkStatusCacheHandler,
   BCMSSdkTemplateCacheHandler,
+  BCMSSdkUserCacheHandler,
   BCMSSdkWidgetCacheHandler,
 } from './handlers';
 
@@ -23,6 +24,7 @@ export function BCMSSdkCacheController() {
     media: BCMSSdkMediaCacheHandler(),
     status: BCMSSdkStatusCacheHandler(),
     template: BCMSSdkTemplateCacheHandler(),
+    user: BCMSSdkUserCacheHandler(),
     widget: BCMSSdkWidgetCacheHandler(),
     clear() {
       // Clear all caches
@@ -35,6 +37,7 @@ export function BCMSSdkCacheController() {
       self.media.clear();
       self.status.clear();
       self.template.clear();
+      self.user.clear();
       self.widget.clear();
     },
   };
