@@ -12,30 +12,12 @@
     "incremental": true,
     "importsNotUsedAsValues": "error",
     "strict": true,
-    "strictNullChecks": true,
+    "strictNullChecks": true
   },
   "typedocOptions": {
-    "inputFiles": ["./src"],
+    "entryPoints": ["./src"],
     "name": "BCMS | SDK",
-    "theme": "./node_modules/typedoc-neo-theme/bin/default",
-    "plugin": "typedoc-neo-theme",
-    "mode": "file",
     "out": "doc",
-    "outline": [
-      {
-        "Client SDK": {
-          "Overview": "interfaces/bcmsprototype",
-          "User": "interfaces/userhandlerprototype",
-          "API Key": "interfaces/apikeyhandlerprototype",
-          "Entry": "interfaces/entryhandlerprototype",
-          "Group": "interfaces/grouphandlerprototype",
-          "Language": "interfaces/languagehandlerprototype",
-          "Media": "interfaces/mediahandlerprototype",
-          "Template": "interfaces/templatehandlerprototype",
-          "Widget": "interfaces/widgethandlerprototype"
-        }
-      }
-    ]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "public", "lib", "tmp"]

@@ -1,7 +1,7 @@
 import type { BCMSSdkCacheEntity, BCMSSdkCacheEntityItem } from './entity';
 
 export interface BCMSSdkCacheHandlerPrototype<
-  T extends BCMSSdkCacheEntityItem<T>
+  T extends BCMSSdkCacheEntityItem
 > {
   cache: Array<BCMSSdkCacheEntity<T>>;
   get(id: string): T | null;
