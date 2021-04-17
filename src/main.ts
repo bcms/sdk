@@ -26,6 +26,7 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
     send,
     mediaService,
     entryService,
+    storage,
     getAccessToken,
     getAccessTokenRaw,
     config && config.cms && config.cms.origin ? config.cms.origin : '',

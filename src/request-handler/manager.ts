@@ -5,6 +5,7 @@ import type {
   BCMSSdkMediaServicePrototype,
   BCMSSdkRequestHandlerManagerPrototype,
   BCMSSdkSendFunction,
+  BCMSSdkStoragePrototype,
 } from '../types';
 import { BCMSSdkApiKeyRequestHandler } from './api-key';
 import { BCMSSdkEntryRequestHandler } from './entry';
@@ -16,12 +17,14 @@ import { BCMSSdkStatusRequestHandler } from './status';
 import { BCMSSdkTemplateRequestHandler } from './template';
 import { BCMSSdkUserRequestHandler } from './user';
 import { BCMSSdkWidgetRequestHandler } from './widget';
+import { BCMSSdkShimRequestHandler } from './shim';
 
 export function BCMSSdkRequestHandlerManager(
   cache: BCMSSdkCacheControllerPrototype,
   send: BCMSSdkSendFunction,
   mediaService: BCMSSdkMediaServicePrototype,
   entryService: BCMSSdkEntryServicePrototype,
+  storage: BCMSSdkStoragePrototype,
   getAccessToken: () => BCMSJwt | null,
   getAccessTokenRaw: () => string | null,
   cmsOrigin: string,
@@ -50,6 +53,7 @@ export function BCMSSdkRequestHandlerManager(
       getAccessTokenRaw,
       cmsOrigin,
     ),
+    shim: BCMSSdkShimRequestHandler(send, storage),
     status: BCMSSdkStatusRequestHandler({ baseUri: '/status' }, cache, send),
     template: BCMSSdkTemplateRequestHandler(
       { baseUri: '/template' },

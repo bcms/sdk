@@ -6,6 +6,7 @@ export * from './group';
 export * from './language';
 export * from './manager';
 export * from './media';
+export * from './shim';
 export * from './status';
 export * from './template';
 export * from './user';

@@ -8,6 +8,7 @@ import type { BCMSSdkStatusRequestHandlerPrototype } from './status';
 import type { BCMSSdkTemplateRequestHandlerPrototype } from './template';
 import type { BCMSSdkUserRequestHandlerPrototype } from './user';
 import type { BCMSSdkWidgetRequestHandlerPrototype } from './widget';
+import type { BCMSSdkShimRequestHandlerPrototype } from './shim';
 
 export interface BCMSSdkRequestHandlerManagerPrototype {
   apiKey: BCMSSdkApiKeyRequestHandlerPrototype;
@@ -16,6 +17,7 @@ export interface BCMSSdkRequestHandlerManagerPrototype {
   group: BCMSSdkGroupRequestHandlerPrototype;
   language: BCMSSdkLanguageRequestHandlerPrototype;
   media: BCMSSdkMediaRequestHandlerPrototype;
+  shim: BCMSSdkShimRequestHandlerPrototype;
   status: BCMSSdkStatusRequestHandlerPrototype;
   template: BCMSSdkTemplateRequestHandlerPrototype;
   user: BCMSSdkUserRequestHandlerPrototype;
