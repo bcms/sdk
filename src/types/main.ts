@@ -12,6 +12,7 @@ export type BCMSSdkSendFunction = <T>(
 ) => Promise<T>;
 export interface BCMSSdkPrototype
   extends BCMSSdkRequestHandlerManagerPrototype {
+  isLoggedIn(): Promise<boolean>;
   getAccessToken(): BCMSJwt | null;
   send: BCMSSdkSendFunction;
   socket: {

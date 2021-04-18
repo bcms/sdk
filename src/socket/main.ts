@@ -46,6 +46,7 @@ export function BCMSSdkSocket(
           try {
             socket = SocketIO(config.server.url, {
               path: config.server.path,
+              transports: ['websocket'],
               query: {
                 at: accessToken,
               },

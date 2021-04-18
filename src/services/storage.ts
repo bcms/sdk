@@ -82,7 +82,7 @@ export function BCMSSdkStorage(config: { prfx: string }) {
       }
       const ids = Object.keys(subs);
       for (let i = 0; i < ids.length; i++) {
-        const sub = subs[i];
+        const sub = subs[ids[i]];
         if (sub.key === key) {
           await sub.handler(JSON.parse(JSON.stringify(value)), 'set');
         }
@@ -93,7 +93,7 @@ export function BCMSSdkStorage(config: { prfx: string }) {
       ls.removeItem(`${config.prfx}_${key}`);
       const ids = Object.keys(subs);
       for (let i = 0; i < ids.length; i++) {
-        const sub = subs[i];
+        const sub = subs[ids[i]];
         if (sub.key === key) {
           await sub.handler(null, 'remove');
         }

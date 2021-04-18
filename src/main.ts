@@ -91,6 +91,7 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
       const at = storage.get<string>('at');
       if (at) {
         accessToken = unpackAccessToken(at);
+        accessTokenRaw = at;
         if (
           accessToken &&
           accessToken.payload.iat + accessToken.payload.exp > Date.now()
@@ -109,16 +110,13 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
     try {
       const result: {
         accessToken: string;
-      } = await send(
-        {
-          url: '/auth/token/refresh',
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${refreshToken}`,
-          },
+      } = await send({
+        url: '/auth/token/refresh',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
         },
-        true,
-      );
+      });
       await storage.set('at', result.accessToken);
       return true;
     } catch (error) {
@@ -132,11 +130,8 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
    * REST API request. It is recommended to use this method
    * for sending requests to the REST API.
    */
-  async function send<T>(
-    conf: AxiosRequestConfig,
-    doNotInjectAuth?: boolean,
-  ): Promise<T> {
-    if (!doNotInjectAuth && conf.headers && conf.headers.Authorization) {
+  async function send<T>(conf: AxiosRequestConfig): Promise<T> {
+    if (conf.headers && conf.headers.Authorization === '') {
       const loggedIn = await isLoggedIn();
       conf.headers.Authorization = `Bearer ${accessTokenRaw}`;
       if (!loggedIn || !accessTokenRaw) {
@@ -203,6 +198,7 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
   });
 
   const self: BCMSSdkPrototype = {
+    isLoggedIn,
     getAccessToken,
     send,
     socket: {

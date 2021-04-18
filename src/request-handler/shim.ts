@@ -15,15 +15,13 @@ export function BCMSSdkShimRequestHandler(
         const query: {
           accessToken: string;
           refreshToken: string;
-        } = await send(
-          {
-            url: `${baseUri}/user/verify/otp`,
-            method: 'POST',
-            data: {
-              otp,
-            },
+        } = await send({
+          url: `${baseUri}/user/verify/otp`,
+          method: 'POST',
+          data: {
+            otp,
           },
-        );
+        });
         await storage.set('at', query.accessToken);
         await storage.set('rt', query.refreshToken);
       },
