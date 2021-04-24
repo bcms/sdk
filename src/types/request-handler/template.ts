@@ -14,6 +14,6 @@ export interface BCMSSdkTemplateRequestHandlerUpdateData {
 }
 export type BCMSSdkTemplateRequestHandlerPrototype = BCMSSdkDefaultRequestHandlerPrototype<
   BCMSTemplate,
-  any,
-  any
+  BCMSSdkTemplateRequestHandlerAddData,
+  BCMSSdkTemplateRequestHandlerUpdateData
 >;
