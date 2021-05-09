@@ -209,6 +209,7 @@ export function BCMSSdk(config?: BCMSSdkConfig) {
     services: {
       entry: entryService,
       media: mediaService,
+      storage,
     },
     ...rhManager,
   };

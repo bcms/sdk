@@ -3,6 +3,7 @@ import type { BCMSJwt } from './models';
 import type {
   BCMSSdkEntryServicePrototype,
   BCMSSdkMediaServicePrototype,
+  BCMSSdkStoragePrototype,
 } from './services';
 import type { BCMSSdkRequestHandlerManagerPrototype } from './request-handler';
 
@@ -21,5 +22,6 @@ export interface BCMSSdkPrototype
   services: {
     entry: BCMSSdkEntryServicePrototype;
     media: BCMSSdkMediaServicePrototype;
+    storage: BCMSSdkStoragePrototype;
   };
 }
