@@ -26,6 +26,6 @@ export interface BCMSEntry {
   templateId: string;
   userId: string;
   meta: BCMSEntryMeta[];
-  content?: BCMSEntryContent[];
+  content: BCMSEntryContent[];
   status?: string;
 }
