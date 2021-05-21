@@ -5,7 +5,6 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
-    "typedoc-generate": "typedoc",
     "build:ts": "tsc -p .",
     "build": "node tools.js --build",
     "bundle": "node tools.js --bundle",
@@ -14,6 +13,8 @@
     "link:sudo": "node tools.js --link --sudo",
     "unlink": "node tools.js --unlink",
     "unlink:sudo": "node tools.js --unlink --sudo",
+    "pack": "node tools.js --pack",
+    "typedoc-generate": "typedoc",
     "test": "mocha -r ts-node/register test/integration/*.test.ts --recursive --exit",
     "test:active": "mocha -r ts-node/register test/integration/*.active.test.ts --recursive --exit",
     "test:unit": "mocha -r ts-node/register test/unit/*.test.ts --recursive --exit",
