@@ -6,8 +6,8 @@ const util = require('util');
 
 /**
  * @typedef {{
- *  title: string;
- *  task: () => Promise<void>;
+ *  title: string
+ *  task: (function(): Promise<void>)
  * }} Task
  */
 
@@ -24,8 +24,8 @@ async function spawn(cmd, args, options) {
       options
         ? options
         : {
-          stdio: 'inherit',
-        },
+            stdio: 'inherit',
+          },
     );
     proc.on('close', (code) => {
       if (code !== 0) {
@@ -73,17 +73,11 @@ function parseArgs(rawArgs) {
     }
   }
   return {
-    bundle:
-      args['--bundle'] === '' || args['--bundle'] === 'true' || false,
+    bundle: args['--bundle'] === '' || args['--bundle'] === 'true' || false,
     link: args['--link'] === '' || args['--link'] === 'true' || false,
-    unlink:
-      args['--unlink'] === '' || args['--unlink'] === 'true' || false,
-    publish:
-      args['--publish'] === '' ||
-      args['--publish'] === 'true' ||
-      false,
-    build:
-      args['--build'] === '' || args['--build'] === 'true' || false,
+    unlink: args['--unlink'] === '' || args['--unlink'] === 'true' || false,
+    publish: args['--publish'] === '' || args['--publish'] === 'true' || false,
+    build: args['--build'] === '' || args['--build'] === 'true' || false,
     sudo: args['--sudo'] === '' || args['--sudo'] === 'true' || false,
     pack: args['--pack'] === '' || args['--pack'] === 'true' || false,
   };
@@ -150,7 +144,7 @@ async function bundle() {
     },
   ]);
   await tasks.run();
-};
+}
 async function pack() {
   await spawn('npm', ['pack'], {
     cwd: path.join(process.cwd(), 'dist'),
@@ -202,11 +196,7 @@ async function publish() {
     )
   ) {
     throw new Error(
-      `Please remove "${path.join(
-        __dirname,
-        'dist',
-        'node_modules',
-      )}"`,
+      `Please remove "${path.join(__dirname, 'dist', 'node_modules')}"`,
     );
   }
   await spawn('npm', ['publish', '--access=private'], {
