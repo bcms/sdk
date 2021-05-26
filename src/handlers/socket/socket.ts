@@ -8,7 +8,7 @@ import {
 import { CacheControlPrototype } from '../../cache';
 import { SocketEventHandlers } from './event-handlers';
 import * as uuid from 'uuid';
-import * as io from 'socket.io-client';
+import SocketIO, {Socket} from 'socket.io-client';
 import { Queueable } from '../../util';
 
 export interface SocketHandlerPrototype {
@@ -35,7 +35,7 @@ export function SocketHandler(
   getAccessToken: () => JWT,
 ): SocketHandlerPrototype {
   let isConnected = false;
-  let socket: SocketIOClient.Socket;
+  let socket: Socket;
   const queueable = Queueable<void>('unsubscribe');
   const subscriptions: SocketSubscriptions = {};
   const handlers = SocketEventHandlers(
@@ -66,7 +66,7 @@ export function SocketHandler(
         isConnected = true;
         return new Promise((resolve, reject) => {
           try {
-            socket = io(server.url, {
+            socket = SocketIO(server.url, {
               path: server.path,
               query: {
                 at: accessToken,
