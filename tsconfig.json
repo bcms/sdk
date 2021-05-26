@@ -12,11 +12,10 @@
     "incremental": true
   },
   "typedocOptions": {
-    "inputFiles": ["./src"],
+    "entryPoints": ["./src"],
     "name": "BCMS | SDK",
     "theme": "./node_modules/typedoc-neo-theme/bin/default",
     "plugin": "typedoc-neo-theme",
-    "mode": "file",
     "out": "doc",
     "outline": [
       {
