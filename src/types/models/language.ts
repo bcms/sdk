@@ -1,7 +1,6 @@
-export interface BCMSLanguage {
-  _id: string;
-  createdAt: number;
-  updatedAt: number;
+import type { BCMSEntity } from './entity';
+
+export interface BCMSLanguage extends BCMSEntity {
   userId: string;
   code: string;
   name: string;

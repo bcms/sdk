@@ -1,4 +1,4 @@
-export interface BCMSPropEnum {
+export interface BCMSPropEnumData {
   items: string[];
   selected?: string;
 }

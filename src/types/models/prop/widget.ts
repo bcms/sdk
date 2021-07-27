@@ -1,6 +1,14 @@
-import type { BCMSProp } from './prop';
+import type { BCMSPropDataParsed, BCMSPropValue } from './main';
 
-export interface BCMSPropWidget {
+export interface BCMSPropWidgetData {
   _id: string;
-  props: BCMSProp[];
+}
+
+export interface BCMSPropWidgetDataParsed {
+  [key: string]: BCMSPropDataParsed;
+}
+
+export interface BCMSPropValueWidgetData {
+  _id: string;
+  props: BCMSPropValue[];
 }

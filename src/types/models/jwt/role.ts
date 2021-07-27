@@ -1,7 +1,7 @@
-import type { BCMSPermission } from './permission';
+import type { BCMSJwtPermission } from './permission';
 
 // eslint-disable-next-line no-shadow
-export enum BCMSRoleName {
+export enum BCMSJwtRoleName {
   SUDO = 'SUDO',
   DEV = 'DEV',
 
@@ -16,7 +16,7 @@ export enum BCMSRoleName {
   GUEST = 'GUEST',
 }
 
-export interface BCMSRole {
-  name: BCMSRoleName;
-  permissions: BCMSPermission[];
+export interface BCMSJwtRole {
+  name: BCMSJwtRoleName;
+  permissions: BCMSJwtPermission[];
 }

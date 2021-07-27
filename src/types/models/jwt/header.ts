@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-shadow
-export enum BCMSJWTEncryptionAlg {
+export enum BCMSJwtEncryptionAlg {
   HMACSHA256 = 'HS256',
   HMACSHA512 = 'HS512',
 }
 
-export interface BCMSJWTHeader {
+export interface BCMSJwtHeader {
   type: string;
-  alg: BCMSJWTEncryptionAlg;
+  alg: BCMSJwtEncryptionAlg;
 }

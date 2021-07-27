@@ -97,14 +97,17 @@ async function bundle() {
       title: 'Compile Typescript.',
       task: async () => {
         await spawn('npm', ['run', 'build:ts']);
+        await fse.remove(path.join(process.cwd(), 'dist', 'dev.js'));
+        await fse.remove(path.join(process.cwd(), 'dist', 'dev.js.map'));
+        await fse.remove(path.join(process.cwd(), 'dist', 'dev.d.ts'));
       },
     },
-    {
-      title: 'Compile Typedoc.',
-      task: async () => {
-        await spawn('npm', ['run', 'typedoc-generate']);
-      },
-    },
+    // {
+    //   title: 'Compile Typedoc.',
+    //   task: async () => {
+    //     await spawn('npm', ['run', 'typedoc-generate']);
+    //   },
+    // },
     {
       title: 'Copy package.json',
       task: async () => {

@@ -8,8 +8,8 @@
     "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
+    "rootDir": "src",
+    "incremental": false,
     "importsNotUsedAsValues": "error",
     "strict": true,
     "strictNullChecks": true
@@ -20,5 +20,5 @@
     "out": "doc",
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "public", "lib", "tmp"]
+  "exclude": ["node_modules", "dist"]
 }

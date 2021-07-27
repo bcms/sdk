@@ -1,8 +1,8 @@
-import type { BCMSJWTPayload } from './payload';
-import type { BCMSJWTHeader } from './header';
+import type { BCMSJwtPayload } from './payload';
+import type { BCMSJwtHeader } from './header';
 
 export interface BCMSJwt {
-  header: BCMSJWTHeader;
-  payload: BCMSJWTPayload;
+  header: BCMSJwtHeader;
+  payload: BCMSJwtPayload;
   signature: string;
 }

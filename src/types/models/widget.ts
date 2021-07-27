@@ -1,9 +1,8 @@
-import type { BCMSProp } from './prop';
+import type { BCMSEntity } from "./entity";
+import type { BCMSProp, BCMSPropChange } from "./prop";
 
-export interface BCMSWidget {
-  _id: string;
-  createdAt: number;
-  updatedAt: number;
+export interface BCMSWidget extends BCMSEntity {
+  cid: string;
   name: string;
   label: string;
   desc: string;
@@ -11,4 +10,22 @@ export interface BCMSWidget {
   previewScript: string;
   previewStyle: string;
   props: BCMSProp[];
+}
+
+export interface BCMSWidgetCreateData {
+  label: string;
+  desc: string;
+  previewImage: string;
+  previewScript: string;
+  previewStyle: string;
+}
+
+export interface BCMSWidgetUpdateData {
+  _id: string;
+  label?: string;
+  desc?: string;
+  previewImage?: string;
+  previewScript?: string;
+  previewStyle?: string;
+  propChanges?: BCMSPropChange[];
 }

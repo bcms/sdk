@@ -1,12 +1,12 @@
-import type { BCMSRole } from './role';
+import type { BCMSJwtRole } from './role';
 import type { BCMSUserCustomPool } from '../user';
 
-export interface BCMSJWTPayload {
+export interface BCMSJwtPayload {
   jti: string;
   iss: string;
   iat: number;
   exp: number;
   userId: string;
-  roles: BCMSRole[];
+  roles: BCMSJwtRole[];
   customPool: BCMSUserCustomPool;
 }

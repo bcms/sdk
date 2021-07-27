@@ -1,4 +1,4 @@
-export interface BCMSApiFunction {
-  _id: string;
-  public: boolean;
+export interface BCMSFunction {
+  name: string;
+  public: string;
 }

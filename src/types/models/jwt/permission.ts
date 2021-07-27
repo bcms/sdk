@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-shadow
-export enum BCMSPermissionName {
+export enum BCMSJwtPermissionName {
   READ = 'READ',
   WRITE = 'WRITE',
   DELETE = 'DELETE',
   EXECUTE = 'EXECUTE',
 }
 
-export interface BCMSPermission {
-  name: BCMSPermissionName;
+export interface BCMSJwtPermission {
+  name: BCMSJwtPermissionName;
 }

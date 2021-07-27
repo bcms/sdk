@@ -5,6 +5,7 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
+    "dev": "webpack serve --host 0.0.0.0 --port 1281",
     "build:ts": "tsc -p .",
     "build": "node tools.js --build",
     "bundle": "node tools.js --bundle",
@@ -27,25 +28,40 @@
   "dependencies": {
     "axios": "^0.21.1",
     "buffer": "^6.0.3",
-    "socket.io-client": "^4.0.1",
+    "socket.io-client": "^4.1.2",
     "uuid": "^8.3.2"
   },
+  "peerDependencies": {
+    "vuex": ">=4.0.2",
+    "vue": ">=3.1.4"
+  },
   "devDependencies": {
-    "@types/chai": "^4.2.16",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "^14.14.41",
-    "@types/uuid": "^8.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@becomes/purple-cheetah": "^3.0.1",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^8.2.3",
+    "@types/node": "^14.17.5",
+    "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "babel-loader": "^8.2.2",
     "chai": "^4.3.4",
     "env-cmd": "^10.0.1",
-    "eslint": "^7.24.0",
+    "eslint": "^7.30.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "form-data": "^4.0.0",
     "fs-extra": "^9.1.0",
+    "html-loader": "^2.1.2",
+    "html-webpack-plugin": "^5.3.2",
     "mocha": "^8.3.2",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.2",
+    "ts-loader": "^9.2.3",
     "ts-node": "^8.6.1",
-    "typedoc": "^0.20.35",
-    "typescript": "^4.2.2"
+    "typedoc": "^0.20.37",
+    "typescript": "^4.3.5",
+    "vue": "^3.1.4",
+    "vuex": "^4.0.2",
+    "webpack": "^5.43.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   }
 }

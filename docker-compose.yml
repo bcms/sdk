@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  sdk:
+    build: ''
+    ports:
+      - '1281:1281'
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
