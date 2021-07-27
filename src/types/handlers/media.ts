@@ -1,10 +1,12 @@
 import type { SendFunction } from '../main';
 import type { BCMSMedia } from '../models';
 import type { BCMSStore } from '../store';
+import type { BCMSStringUtility } from '../util';
 
 export interface BCMSMediaHandlerConfig {
   send: SendFunction;
   store: BCMSStore;
+  stringUtil: BCMSStringUtility;
 }
 
 export interface BCMSMediaHandler {

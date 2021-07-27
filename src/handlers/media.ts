@@ -4,11 +4,11 @@ import {
   BCMSMediaHandlerConfig,
   BCMSStoreMutationTypes,
 } from '../types';
-import { useBcmsStringUtility } from '../util';
 
 export function createBcmsMediaHandler({
   send,
   store,
+  stringUtil
 }: BCMSMediaHandlerConfig): BCMSMediaHandler {
   const baseUri = '/media';
   const latch: {
@@ -20,7 +20,6 @@ export function createBcmsMediaHandler({
     getAll: false,
     getByParentId: {},
   };
-  const stringUtil = useBcmsStringUtility();
 
   const self: BCMSMediaHandler = {
     async getAll() {

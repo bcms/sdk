@@ -13,11 +13,16 @@ import {
   createBcmsWidgetHandler,
   createBcmsTemplateHandler,
   createBcmsTemplateOrganizerHandler,
+  createBcmsSocketHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
 import { useBcmsStore } from './store';
 import type { BCMSJwt, BCMSSdk, BCMSSdkConfig } from './types';
-import { createBcmsDateUtility, createBcmsStringUtility } from './util';
+import {
+  createBcmsDateUtility,
+  createBcmsStringUtility,
+  createBcmsThrowable,
+} from './util';
 
 export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
   const store = useBcmsStore();
@@ -31,8 +36,11 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
     accessToken = unpackAccessToken(accessTokenRaw);
   }
 
-  createBcmsStringUtility();
-  createBcmsDateUtility();
+  const stringUtil = createBcmsStringUtility();
+  const dateUtil = createBcmsDateUtility({
+    stringUtil,
+  });
+  const throwable = createBcmsThrowable();
 
   function getAccessToken(): BCMSJwt | null {
     if (accessToken) {
@@ -70,14 +78,6 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
         };
       }
     }
-    // TODO
-    // if (!conf.headers && socket.id) {
-    //   conf.headers = {
-    //     sid: socket.id(),
-    //   };
-    // } else if (socket.id()) {
-    //   conf.headers.sid = socket.id();
-    // }
     conf.url = `${origin ? origin : ''}/api${conf.url}`;
     try {
       const response = await Axios(conf);
@@ -115,9 +115,14 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
   async function isLoggedIn(): Promise<boolean> {
     const result = await refreshAccessToken();
     // TODO
-    // if (socket && result && !socket.connected() && accessTokenRaw) {
-    //   await socket.connect(accessTokenRaw);
-    // }
+    if (
+      socketHandler &&
+      result &&
+      !socketHandler.connected() &&
+      accessTokenRaw
+    ) {
+      await socketHandler.connect();
+    }
     return result;
   }
   /**
@@ -175,15 +180,14 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
     if (type === 'set') {
       accessTokenRaw = value;
       accessToken = unpackAccessToken(value);
-      // TODO
-      // if (!socket.connected() && accessToken) {
-      //   socket.connect(value).catch((error) => {
-      //     console.error(error);
-      //   });
-      // }
+      if (!socketHandler.connected() && accessToken) {
+        socketHandler.connect().catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error(error);
+        });
+      }
     } else if (type === 'remove') {
-      // TODO
-      // socket.disconnect();
+      socketHandler.disconnect();
     }
   });
 
@@ -222,6 +226,7 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
   const mediaHandler = createBcmsMediaHandler({
     send,
     store,
+    stringUtil,
   });
   const templateHandler = createBcmsTemplateHandler({
     send,
@@ -234,6 +239,22 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
   const entryHandler = createBcmsEntryHandler({
     send,
     store,
+  });
+  const socketHandler = createBcmsSocketHandler({
+    store,
+    storage,
+    throwable,
+
+    apiKeyHandler,
+    entryHandler,
+    groupHandler,
+    langHandler: languageHandler,
+    mediaHandler,
+    statusHandler,
+    tempOrgHandler: templateOrganizerHandler,
+    templateHandler,
+    userHandler,
+    widgetHandler,
   });
 
   return {
@@ -256,5 +277,12 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
     template: templateHandler,
     templateOrganizer: templateOrganizerHandler,
     entry: entryHandler,
+    socket: socketHandler,
+
+    util: {
+      string: stringUtil,
+      date: dateUtil,
+      throwable,
+    },
   };
 }

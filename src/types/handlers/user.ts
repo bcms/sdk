@@ -9,5 +9,5 @@ export interface BCMSUserHandlerConfig {
 }
 
 export interface BCMSUserHandler {
-  get(id?: string): Promise<BCMSUser>;
+  get(id?: string, skipCache?: boolean): Promise<BCMSUser>;
 }

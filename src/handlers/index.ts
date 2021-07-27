@@ -5,6 +5,7 @@ export * from './group';
 export * from './language';
 export * from './media';
 export * from './shim';
+export * from './socket';
 export * from './status';
 export * from './template-organizer';
 export * from './template';

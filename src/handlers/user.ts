@@ -12,15 +12,17 @@ export function createBcmsUserHandler({
 }: BCMSUserHandlerConfig): BCMSUserHandler {
   const baseUri = '/user';
   return {
-    async get(id) {
-      const accessToken = getAccessToken();
-      if (!accessToken) {
-        throw Error('You must be logged in.');
-      }
-      const targetId = id ? id : accessToken.payload.userId;
-      const cacheHit = store.getters.user_findOne((e) => e._id === targetId);
-      if (cacheHit) {
-        return cacheHit;
+    async get(id, skipCache) {
+      if (!skipCache) {
+        const accessToken = getAccessToken();
+        if (!accessToken) {
+          throw Error('You must be logged in.');
+        }
+        const targetId = id ? id : accessToken.payload.userId;
+        const cacheHit = store.getters.user_findOne((e) => e._id === targetId);
+        if (cacheHit) {
+          return cacheHit;
+        }
       }
       const result: {
         item: BCMSUser;

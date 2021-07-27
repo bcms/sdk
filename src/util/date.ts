@@ -1,20 +1,14 @@
-import type { BCMSDateUtility } from '../types';
-import { useBcmsStringUtility } from './string';
+import type { BCMSDateUtility, BCMSDateUtilityConfig } from '../types';
 
-const mod: {
-  date: BCMSDateUtility;
-} = {
-  date: undefined as never,
-};
-
-export function createBcmsDateUtility(): void {
-  const stringUtil = useBcmsStringUtility();
-  mod.date = {
+export function createBcmsDateUtility({
+  stringUtil,
+}: BCMSDateUtilityConfig): BCMSDateUtility {
+  const self: BCMSDateUtility = {
     prettyElapsedTimeSince(millis) {
       const timeDiff = Math.abs(Date.now() - millis);
       const days = parseInt(`${(timeDiff / 86400000).toFixed(1)}`);
       if (days > 10) {
-        return mod.date.toReadable(millis);
+        return self.toReadable(millis);
       }
       const hours = parseInt(`${timeDiff / 3600000}`);
       const minutes = parseInt(`${timeDiff / 60000}`);
@@ -56,8 +50,5 @@ export function createBcmsDateUtility(): void {
       )}:${stringUtil.addZerosAtBeginning(minutes)}`;
     },
   };
-}
-
-export function useDateUtility(): BCMSDateUtility {
-  return mod.date;
+  return self;
 }

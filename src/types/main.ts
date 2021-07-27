@@ -7,6 +7,7 @@ import type {
   BCMSLanguageHandler,
   BCMSMediaHandler,
   BCMSShimHandler,
+  BCMSSocketHandler,
   BCMSStatusHandler,
   BCMSTemplateHandler,
   BCMSTemplateOrganizerHandler,
@@ -16,9 +17,12 @@ import type {
 import type { BCMSJwt } from './models';
 import type { BCMSStorage } from './storage';
 import type { BCMSStore } from './store';
+import type { BCMSDateUtility, BCMSStringUtility, BCMSThrowable } from './util';
 
 export interface BCMSSdkConfig {
-  /** Origin of the BCMS. For example: https://bcms.example.com */
+  /**
+   * Origin of the BCMS. For example: https://bcms.example.com
+   */
   origin?: string;
 }
 
@@ -42,6 +46,13 @@ export interface BCMSSdk {
   templateOrganizer: BCMSTemplateOrganizerHandler;
   template: BCMSTemplateHandler;
   entry: BCMSEntryHandler;
+  socket: BCMSSocketHandler;
+
+  util: {
+    throwable: BCMSThrowable;
+    string: BCMSStringUtility;
+    date: BCMSDateUtility;
+  };
 }
 
 export interface SendFunction {

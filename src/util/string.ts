@@ -1,13 +1,7 @@
 import type { BCMSStringUtility } from '../types';
 
-const mod: {
-  stringUtil: BCMSStringUtility;
-} = {
-  stringUtil: undefined as never,
-};
-
-export function createBcmsStringUtility(): void {
-  mod.stringUtil = {
+export function createBcmsStringUtility(): BCMSStringUtility {
+  return {
     toPretty(s) {
       if (s.indexOf('_') !== -1) {
         return s
@@ -104,8 +98,4 @@ export function createBcmsStringUtility(): void {
       return `${num}`.padStart(count ? count : 2, '0');
     },
   };
-}
-
-export function useBcmsStringUtility(): BCMSStringUtility {
-  return mod.stringUtil;
 }

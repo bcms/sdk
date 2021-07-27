@@ -3,6 +3,7 @@ export * from './entry';
 export * from './jwt';
 export * from './media';
 export * from './prop';
+export * from './socket';
 export * from './user';
 
 export * from './entity';
