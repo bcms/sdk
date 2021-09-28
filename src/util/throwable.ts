@@ -15,7 +15,7 @@ export function createBcmsThrowable(): BCMSThrowable {
       } else {
         // eslint-disable-next-line no-console
         console.error(e);
-        return e;
+        return e as OnErrorResult;
       }
     }
     if (onSuccess) {
