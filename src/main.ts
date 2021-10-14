@@ -154,14 +154,14 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
       }
     }
     const refreshToken = storage.get<string>('rt');
-    if (!refreshToken) {
+    if (!refreshToken || !accessToken) {
       return false;
     }
     try {
       const result: {
         accessToken: string;
       } = await send({
-        url: '/auth/token/refresh',
+        url: `/auth/token/refresh/${accessToken.payload.userId}`,
         method: 'POST',
         headers: {
           Authorization: `Bearer ${refreshToken}`,
