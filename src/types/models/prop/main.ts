@@ -1,3 +1,7 @@
+import type {
+  BCMSPropRichTextData,
+  BCMSPropValueRichTextData,
+} from './rich-text';
 import type { BCMSPropDateData } from './date';
 import type { BCMSPropEntryPointerData } from './entry-pointer';
 import type { BCMSPropEnumData } from './enum';
@@ -49,7 +53,8 @@ export type BCMSPropData =
   | BCMSPropEntryPointerData
   | BCMSPropGroupPointerData
   | BCMSPropMediaData[]
-  | BCMSPropWidgetData;
+  | BCMSPropWidgetData
+  | BCMSPropRichTextData[];
 
 export interface BCMSPropParsed {
   [name: string]: BCMSPropDataParsed;
@@ -90,4 +95,5 @@ export type BCMSPropValueData =
   | BCMSPropDateData
   | BCMSPropValueGroupPointerData
   | BCMSPropMediaData[]
-  | BCMSPropValueWidgetData;
+  | BCMSPropValueWidgetData
+  | BCMSPropValueRichTextData[];
