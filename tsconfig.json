@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "esnext",
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./dist",
     "incremental": false,
     "importsNotUsedAsValues": "error",
