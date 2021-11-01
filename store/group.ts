@@ -8,7 +8,7 @@ import {
   BCMSStoreGroupActions,
   BCMSStoreGroupGetters,
   BCMSStoreGroupMutations,
-} from '../types';
+} from '../src/types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 
 const defaultMutations = defaultEntryMutations<BCMSGroup>((item) => {

@@ -1,14 +1,6 @@
-import type { BCMSGroupLite } from '../models';
-import type {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
-} from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSGroupLite } from '../../types';
+import type { BCMSStoreGetterTypes, BCMSStoreMutationTypes } from './enums';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSGroupLite;
 
@@ -30,14 +22,4 @@ export interface BCMSStoreGroupLiteGetters {
   [BCMSStoreGetterTypes.groupLite_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreGroupLiteActions {
-  [BCMSStoreActionTypes.groupLite_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.groupLite_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

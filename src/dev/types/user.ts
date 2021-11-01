@@ -1,14 +1,6 @@
-import type { BCMSUser } from '../models';
-import type {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
-} from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSUser } from '../../types';
+import type { BCMSStoreGetterTypes, BCMSStoreMutationTypes } from './enums';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSUser;
 
@@ -31,14 +23,4 @@ export interface BCMSStoreUserGetters {
   [BCMSStoreGetterTypes.user_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreUserActions {
-  [BCMSStoreActionTypes.user_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.user_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

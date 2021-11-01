@@ -8,7 +8,7 @@ import {
   BCMSStoreGetterTypes,
   BCMSStoreMutationTypes,
   BCMSStoreState,
-} from '../types';
+} from '../src/types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 
 const defaultMutations = defaultEntryMutations<BCMSColor>((item) => {

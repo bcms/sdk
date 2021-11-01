@@ -8,7 +8,7 @@ import {
   BCMSStoreStatusActions,
   BCMSStoreStatusGetters,
   BCMSStoreStatusMutations,
-} from '../types';
+} from '../src/types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 
 const defaultMutations = defaultEntryMutations<BCMSStatus>((item) => {

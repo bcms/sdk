@@ -1,12 +1,10 @@
 import type {
-  BCMSStoreActionAugments,
-  BCMSStoreActionTypes,
   BCMSStoreGetterQuery,
   BCMSStoreGetterTypes,
   BCMSStoreMutationTypes,
   BCMSStoreState,
 } from '.';
-import type { BCMSColor } from '../models';
+import type { BCMSColor } from '../../types';
 
 type EntityItem = BCMSColor;
 
@@ -29,14 +27,4 @@ export interface BCMSStoreColorGetters {
   [BCMSStoreGetterTypes.color_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreColorActions {
-  [BCMSStoreActionTypes.color_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.color_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

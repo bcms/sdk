@@ -8,12 +8,11 @@
     "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "src",
     "incremental": false,
     "importsNotUsedAsValues": "error",
     "strict": true,
     "strictNullChecks": true
   },
-  "include": ["src"],
+  "include": ["src", "test/**/*"],
   "exclude": ["node_modules", "dist"]
 }

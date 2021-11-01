@@ -1,11 +1,9 @@
-import type { BCMSApiKey } from '../models';
+import type { BCMSApiKey } from '../../types';
 import type {
-  BCMSStoreActionTypes,
   BCMSStoreGetterTypes,
   BCMSStoreMutationTypes,
 } from './enums';
 import type {
-  BCMSStoreActionAugments,
   BCMSStoreGetterQuery,
   BCMSStoreState,
 } from './main';
@@ -30,14 +28,4 @@ export interface BCMSStoreApiKeyGetters {
   [BCMSStoreGetterTypes.apiKey_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreApiKeyActions {
-  [BCMSStoreActionTypes.apiKey_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.apiKey_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

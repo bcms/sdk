@@ -1,134 +1,56 @@
-import { expect, assert } from 'chai';
-import { sdk, Login, ObjectUtil, env } from '../util';
-import { User, RoleName, PermissionName } from '../../src/interfaces';
+import { Login, ObjectUtil, sdk } from '../util';
 
-const objectUtil = ObjectUtil();
-
-const comparator = {
-  defUser: {
-    email: env.user,
-    roles: [
+describe('User API', async () => {
+  Login();
+  it('should get currently logged in User', async () => {
+    const result = await sdk.user.get();
+    ObjectUtil.eq(
+      result,
       {
-        name: RoleName.ADMIN,
-        permissions: [
+        _id: '111111111111111111111111',
+        email: '',
+        roles: [
           {
-            name: PermissionName.READ,
-          },
-          {
-            name: PermissionName.WRITE,
-          },
-          {
-            name: PermissionName.DELETE,
-          },
-          {
-            name: PermissionName.EXECUTE,
+            name: 'ADMIN',
+            permissions: [
+              {
+                name: 'READ',
+              },
+              {
+                name: 'WRITE',
+              },
+              {
+                name: 'DELETE',
+              },
+              {
+                name: 'EXECUTE',
+              },
+            ],
           },
         ],
-      },
-    ],
-    username: 'Test Test',
-    customPool: {
-      personal: {
-        firstName: 'Test',
-        lastName: 'Test',
-        avatarUri: '',
-      },
-      policy: {
-        customPortal: {
-          delete: false,
-          get: false,
-          post: false,
-          put: false,
-        },
-        media: {
-          delete: false,
-          get: false,
-          post: false,
-          put: false,
-        },
-        entries: [],
-        webhooks: [],
-      },
-    },
-  },
-  newUser: {
-    _id: '',
-    username: 'Test Test 2',
-    email: 'test2@test.com',
-    customPool: {
-      personal: {
-        firstName: 'Test',
-        lastName: 'Test 2',
-      },
-    },
-  },
-};
-let userToAdminData: User;
-
-describe('User functions', async () => {
-  Login();
-  it('should get this user data', async () => {
-    const data = await sdk.user.get();
-    objectUtil.eq(data, comparator.defUser, 'data');
-  });
-  it('should get all users', async () => {
-    const data = await sdk.user.getAll();
-    for (const i in data) {
-      objectUtil.checkType(data[i], comparator.defUser, `data[${i}]`);
-    }
-  });
-  it('should create a new user', async () => {
-    const data = await sdk.user.add({
-      email: comparator.newUser.email,
-      password: 'password1234',
-      customPool: comparator.newUser.customPool,
-    });
-    comparator.newUser._id = data._id;
-    objectUtil.eq(data, comparator.newUser, 'data');
-  });
-  it('should update new user', async () => {
-    const data = await sdk.user.update({
-      _id: comparator.newUser._id,
-      customPool: {
-        personal: {
-          firstName: 'Test 2',
-          lastName: 'Test',
-        },
-      },
-    });
-    objectUtil.eq(
-      data,
-      {
-        username: 'Test 2 Test',
+        username: 'Dev User',
+        createdAt: 1627401751338,
+        updatedAt: 1627401751338,
         customPool: {
           personal: {
-            firstName: 'Test 2',
-            lastName: 'Test',
+            firstName: 'Dev',
+            lastName: 'User',
+            avatarUri: '',
+          },
+          address: {},
+          policy: {
+            media: {
+              get: false,
+              post: false,
+              put: false,
+              delete: false,
+            },
+            templates: [],
+            plugins: [],
           },
         },
       },
-      'data',
+      'user',
     );
-  });
-  it('should delete new user', async () => {
-    await sdk.user.delete(comparator.newUser._id);
-  });
-  it('should create a new user', async () => {
-    const data = await sdk.user.add({
-      email: comparator.newUser.email,
-      password: 'password1234',
-      customPool: comparator.newUser.customPool,
-    });
-    userToAdminData = data;
-    delete userToAdminData.createdAt;
-    delete userToAdminData.updatedAt;
-  });
-  it('should make a new user an ADMIN', async () => {
-    const data = await sdk.user.makeAnAdmin(userToAdminData._id);
-    userToAdminData.roles[0].name = RoleName.ADMIN;
-    objectUtil.eq(data, userToAdminData, 'data');
-  });
-  it('should delete new ADMIN user', async () => {
-    await sdk.user.delete(userToAdminData._id);
   });
 });

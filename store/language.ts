@@ -8,7 +8,7 @@ import {
   BCMSStoreLanguageActions,
   BCMSStoreLanguageGetters,
   BCMSStoreLanguageMutations,
-} from '../types';
+} from '../src/types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 
 const defaultMutations = defaultEntryMutations<BCMSLanguage>((item) => {

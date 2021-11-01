@@ -8,7 +8,7 @@ import {
   BCMSStoreWidgetActions,
   BCMSStoreWidgetGetters,
   BCMSStoreWidgetMutations,
-} from '../types';
+} from '../src/types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 
 const defaultMutations = defaultEntryMutations<BCMSWidget>((item) => {

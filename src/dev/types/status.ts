@@ -1,14 +1,9 @@
-import type { BCMSStatus } from '../models';
+import type { BCMSStatus } from '../../types';
 import type {
-  BCMSStoreActionTypes,
   BCMSStoreGetterTypes,
   BCMSStoreMutationTypes,
 } from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSStatus;
 
@@ -30,14 +25,4 @@ export interface BCMSStoreStatusGetters {
   [BCMSStoreGetterTypes.status_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreStatusActions {
-  [BCMSStoreActionTypes.status_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.status_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

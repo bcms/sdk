@@ -1,14 +1,6 @@
-import type { BCMSWidget } from '../models';
-import type {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
-} from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSWidget } from '../../types';
+import type { BCMSStoreGetterTypes, BCMSStoreMutationTypes } from './enums';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSWidget;
 
@@ -30,14 +22,4 @@ export interface BCMSStoreWidgetGetters {
   [BCMSStoreGetterTypes.widget_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreWidgetActions {
-  [BCMSStoreActionTypes.widget_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.widget_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

@@ -1,14 +1,6 @@
-import type { BCMSTemplateOrganizer } from '../models';
-import type {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
-} from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSTemplateOrganizer } from '../../types';
+import type { BCMSStoreGetterTypes, BCMSStoreMutationTypes } from './enums';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSTemplateOrganizer;
 
@@ -23,21 +15,13 @@ export interface BCMSStoreTemplateOrganizerMutations {
   ): void;
 }
 export interface BCMSStoreTemplateOrganizerGetters {
-  [BCMSStoreGetterTypes.templateOrganizer_items](state: BCMSStoreState): EntityItem[];
+  [BCMSStoreGetterTypes.templateOrganizer_items](
+    state: BCMSStoreState,
+  ): EntityItem[];
   [BCMSStoreGetterTypes.templateOrganizer_find](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem[];
   [BCMSStoreGetterTypes.templateOrganizer_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreTemplateOrganizerActions {
-  [BCMSStoreActionTypes.templateOrganizer_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.templateOrganizer_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

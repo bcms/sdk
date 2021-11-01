@@ -1,14 +1,9 @@
-import type { BCMSGroup } from '../models';
+import type { BCMSGroup } from '../../types';
 import type {
-  BCMSStoreActionTypes,
   BCMSStoreGetterTypes,
   BCMSStoreMutationTypes,
 } from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSGroup;
 
@@ -30,14 +25,4 @@ export interface BCMSStoreGroupGetters {
   [BCMSStoreGetterTypes.group_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreGroupActions {
-  [BCMSStoreActionTypes.group_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.group_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }

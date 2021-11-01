@@ -11,7 +11,7 @@ import type {
   BCMSStoreGetters,
   BCMSStoreMutations,
   BCMSStoreState,
-} from '../types';
+} from '../src/types';
 import * as UserStore from './user';
 import * as ApiKeyStore from './api-key';
 import * as LanguageStore from './language';

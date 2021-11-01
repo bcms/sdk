@@ -1,14 +1,6 @@
-import type { BCMSLanguage } from '../models';
-import type {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
-} from './enums';
-import type {
-  BCMSStoreActionAugments,
-  BCMSStoreGetterQuery,
-  BCMSStoreState,
-} from './main';
+import type { BCMSLanguage } from '../../types';
+import type { BCMSStoreGetterTypes, BCMSStoreMutationTypes } from './enums';
+import type { BCMSStoreGetterQuery, BCMSStoreState } from './main';
 
 type EntityItem = BCMSLanguage;
 
@@ -30,14 +22,4 @@ export interface BCMSStoreLanguageGetters {
   [BCMSStoreGetterTypes.language_findOne](
     state: BCMSStoreState,
   ): (query: BCMSStoreGetterQuery<EntityItem>) => EntityItem | undefined;
-}
-export interface BCMSStoreLanguageActions {
-  [BCMSStoreActionTypes.language_set](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem[],
-  ): void;
-  [BCMSStoreActionTypes.language_remove](
-    ctx: BCMSStoreActionAugments,
-    payload: EntityItem | EntityItem[],
-  ): void;
 }
