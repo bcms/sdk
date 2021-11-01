@@ -1,14 +1,13 @@
-import {
+import type {
   BCMSEntry,
   BCMSEntryHandler,
   BCMSEntryHandlerConfig,
   BCMSEntryLite,
-  BCMSStoreMutationTypes,
 } from '../types';
 
 export function createBcmsEntryHandler({
   send,
-  store,
+  cache,
 }: BCMSEntryHandlerConfig): BCMSEntryHandler {
   const baseUri = '/entry';
   const getAllLatch: {
@@ -18,9 +17,10 @@ export function createBcmsEntryHandler({
   return {
     async getAllLite(data) {
       if (getAllLatch[data.templateId]) {
-        return store.getters.entryLite_find(
-          (e) => e.templateId === data.templateId,
-        );
+        return cache.getters.find({
+          query: (e) => e.templateId === data.templateId,
+          name: 'entryLite',
+        });
       }
       const result: { items: BCMSEntryLite[] } = await send({
         url: `${baseUri}/all/${data.templateId}/lite`,
@@ -30,17 +30,18 @@ export function createBcmsEntryHandler({
         },
       });
       getAllLatch[data.templateId] = true;
-      store.commit(BCMSStoreMutationTypes.entryLite_set, result.items);
+      cache.mutations.set({ payload: result.items, name: 'entryLite' });
       return result.items;
     },
     async getManyLite(data) {
       let cacheHits: BCMSEntryLite[] = [];
       let missingIds: string[] = [];
       if (!data.skipCache) {
-        cacheHits = store.getters.entry_find(
-          (e) =>
+        cacheHits = cache.getters.find({
+          query: (e) =>
             e.templateId === data.templateId && data.entryIds.includes(e._id),
-        );
+          name: 'entryLite',
+        });
         if (cacheHits.length === data.entryIds.length) {
           return cacheHits;
         }
@@ -61,14 +62,15 @@ export function createBcmsEntryHandler({
           'X-Bcms-Ids': data.entryIds,
         },
       });
-      store.commit(BCMSStoreMutationTypes.entryLite_set, result.items);
+      cache.mutations.set({ payload: result.items, name: 'entryLite' });
       return [...cacheHits, ...result.items];
     },
     async getLite(data) {
       if (!data.skipCache) {
-        const cacheHit = store.getters.entryLite_findOne(
-          (e) => e._id === data.entryId,
-        );
+        const cacheHit = cache.getters.findOne<BCMSEntryLite>({
+          query: (e) => e._id === data.entryId,
+          name: 'entryLite',
+        });
         if (cacheHit) {
           return cacheHit;
         }
@@ -80,14 +82,15 @@ export function createBcmsEntryHandler({
           Authorization: '',
         },
       });
-      store.commit(BCMSStoreMutationTypes.entryLite_set, result.item);
+      cache.mutations.set({ payload: result.item, name: 'entryLite' });
       return result.item;
     },
     async get(data) {
       if (!data.skipCache) {
-        const cacheHit = store.getters.entry_findOne(
-          (e) => e._id === data.entryId,
-        );
+        const cacheHit = cache.getters.findOne<BCMSEntry>({
+          query: (e) => e._id === data.entryId,
+          name: 'entry',
+        });
         if (cacheHit) {
           return cacheHit;
         }
@@ -99,14 +102,15 @@ export function createBcmsEntryHandler({
           Authorization: '',
         },
       });
-      store.commit(BCMSStoreMutationTypes.entry_set, result.item);
+      cache.mutations.set({ payload: result.item, name: 'entry' });
       return result.item;
     },
     async count(data) {
       if (getAllLatch[data.templateId]) {
-        return store.getters.entryLite_find(
-          (e) => e.templateId === data.templateId,
-        ).length;
+        return cache.getters.find<BCMSEntry>({
+          query: (e) => e.templateId === data.templateId,
+          name: 'entryLite',
+        }).length;
       }
       const result: { count: number } = await send({
         url: `${baseUri}/count/${data.templateId}`,
@@ -128,20 +132,23 @@ export function createBcmsEntryHandler({
         },
         data,
       });
-      store.commit(BCMSStoreMutationTypes.entry_set, result.item);
-      store.commit(BCMSStoreMutationTypes.entryLite_set, {
-        _id: result.item._id,
-        createdAt: result.item.createdAt,
-        updatedAt: result.item.updatedAt,
-        cid: result.item.cid,
-        templateId: result.item.templateId,
-        userId: result.item.userId,
-        meta: result.item.meta.map((meta) => {
-          return {
-            lng: meta.lng,
-            props: meta.props.slice(0, 2),
-          };
-        }),
+      cache.mutations.set({ payload: result.item, name: 'entry' });
+      cache.mutations.set<BCMSEntryLite>({
+        payload: {
+          _id: result.item._id,
+          createdAt: result.item.createdAt,
+          updatedAt: result.item.updatedAt,
+          cid: result.item.cid,
+          templateId: result.item.templateId,
+          userId: result.item.userId,
+          meta: result.item.meta.map((meta) => {
+            return {
+              lng: meta.lng,
+              props: meta.props.slice(0, 2),
+            };
+          }),
+        },
+        name: 'entryLite',
       });
       return result.item;
     },
@@ -156,20 +163,23 @@ export function createBcmsEntryHandler({
         },
         data,
       });
-      store.commit(BCMSStoreMutationTypes.entry_set, result.item);
-      store.commit(BCMSStoreMutationTypes.entryLite_set, {
-        _id: result.item._id,
-        createdAt: result.item.createdAt,
-        updatedAt: result.item.updatedAt,
-        cid: result.item.cid,
-        templateId: result.item.templateId,
-        userId: result.item.userId,
-        meta: result.item.meta.map((meta) => {
-          return {
-            lng: meta.lng,
-            props: meta.props.slice(0, 2),
-          };
-        }),
+      cache.mutations.set({ payload: result.item, name: 'entry' });
+      cache.mutations.set<BCMSEntryLite>({
+        payload: {
+          _id: result.item._id,
+          createdAt: result.item.createdAt,
+          updatedAt: result.item.updatedAt,
+          cid: result.item.cid,
+          templateId: result.item.templateId,
+          userId: result.item.userId,
+          meta: result.item.meta.map((meta) => {
+            return {
+              lng: meta.lng,
+              props: meta.props.slice(0, 2),
+            };
+          }),
+        },
+        name: 'entryLite',
       });
       return result.item;
     },
@@ -182,20 +192,25 @@ export function createBcmsEntryHandler({
         },
         data,
       });
-      const entryLiteCacheHit = store.getters.entryLite_findOne(
-        (e) => e._id === data.entryId,
-      );
+      const entryLiteCacheHit = cache.getters.findOne({
+        query: (e) => e._id === data.entryId,
+        name: 'entryLite',
+      });
       if (entryLiteCacheHit) {
-        store.commit(
-          BCMSStoreMutationTypes.entryLite_remove,
-          entryLiteCacheHit,
-        );
+        cache.mutations.remove({
+          payload: entryLiteCacheHit,
+          name: 'entryLite',
+        });
       }
-      const entryCacheHit = store.getters.entry_findOne(
-        (e) => e._id === data.entryId,
-      );
+      const entryCacheHit = cache.getters.findOne({
+        query: (e) => e._id === data.entryId,
+        name: 'entry',
+      });
       if (entryCacheHit) {
-        store.commit(BCMSStoreMutationTypes.entry_remove, entryCacheHit);
+        cache.mutations.remove({
+          payload: entryCacheHit,
+          name: 'entry',
+        });
       }
     },
   };

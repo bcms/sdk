@@ -1,9 +1,9 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type { BCMSJwt, BCMSUser } from '../models';
-import type { BCMSStore } from '../store';
 
 export interface BCMSUserHandlerConfig {
-  store: BCMSStore;
+  cache: BCMSSdkCache;
   send: SendFunction;
   getAccessToken(): BCMSJwt | null;
 }

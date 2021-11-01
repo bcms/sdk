@@ -1,11 +1,11 @@
 import type { BCMSColor, BCMSColorCreateData, BCMSColorUpdateData } from '..';
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
-import type { BCMSStore } from '../store';
 import type { BCMSDefaultHandler } from './_defaults';
 
 export interface BCMSColorHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export type BCMSColorHandler = BCMSDefaultHandler<

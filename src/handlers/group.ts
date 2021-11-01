@@ -1,4 +1,4 @@
-import {
+import type {
   BCMSGroup,
   BCMSGroupAddData,
   BCMSGroupHandler,
@@ -6,13 +6,15 @@ import {
   BCMSGroupLite,
   BCMSGroupUpdateData,
   BCMSGroupWhereIsItUsedResponse,
-  BCMSStoreMutationTypes,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import {
+  createBcmsDefaultHandler,
+  createBcmsDefaultHandlerCache,
+} from './_defaults';
 
 export function createBcmsGroupHandler({
   send,
-  store,
+  cache,
 }: BCMSGroupHandlerConfig): BCMSGroupHandler {
   const baseUri = '/group';
   const defaultHandler = createBcmsDefaultHandler<
@@ -22,23 +24,7 @@ export function createBcmsGroupHandler({
   >({
     baseUri,
     send,
-    cache: {
-      find(query) {
-        return store.getters.group_find(query);
-      },
-      findAll() {
-        return store.getters.group_items;
-      },
-      findOne(query) {
-        return store.getters.group_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.group_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.group_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'group', cache }),
   });
 
   let getAllLiteLatch = false;
@@ -47,7 +33,7 @@ export function createBcmsGroupHandler({
     ...defaultHandler,
     async getAllLite() {
       if (getAllLiteLatch) {
-        return store.getters.groupLite_items;
+        return cache.getters.items({ name: 'groupLite' });
       }
       const result: {
         items: BCMSGroupLite[];
@@ -58,7 +44,7 @@ export function createBcmsGroupHandler({
           Authorization: '',
         },
       });
-      store.commit(BCMSStoreMutationTypes.groupLite_set, result.items);
+      cache.mutations.set({ name: 'groupLite', payload: result.items });
       getAllLiteLatch = true;
       return result.items;
     },

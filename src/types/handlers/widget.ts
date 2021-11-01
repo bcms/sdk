@@ -1,15 +1,15 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type {
   BCMSWidget,
   BCMSWidgetCreateData,
   BCMSWidgetUpdateData,
 } from '../models';
-import type { BCMSStore } from '../store';
 import type { BCMSDefaultHandler } from './_defaults';
 
 export interface BCMSWidgetHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export interface BCMSWidgetWhereIsItUsedResponse {

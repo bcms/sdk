@@ -1,8 +1,37 @@
-import type { BCMSEntity } from '../types';
+import type { BCMSEntity, BCMSSdkCache, BCMSSdkCacheDataName } from '../types';
 import type {
   BCMSDefaultHandler,
+  BCMSDefaultHandlerCache,
   BCMSDefaultHandlerConfig,
 } from '../types/handlers/_defaults';
+
+export function createBcmsDefaultHandlerCache<
+  Model extends BCMSEntity & { cid?: string },
+>({
+  name,
+  cache,
+}: {
+  name: BCMSSdkCacheDataName;
+  cache: BCMSSdkCache;
+}): BCMSDefaultHandlerCache<Model> {
+  return {
+    find(query) {
+      return cache.getters.find({ query, name });
+    },
+    findAll() {
+      return cache.getters.items({ name });
+    },
+    findOne(query) {
+      return cache.getters.findOne({ query, name });
+    },
+    remove(item) {
+      cache.mutations.remove({ payload: item, name });
+    },
+    set(item) {
+      cache.mutations.set({ payload: item, name });
+    },
+  };
+}
 
 export function createBcmsDefaultHandler<
   Model extends BCMSEntity & { cid?: string },

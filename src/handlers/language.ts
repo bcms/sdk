@@ -1,16 +1,18 @@
-import {
+import type {
   BCMSLanguage,
   BCMSLanguageAddData,
   BCMSLanguageHandler,
   BCMSLanguageHandlerConfig,
   BCMSLanguageUpdateData,
-  BCMSStoreMutationTypes,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import {
+  createBcmsDefaultHandler,
+  createBcmsDefaultHandlerCache,
+} from './_defaults';
 
 export function createBcmsLanguageHandler({
   send,
-  store,
+  cache,
 }: BCMSLanguageHandlerConfig): BCMSLanguageHandler {
   return createBcmsDefaultHandler<
     BCMSLanguage,
@@ -19,22 +21,6 @@ export function createBcmsLanguageHandler({
   >({
     baseUri: '/language',
     send,
-    cache: {
-      find(query) {
-        return store.getters.language_find(query);
-      },
-      findAll() {
-        return store.getters.language_items;
-      },
-      findOne(query) {
-        return store.getters.language_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.language_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.language_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'language', cache }),
   });
 }

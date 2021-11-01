@@ -1,5 +1,4 @@
-import {
-  BCMSStoreMutationTypes,
+import type {
   BCMSUser,
   BCMSUserHandler,
   BCMSUserHandlerConfig,
@@ -8,7 +7,7 @@ import {
 export function createBcmsUserHandler({
   send,
   getAccessToken,
-  store,
+  cache,
 }: BCMSUserHandlerConfig): BCMSUserHandler {
   const baseUri = '/user';
   return {
@@ -19,7 +18,10 @@ export function createBcmsUserHandler({
           throw Error('You must be logged in.');
         }
         const targetId = id ? id : accessToken.payload.userId;
-        const cacheHit = store.getters.user_findOne((e) => e._id === targetId);
+        const cacheHit = cache.getters.findOne<BCMSUser>({
+          query: (e) => e._id === targetId,
+          name: 'user',
+        });
         if (cacheHit) {
           return cacheHit;
         }
@@ -33,7 +35,7 @@ export function createBcmsUserHandler({
           Authorization: '',
         },
       });
-      store.commit(BCMSStoreMutationTypes.user_set, result.item);
+      cache.mutations.set({ payload: result.item, name: 'user' });
       return result.item;
     },
   };

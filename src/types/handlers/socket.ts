@@ -1,6 +1,6 @@
+import type { BCMSSdkCache } from '../cache';
 import type { BCMSSocketEvent, BCMSSocketEventName } from '../models';
 import type { BCMSStorage } from '../storage';
-import type { BCMSStore } from '../store';
 import type { BCMSThrowable } from '../util';
 import type { BCMSApiKeyHandler } from './api-key';
 import type { BCMSEntryHandler } from './entry';
@@ -14,7 +14,7 @@ import type { BCMSUserHandler } from './user';
 import type { BCMSWidgetHandler } from './widget';
 
 export interface BCMSSocketHandlerConfig {
-  store: BCMSStore;
+  cache: BCMSSdkCache;
   storage: BCMSStorage;
   throwable: BCMSThrowable;
 

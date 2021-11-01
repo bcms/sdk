@@ -1,16 +1,18 @@
-import {
+import type {
   BCMSApiKey,
   BCMSApiKeyAddData,
   BCMSApiKeyHandler,
   BCMSApiKeyHandlerConfig,
   BCMSApiKeyUpdateData,
-  BCMSStoreMutationTypes,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import {
+  createBcmsDefaultHandler,
+  createBcmsDefaultHandlerCache,
+} from './_defaults';
 
 export function createBcmsApiKeyHandler({
   send,
-  store,
+  cache,
 }: BCMSApiKeyHandlerConfig): BCMSApiKeyHandler {
   return createBcmsDefaultHandler<
     BCMSApiKey,
@@ -19,22 +21,6 @@ export function createBcmsApiKeyHandler({
   >({
     baseUri: '/key',
     send,
-    cache: {
-      find(query) {
-        return store.getters.apiKey_find(query);
-      },
-      findAll() {
-        return store.getters.apiKey_items;
-      },
-      findOne(query) {
-        return store.getters.apiKey_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.apiKey_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.apiKey_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'apiKey', cache }),
   });
 }
