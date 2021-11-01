@@ -5,7 +5,13 @@ import type {
   Store as VuexStore,
 } from 'vuex';
 import type {
+  BCMSStoreColorActions,
+  BCMSStoreColorGetters,
+  BCMSStoreColorMutations,
+} from '.';
+import type {
   BCMSApiKey,
+  BCMSColor,
   BCMSEntity,
   BCMSEntry,
   BCMSEntryLite,
@@ -97,6 +103,7 @@ export interface BCMSStoreState {
   entry: BCMSEntry[];
   entryLite: BCMSEntryLite[];
   templateOrganizer: BCMSTemplateOrganizer[];
+  color: BCMSColor[];
 }
 
 export type BCMSStoreMutations = BCMSStoreUserMutations &
@@ -110,7 +117,8 @@ export type BCMSStoreMutations = BCMSStoreUserMutations &
   BCMSStoreTemplateMutations &
   BCMSStoreEntryLiteMutations &
   BCMSStoreEntryMutations &
-  BCMSStoreTemplateOrganizerMutations;
+  BCMSStoreTemplateOrganizerMutations &
+  BCMSStoreColorMutations;
 
 export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreApiKeyGetters &
@@ -123,7 +131,8 @@ export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreTemplateGetters &
   BCMSStoreEntryLiteGetters &
   BCMSStoreEntryGetters &
-  BCMSStoreTemplateOrganizerGetters;
+  BCMSStoreTemplateOrganizerGetters &
+  BCMSStoreColorGetters;
 
 export type BCMSStoreActionAugments = Omit<
   ActionContext<BCMSStoreState, BCMSStoreState>,
@@ -146,7 +155,8 @@ export type BCMSStoreActions = BCMSStoreUserActions &
   BCMSStoreTemplateActions &
   BCMSStoreEntryLiteActions &
   BCMSStoreEntryActions &
-  BCMSStoreTemplateOrganizerActions;
+  BCMSStoreTemplateOrganizerActions &
+  BCMSStoreColorActions;
 
 export type BCMSStore = Omit<
   VuexStore<BCMSStoreState>,

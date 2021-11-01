@@ -24,7 +24,7 @@ import * as TemplateStore from './template';
 import * as EntryLiteStore from './entry-lite';
 import * as EntryStore from './entry';
 import * as TempOrgStore from './template-organizer';
-
+import * as ColorStore from './color';
 export const state: BCMSStoreState = {
   user: [],
   apiKey: [],
@@ -38,6 +38,7 @@ export const state: BCMSStoreState = {
   entryLite: [],
   entry: [],
   templateOrganizer: [],
+  color: [],
 };
 
 export const mutations: MutationTree<BCMSStoreState> & BCMSStoreMutations = {
@@ -53,6 +54,7 @@ export const mutations: MutationTree<BCMSStoreState> & BCMSStoreMutations = {
   ...EntryLiteStore.mutations,
   ...EntryStore.mutations,
   ...TempOrgStore.mutations,
+  ...ColorStore.mutations,
 };
 export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
   BCMSStoreGetters = {
@@ -68,6 +70,7 @@ export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
   ...EntryLiteStore.getters,
   ...EntryStore.getters,
   ...TempOrgStore.getters,
+  ...ColorStore.getters,
 };
 export const actions: ActionTree<BCMSStoreState, BCMSStoreState> &
   BCMSStoreActions = {
@@ -83,6 +86,7 @@ export const actions: ActionTree<BCMSStoreState, BCMSStoreState> &
   ...EntryLiteStore.actions,
   ...EntryStore.actions,
   ...TempOrgStore.actions,
+  ...ColorStore.actions,
 };
 
 export const bcmsStore = createStore<BCMSStoreState>({

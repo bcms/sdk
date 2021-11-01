@@ -8,7 +8,7 @@ import {
 export function createBcmsMediaHandler({
   send,
   store,
-  stringUtil
+  stringUtil,
 }: BCMSMediaHandlerConfig): BCMSMediaHandler {
   const baseUri = '/media';
   const latch: {
@@ -186,6 +186,30 @@ export function createBcmsMediaHandler({
       if (cacheHit) {
         store.commit(BCMSStoreMutationTypes.media_remove, cacheHit);
       }
+    },
+    async duplicateFile(data) {
+      const result: { item: BCMSMedia } = await send({
+        url: `${baseUri}/duplicate`,
+        method: 'POST',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      store.commit(BCMSStoreMutationTypes.media_set, result.item);
+      return result.item;
+    },
+    async moveFile(data) {
+      const result: { item: BCMSMedia } = await send({
+        url: `${baseUri}/move`,
+        method: 'PUT',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      store.commit(BCMSStoreMutationTypes.media_set, result.item);
+      return result.item;
     },
   };
 

@@ -1,3 +1,4 @@
+import type { BCMSPropColorPickerData } from './color-picker';
 import type { BCMSPropData, BCMSPropType } from './main';
 
 export interface BCMSPropChange {
@@ -17,5 +18,6 @@ export interface BCMSPropChange {
     move: number;
     required: boolean;
     enumItems?: string[];
+    colorData?: BCMSPropColorPickerData;
   };
 }

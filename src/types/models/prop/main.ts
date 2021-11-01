@@ -16,7 +16,7 @@ import type {
   BCMSPropWidgetData,
   BCMSPropWidgetDataParsed,
 } from './widget';
-
+import type { BCMSPropColorPickerData } from './color-picker';
 // eslint-disable-next-line no-shadow
 export enum BCMSPropType {
   STRING = 'STRING',
@@ -31,6 +31,7 @@ export enum BCMSPropType {
   ENTRY_POINTER = 'ENTRY_POINTER',
   WIDGET = 'WIDGET',
 
+  COLOR_PICKER = 'COLOR_PICKER',
   RICH_TEXT = 'RICH_TEXT',
 }
 
@@ -54,7 +55,8 @@ export type BCMSPropData =
   | BCMSPropGroupPointerData
   | BCMSPropMediaData[]
   | BCMSPropWidgetData
-  | BCMSPropRichTextData[];
+  | BCMSPropRichTextData[]
+  | BCMSPropColorPickerData;
 
 export interface BCMSPropParsed {
   [name: string]: BCMSPropDataParsed;

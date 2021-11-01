@@ -35,6 +35,9 @@ export enum BCMSStoreMutationTypes {
 
   templateOrganizer_set = 'templateOrganizer_set',
   templateOrganizer_remove = 'templateOrganizer_remove',
+
+  color_set = 'color_set',
+  color_remove = 'color_remove',
 }
 
 // eslint-disable-next-line no-shadow
@@ -87,6 +90,10 @@ export enum BCMSStoreGetterTypes {
   templateOrganizer_items = 'templateOrganizer_items',
   templateOrganizer_find = 'templateOrganizer_find',
   templateOrganizer_findOne = 'templateOrganizer_findOne',
+
+  color_items = 'color_items',
+  color_find = 'color_find',
+  color_findOne = 'color_findOne',
 }
 
 // eslint-disable-next-line no-shadow
@@ -126,4 +133,7 @@ export enum BCMSStoreActionTypes {
 
   templateOrganizer_set = 'templateOrganizer_set',
   templateOrganizer_remove = 'templateOrganizer_remove',
+
+  color_set = 'color_set',
+  color_remove = 'color_remove',
 }
