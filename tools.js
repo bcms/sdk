@@ -97,9 +97,12 @@ async function bundle() {
       title: 'Compile Typescript.',
       task: async () => {
         await spawn('npm', ['run', 'build:ts']);
-        await fse.remove(path.join(process.cwd(), 'dist', 'dev.js'));
-        await fse.remove(path.join(process.cwd(), 'dist', 'dev.js.map'));
-        await fse.remove(path.join(process.cwd(), 'dist', 'dev.d.ts'));
+        await fse.remove(path.join(process.cwd(), 'dist', 'test'));
+        await fse.copy(
+          path.join(process.cwd(), 'dist', 'src'),
+          path.join(process.cwd(), 'dist'),
+        );
+        await fse.remove(path.join(process.cwd(), 'dist', 'dev'));
       },
     },
     // {
