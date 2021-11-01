@@ -14,6 +14,7 @@ import type { BCMSUserHandler } from './user';
 import type { BCMSWidgetHandler } from './widget';
 
 export interface BCMSSocketHandlerConfig {
+  origin?: string;
   cache: BCMSSdkCache;
   storage: BCMSStorage;
   throwable: BCMSThrowable;

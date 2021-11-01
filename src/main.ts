@@ -239,6 +239,7 @@ export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
     cache,
   });
   const socketHandler = createBcmsSocketHandler({
+    origin,
     cache,
     storage,
     throwable,

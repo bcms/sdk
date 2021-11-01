@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import SocketIO, { Socket } from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
 import {
   BCMSApiKey,
   BCMSSocketApiKeyEvent,
@@ -21,6 +21,7 @@ import {
 } from '../types';
 
 export function createBcmsSocketHandler({
+  origin,
   cache,
   storage,
   throwable,
@@ -308,7 +309,7 @@ export function createBcmsSocketHandler({
               reject('You need to login to access socket.');
               return;
             }
-            socket = SocketIO('', {
+            socket = io(origin || '', {
               path: '/api/socket/server',
               transports: ['websocket'],
               query: {
