@@ -1,43 +1,29 @@
 import { expect } from 'chai';
 import { createBcmsSdk } from '../../src';
-import { store } from '../../src/dev/store';
-import {
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
-} from '../../src/dev/types';
+import { store as Store } from '../../src/dev/store';
+
+const store = Store as any;
 
 export const sdk = createBcmsSdk({
   origin: 'http://localhost:8080',
   cache: {
     getters: {
       find({ query, name }) {
-        return store.getters[BCMSStoreGetterTypes[`${name}_find`]](store.state)(
-          query as any,
-        ) as any[];
+        return store.getters[`${name}_find`](store.state)(query);
       },
       findOne({ query, name }) {
-        return store.getters[BCMSStoreGetterTypes[`${name}_findOne`]](
-          store.state,
-        )(query as any) as any;
+        return store.getters[`${name}_findOne`](store.state)(query);
       },
       items({ name }) {
-        return store.getters[BCMSStoreGetterTypes[`${name}_items`]](
-          store.state,
-        ) as any[];
+        return store.getters[`${name}_items`](store.state);
       },
     },
     mutations: {
       remove({ payload, name }) {
-        store.mutations[BCMSStoreMutationTypes[`${name}_remove`]](
-          store.state,
-          payload as any,
-        );
+        store.mutations[`${name}_remove`](store.state, payload);
       },
       set({ payload, name }) {
-        store.mutations[BCMSStoreMutationTypes[`${name}_set`]](
-          store.state,
-          payload as any,
-        );
+        store.mutations[`${name}_set`](store.state, payload);
       },
     },
   },
