@@ -1,3 +1,4 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type {
   BCMSGroup,
@@ -5,12 +6,11 @@ import type {
   BCMSGroupLite,
   BCMSGroupUpdateData,
 } from '../models';
-import type { BCMSStore } from '../store';
 import type { BCMSDefaultHandler } from './_defaults';
 
 export interface BCMSGroupHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export interface BCMSGroupWhereIsItUsedResponse {

@@ -1,14 +1,15 @@
-import {
+import type {
   BCMSMedia,
   BCMSMediaHandler,
   BCMSMediaHandlerConfig,
-  BCMSStoreMutationTypes,
 } from '../types';
 
 export function createBcmsMediaHandler({
   send,
-  store,
-  stringUtil
+  isLoggedIn,
+  storage,
+  cache,
+  stringUtil,
 }: BCMSMediaHandlerConfig): BCMSMediaHandler {
   const baseUri = '/media';
   const latch: {
@@ -24,7 +25,7 @@ export function createBcmsMediaHandler({
   const self: BCMSMediaHandler = {
     async getAll() {
       if (latch.getAll) {
-        return store.getters.media_items;
+        return cache.getters.items({ name: 'media' });
       }
       const result: {
         items: BCMSMedia[];
@@ -36,13 +37,16 @@ export function createBcmsMediaHandler({
         },
       });
       latch.getAll = true;
-      store.commit(BCMSStoreMutationTypes.media_set, result.items);
+      cache.mutations.set({ payload: result.items, name: 'media' });
       return result.items;
     },
     async getAllByParentId(id, skipCache) {
       if (!skipCache) {
         if (latch.getByParentId[id]) {
-          return store.getters.media_find((e) => e.parentId === id);
+          return cache.getters.find({
+            query: (e) => e.parentId === id,
+            name: 'media',
+          });
         }
       }
       const result: {
@@ -55,14 +59,17 @@ export function createBcmsMediaHandler({
         },
       });
       latch.getByParentId[id] = true;
-      store.commit(BCMSStoreMutationTypes.media_set, result.items);
+      cache.mutations.set({ payload: result.items, name: 'media' });
       return result.items;
     },
     async getMany(ids, skipCache) {
       let cacheHits: BCMSMedia[] = [];
       let missingIds: string[] = [];
       if (!skipCache) {
-        cacheHits = store.getters.media_find((e) => ids.includes(e._id));
+        cacheHits = cache.getters.find({
+          query: (e) => ids.includes(e._id),
+          name: 'media',
+        });
         if (cacheHits.length !== ids.length) {
           for (let i = 0; i < ids.length; i++) {
             const id = ids[i];
@@ -84,12 +91,15 @@ export function createBcmsMediaHandler({
           'X-Bcms-Ids': missingIds.join('-'),
         },
       });
-      store.commit(BCMSStoreMutationTypes.media_set, result.items);
+      cache.mutations.set({ payload: result.items, name: 'media' });
       return [...cacheHits, ...result.items];
     },
     async getById(id, skipCache) {
       if (!skipCache) {
-        const cacheHit = store.getters.media_findOne((e) => e._id === id);
+        const cacheHit = cache.getters.findOne<BCMSMedia>({
+          query: (e) => e._id === id,
+          name: 'media',
+        });
         if (cacheHit) {
           return cacheHit;
         }
@@ -101,7 +111,7 @@ export function createBcmsMediaHandler({
           Authorization: '',
         },
       });
-      store.commit(BCMSStoreMutationTypes.media_set, result.item);
+      cache.mutations.set({ payload: result.item, name: 'media' });
       return result.item;
     },
     async getBinary(id, size) {
@@ -113,6 +123,18 @@ export function createBcmsMediaHandler({
         },
         responseType: 'arraybuffer',
       });
+    },
+    async getVideoThumbnail(id) {
+      if (!(await isLoggedIn())) {
+        return null;
+      }
+      const act = await storage.get('at');
+      const result: Buffer = await send({
+        url: `${baseUri}/${id}/vid/bin/thumbnail?act=${act}`,
+        method: 'GET',
+        responseType: 'arraybuffer',
+      });
+      return result;
     },
     async createFile(data) {
       const filenameParts = data.file.name.split('.');
@@ -146,7 +168,7 @@ export function createBcmsMediaHandler({
         },
         data: fd,
       });
-      store.commit(BCMSStoreMutationTypes.media_set, result.item);
+      cache.mutations.set({ payload: result.item, name: 'media' });
       return result.item;
     },
     async createDir(data) {
@@ -158,12 +180,24 @@ export function createBcmsMediaHandler({
         },
         data,
       });
-      store.commit(BCMSStoreMutationTypes.media_set, result.item);
+      cache.mutations.set({ payload: result.item, name: 'media' });
+      return result.item;
+    },
+    async updateFile(data) {
+      const result: { item: BCMSMedia } = await send({
+        url: `${baseUri}/file`,
+        method: 'PUT',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      cache.mutations.set({ payload: result.item, name: 'media' });
       return result.item;
     },
     async count() {
       if (latch.getAll) {
-        return store.getters.media_items.length;
+        return cache.getters.items({ name: 'media' }).length;
       }
       const result: { count: number } = await send({
         url: `${baseUri}/count`,
@@ -182,10 +216,37 @@ export function createBcmsMediaHandler({
           Authorization: '',
         },
       });
-      const cacheHit = store.getters.media_findOne((e) => e._id === id);
+      const cacheHit = cache.getters.findOne<BCMSMedia>({
+        query: (e) => e._id === id,
+        name: 'media',
+      });
       if (cacheHit) {
-        store.commit(BCMSStoreMutationTypes.media_remove, cacheHit);
+        cache.mutations.remove({ payload: cacheHit, name: 'media' });
       }
+    },
+    async duplicateFile(data) {
+      const result: { item: BCMSMedia } = await send({
+        url: `${baseUri}/duplicate`,
+        method: 'POST',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      cache.mutations.set({ payload: result.item, name: 'media' });
+      return result.item;
+    },
+    async moveFile(data) {
+      const result: { item: BCMSMedia } = await send({
+        url: `${baseUri}/move`,
+        method: 'PUT',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      cache.mutations.set({ payload: result.item, name: 'media' });
+      return result.item;
     },
   };
 

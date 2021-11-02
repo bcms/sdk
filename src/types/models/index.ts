@@ -15,3 +15,4 @@ export * from './status';
 export * from './template-organizer';
 export * from './template';
 export * from './widget';
+export * from './color';

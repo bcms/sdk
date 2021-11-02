@@ -1,11 +1,15 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
-import type { BCMSApiKey, BCMSApiKeyAccess, BCMSApiKeyAddData, BCMSApiKeyUpdateData } from '../models';
-import type { BCMSStore } from '../store';
+import type {
+  BCMSApiKey,
+  BCMSApiKeyAddData,
+  BCMSApiKeyUpdateData,
+} from '../models';
 import type { BCMSDefaultHandler } from './_defaults';
 
 export interface BCMSApiKeyHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export type BCMSApiKeyHandler = BCMSDefaultHandler<

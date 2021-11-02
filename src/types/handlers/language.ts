@@ -1,6 +1,6 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type { BCMSLanguage } from '../models';
-import type { BCMSStore } from '../store';
 import type { BCMSDefaultHandler } from './_defaults';
 
 export interface BCMSLanguageAddData {
@@ -16,7 +16,7 @@ export interface BCMSLanguageUpdateData {
 
 export interface BCMSLanguageHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export type BCMSLanguageHandler = BCMSDefaultHandler<

@@ -16,7 +16,6 @@ import {
   createBcmsSocketHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
-import { useBcmsStore } from './store';
 import type { BCMSJwt, BCMSSdk, BCMSSdkConfig } from './types';
 import {
   createBcmsDateUtility,
@@ -24,8 +23,7 @@ import {
   createBcmsThrowable,
 } from './util';
 
-export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
-  const store = useBcmsStore();
+export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
   const storage = createBcmsStorage({
     prfx: 'bcms',
   });
@@ -198,50 +196,53 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
   const userHandler = createBcmsUserHandler({
     send,
     getAccessToken,
-    store,
+    cache,
   });
   const apiKeyHandler = createBcmsApiKeyHandler({
     send,
-    store,
+    cache,
   });
   const functionHandler = createBcmsFunctionHandler({
     send,
   });
   const languageHandler = createBcmsLanguageHandler({
     send,
-    store,
+    cache,
   });
   const statusHandler = createBcmsStatusHandler({
     send,
-    store,
+    cache,
   });
   const groupHandler = createBcmsGroupHandler({
     send,
-    store,
+    cache,
   });
   const widgetHandler = createBcmsWidgetHandler({
     send,
-    store,
+    cache,
   });
   const mediaHandler = createBcmsMediaHandler({
     send,
-    store,
+    cache,
+    isLoggedIn,
+    storage,
     stringUtil,
   });
   const templateHandler = createBcmsTemplateHandler({
     send,
-    store,
+    cache,
   });
   const templateOrganizerHandler = createBcmsTemplateOrganizerHandler({
     send,
-    store,
+    cache,
   });
   const entryHandler = createBcmsEntryHandler({
     send,
-    store,
+    cache,
   });
   const socketHandler = createBcmsSocketHandler({
-    store,
+    origin,
+    cache,
     storage,
     throwable,
 
@@ -262,7 +263,7 @@ export function createBcmsSdk({ origin }: BCMSSdkConfig): BCMSSdk {
     isLoggedIn,
     getAccessToken,
     storage,
-    store,
+    cache,
 
     // Handlers
     shim: shimHandler,

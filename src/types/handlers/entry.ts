@@ -1,3 +1,4 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type {
   BCMSEntry,
@@ -5,11 +6,10 @@ import type {
   BCMSEntryLite,
   BCMSEntryUpdateData,
 } from '../models';
-import type { BCMSStore } from '../store';
 
 export interface BCMSEntryHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export interface BCMSEntryHandler {

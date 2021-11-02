@@ -1,16 +1,18 @@
-import {
+import type {
   BCMSTemplate,
   BCMSTemplateCreateData,
   BCMSTemplateHandler,
   BCMSTemplateHandlerConfig,
   BCMSTemplateUpdateData,
-  BCMSStoreMutationTypes,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import {
+  createBcmsDefaultHandler,
+  createBcmsDefaultHandlerCache,
+} from './_defaults';
 
 export function createBcmsTemplateHandler({
   send,
-  store,
+  cache,
 }: BCMSTemplateHandlerConfig): BCMSTemplateHandler {
   const baseUri = '/template';
   return createBcmsDefaultHandler<
@@ -20,22 +22,6 @@ export function createBcmsTemplateHandler({
   >({
     baseUri,
     send,
-    cache: {
-      find(query) {
-        return store.getters.template_find(query);
-      },
-      findAll() {
-        return store.getters.template_items;
-      },
-      findOne(query) {
-        return store.getters.template_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.template_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.template_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'template', cache }),
   });
 }

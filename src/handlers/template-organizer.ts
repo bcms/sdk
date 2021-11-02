@@ -1,16 +1,15 @@
-import {
+import type {
   BCMSTemplateOrganizer,
   BCMSTemplateOrganizerCreateData,
   BCMSTemplateOrganizerHandler,
   BCMSTemplateOrganizerHandlerConfig,
   BCMSTemplateOrganizerUpdateData,
-  BCMSStoreMutationTypes,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import { createBcmsDefaultHandler, createBcmsDefaultHandlerCache } from './_defaults';
 
 export function createBcmsTemplateOrganizerHandler({
   send,
-  store,
+  cache,
 }: BCMSTemplateOrganizerHandlerConfig): BCMSTemplateOrganizerHandler {
   const baseUri = '/template/organizer';
   return createBcmsDefaultHandler<
@@ -20,22 +19,6 @@ export function createBcmsTemplateOrganizerHandler({
   >({
     baseUri,
     send,
-    cache: {
-      find(query) {
-        return store.getters.templateOrganizer_find(query);
-      },
-      findAll() {
-        return store.getters.templateOrganizer_items;
-      },
-      findOne(query) {
-        return store.getters.templateOrganizer_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.templateOrganizer_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.templateOrganizer_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'templateOrganizer', cache }),
   });
 }

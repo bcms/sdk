@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import SocketIO, { Socket } from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
 import {
+  BCMSApiKey,
   BCMSSocketApiKeyEvent,
   BCMSSocketEntryEvent,
   BCMSSocketEvent,
@@ -17,11 +18,11 @@ import {
   BCMSSocketTemplateOrganizerEvent,
   BCMSSocketUserEvent,
   BCMSSocketWidgetEvent,
-  BCMSStoreMutationTypes,
 } from '../types';
 
 export function createBcmsSocketHandler({
-  store,
+  origin,
+  cache,
   storage,
   throwable,
 
@@ -78,9 +79,12 @@ export function createBcmsSocketHandler({
           await apiKeyHandler.get(data.a, true);
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const item = store.getters.apiKey_findOne((e) => e._id === data.a);
+        const item = cache.getters.findOne<BCMSApiKey>({
+          query: (e) => e._id === data.a,
+          name: 'apiKey',
+        });
         if (item) {
-          store.commit(BCMSStoreMutationTypes.apiKey_remove, item);
+          cache.mutations.remove({ payload: item, name: 'apiKey' });
         }
       }
 
@@ -98,15 +102,19 @@ export function createBcmsSocketHandler({
           });
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const entryLite = store.getters.entryLite_findOne(
-          (e) => e._id === data.e,
-        );
+        const entryLite = cache.getters.findOne({
+          query: (e) => e._id === data.e,
+          name: 'entryLite',
+        });
         if (entryLite) {
-          store.commit(BCMSStoreMutationTypes.entryLite_remove, entryLite);
+          cache.mutations.remove({ payload: entryLite, name: 'entryLite' });
         }
-        const entry = store.getters.entry_findOne((e) => e._id === data.e);
+        const entry = cache.getters.findOne({
+          query: (e) => e._id === data.e,
+          name: 'entry',
+        });
         if (entry) {
-          store.commit(BCMSStoreMutationTypes.entry_remove, entry);
+          cache.mutations.remove({ payload: entry, name: 'entry' });
         }
       }
 
@@ -120,9 +128,12 @@ export function createBcmsSocketHandler({
           await groupHandler.get(data.g, true);
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const item = store.getters.groupLite_findOne((e) => e._id === data.g);
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.g,
+          name: 'group',
+        });
         if (item) {
-          store.commit(BCMSStoreMutationTypes.groupLite_remove, item);
+          cache.mutations.remove({ payload: item, name: 'group' });
         }
       }
 
@@ -138,9 +149,12 @@ export function createBcmsSocketHandler({
             await langHandler.get(data.l, true);
           });
         } else if (data.t === BCMSSocketEventType.REMOVE) {
-          const item = store.getters.language_findOne((e) => e._id === data.l);
+          const item = cache.getters.findOne({
+            query: (e) => e._id === data.l,
+            name: 'language',
+          });
           if (item) {
-            store.commit(BCMSStoreMutationTypes.language_remove, item);
+            cache.mutations.remove({ payload: item, name: 'language' });
           }
         }
 
@@ -155,9 +169,12 @@ export function createBcmsSocketHandler({
           await mediaHandler.getById(data.m, true);
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const item = store.getters.media_findOne((e) => e._id === data.m);
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.m,
+          name: 'media',
+        });
         if (item) {
-          store.commit(BCMSStoreMutationTypes.media_remove, item);
+          cache.mutations.remove({ payload: item, name: 'media' });
         }
       }
 
@@ -171,9 +188,12 @@ export function createBcmsSocketHandler({
           await statusHandler.get(data.s, true);
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const item = store.getters.status_findOne((e) => e._id === data.s);
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.s,
+          name: 'status',
+        });
         if (item) {
-          store.commit(BCMSStoreMutationTypes.status_remove, item);
+          cache.mutations.remove({ payload: item, name: 'status' });
         }
       }
 
@@ -189,9 +209,12 @@ export function createBcmsSocketHandler({
             await templateHandler.get(data.tm, true);
           });
         } else if (data.t === BCMSSocketEventType.REMOVE) {
-          const item = store.getters.template_findOne((e) => e._id === data.tm);
+          const item = cache.getters.findOne({
+            query: (e) => e._id === data.tm,
+            name: 'template',
+          });
           if (item) {
-            store.commit(BCMSStoreMutationTypes.template_set, item);
+            cache.mutations.remove({ payload: item, name: 'template' });
           }
         }
 
@@ -208,11 +231,15 @@ export function createBcmsSocketHandler({
             await tempOrgHandler.get(data.to, true);
           });
         } else if (data.t === BCMSSocketEventType.REMOVE) {
-          const item = store.getters.templateOrganizer_findOne(
-            (e) => e._id === data.to,
-          );
+          const item = cache.getters.findOne({
+            query: (e) => e._id === data.to,
+            name: 'templateOrganizer',
+          });
           if (item) {
-            store.commit(BCMSStoreMutationTypes.templateOrganizer_remove, item);
+            cache.mutations.remove({
+              payload: item,
+              name: 'templateOrganizer',
+            });
           }
         }
 
@@ -227,9 +254,12 @@ export function createBcmsSocketHandler({
           await userHandler.get(data.u, true);
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const item = store.getters.user_findOne((e) => e._id === data.u);
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.u,
+          name: 'user',
+        });
         if (item) {
-          store.commit(BCMSStoreMutationTypes.user_remove, item);
+          cache.mutations.remove({ payload: item, name: 'user' });
         }
       }
 
@@ -243,9 +273,12 @@ export function createBcmsSocketHandler({
           await widgetHandler.get(data.w, true);
         });
       } else if (data.t === BCMSSocketEventType.REMOVE) {
-        const item = store.getters.widget_findOne((e) => e._id === data.w);
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.w,
+          name: 'widget',
+        });
         if (item) {
-          store.commit(BCMSStoreMutationTypes.widget_remove, item);
+          cache.mutations.remove({ payload: item, name: 'widget' });
         }
       }
 
@@ -276,7 +309,7 @@ export function createBcmsSocketHandler({
               reject('You need to login to access socket.');
               return;
             }
-            socket = SocketIO('', {
+            socket = io(origin || '', {
               path: '/api/socket/server',
               transports: ['websocket'],
               query: {

@@ -1,17 +1,19 @@
-import {
+import type {
   BCMSWidget,
   BCMSWidgetCreateData,
   BCMSWidgetHandler,
   BCMSWidgetHandlerConfig,
   BCMSWidgetUpdateData,
-  BCMSStoreMutationTypes,
   BCMSWidgetWhereIsItUsedResponse,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import {
+  createBcmsDefaultHandler,
+  createBcmsDefaultHandlerCache,
+} from './_defaults';
 
 export function createBcmsWidgetHandler({
   send,
-  store,
+  cache,
 }: BCMSWidgetHandlerConfig): BCMSWidgetHandler {
   const baseUri = '/widget';
   const defaultHandler = createBcmsDefaultHandler<
@@ -21,23 +23,7 @@ export function createBcmsWidgetHandler({
   >({
     baseUri,
     send,
-    cache: {
-      find(query) {
-        return store.getters.widget_find(query);
-      },
-      findAll() {
-        return store.getters.widget_items;
-      },
-      findOne(query) {
-        return store.getters.widget_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.widget_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.widget_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'widget', cache }),
   });
 
   return {

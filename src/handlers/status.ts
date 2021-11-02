@@ -1,16 +1,18 @@
-import {
+import type {
   BCMSStatus,
   BCMSStatusCreateData,
   BCMSStatusHandler,
   BCMSStatusHandlerConfig,
   BCMSStatusUpdateData,
-  BCMSStoreMutationTypes,
 } from '../types';
-import { createBcmsDefaultHandler } from './_defaults';
+import {
+  createBcmsDefaultHandler,
+  createBcmsDefaultHandlerCache,
+} from './_defaults';
 
 export function createBcmsStatusHandler({
   send,
-  store,
+  cache,
 }: BCMSStatusHandlerConfig): BCMSStatusHandler {
   return createBcmsDefaultHandler<
     BCMSStatus,
@@ -19,22 +21,6 @@ export function createBcmsStatusHandler({
   >({
     baseUri: '/status',
     send,
-    cache: {
-      find(query) {
-        return store.getters.status_find(query);
-      },
-      findAll() {
-        return store.getters.status_items;
-      },
-      findOne(query) {
-        return store.getters.status_findOne(query);
-      },
-      remove(item) {
-        store.commit(BCMSStoreMutationTypes.status_remove, item);
-      },
-      set(item) {
-        store.commit(BCMSStoreMutationTypes.status_set, item);
-      },
-    },
+    cache: createBcmsDefaultHandlerCache({ name: 'status', cache }),
   });
 }

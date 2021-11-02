@@ -1,4 +1,5 @@
 import type { AxiosRequestConfig } from 'axios';
+import type { BCMSSdkCache } from './cache';
 import type {
   BCMSApiKeyHandler,
   BCMSEntryHandler,
@@ -16,7 +17,6 @@ import type {
 } from './handlers';
 import type { BCMSJwt } from './models';
 import type { BCMSStorage } from './storage';
-import type { BCMSStore } from './store';
 import type { BCMSDateUtility, BCMSStringUtility, BCMSThrowable } from './util';
 
 export interface BCMSSdkConfig {
@@ -24,12 +24,13 @@ export interface BCMSSdkConfig {
    * Origin of the BCMS. For example: https://bcms.example.com
    */
   origin?: string;
+  cache: BCMSSdkCache;
 }
 
 export interface BCMSSdk {
   send: SendFunction;
   storage: BCMSStorage;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
   isLoggedIn(): Promise<boolean>;
   getAccessToken(): BCMSJwt | null;
 

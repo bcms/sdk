@@ -1,16 +1,18 @@
 import type { SendFunction } from '../main';
 import type { BCMSEntity } from '../models';
 
+export interface BCMSDefaultHandlerCache<Model extends BCMSEntity> {
+  findAll(): Model[];
+  findOne(query: (item: Model) => boolean): Model | undefined;
+  find(query: (item: Model) => boolean): Model[];
+  set(item: Model | Model[]): void;
+  remove(item: Model | Model[]): void;
+}
+
 export interface BCMSDefaultHandlerConfig<Model extends BCMSEntity> {
   baseUri: string;
   send: SendFunction;
-  cache: {
-    findAll(): Model[];
-    findOne(query: (item: Model) => boolean): Model | undefined;
-    find(query: (item: Model) => boolean): Model[];
-    set(item: Model | Model[]): void;
-    remove(item: Model | Model[]): void;
-  };
+  cache: BCMSDefaultHandlerCache<Model>;
 }
 
 export interface BCMSDefaultHandler<

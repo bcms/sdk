@@ -1,15 +1,15 @@
+import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type {
   BCMSTemplate,
   BCMSTemplateCreateData,
   BCMSTemplateUpdateData,
 } from '../models';
-import type { BCMSStore } from '../store';
 import type { BCMSDefaultHandler } from './_defaults';
 
 export interface BCMSTemplateHandlerConfig {
   send: SendFunction;
-  store: BCMSStore;
+  cache: BCMSSdkCache;
 }
 
 export type BCMSTemplateHandler = BCMSDefaultHandler<

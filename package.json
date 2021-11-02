@@ -19,7 +19,7 @@
     "test": "mocha -r ts-node/register test/integration/*.test.ts --recursive --exit",
     "test:active": "mocha -r ts-node/register test/integration/*.active.test.ts --recursive --exit",
     "test:unit": "mocha -r ts-node/register test/unit/*.test.ts --recursive --exit",
-    "test:active:unit": "mocha -r ts-node/register test/unit/*.active.test.ts --recursive --exit",
+    "test:unit:active": "mocha -r ts-node/register test/unit/*.active.test.ts --recursive --exit",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
@@ -30,10 +30,6 @@
     "buffer": "^6.0.3",
     "socket.io-client": "^4.1.2",
     "uuid": "^8.3.2"
-  },
-  "peerDependencies": {
-    "vuex": ">=4.0.2",
-    "vue": ">=3.1.4"
   },
   "devDependencies": {
     "@becomes/purple-cheetah": "^3.0.1",
@@ -56,10 +52,7 @@
     "prettier": "^2.3.2",
     "ts-loader": "^9.2.3",
     "ts-node": "^8.6.1",
-    "typedoc": "^0.20.37",
     "typescript": "^4.3.5",
-    "vue": "^3.1.4",
-    "vuex": "^4.0.2",
     "webpack": "^5.43.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"

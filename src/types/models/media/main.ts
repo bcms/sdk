@@ -24,6 +24,10 @@ export interface BCMSMedia extends BCMSEntity {
   isInRoot: boolean;
   hasChildren: boolean;
   parentId: string;
+  altText: string;
+  caption: string;
+  width: number;
+  height: number;
 }
 
 export interface BCMSMediaAddDirData {
@@ -33,7 +37,22 @@ export interface BCMSMediaAddDirData {
 
 export interface BCMSMediaUpdateData {
   _id: string;
-  rename?: string;
-  /** ID of the parent dir or `root`. */
-  moveTo?: string;
+  altText?: string;
+  caption?: string;
+  name?: string;
+}
+
+export interface BCMSMediaAddDirData {
+  name: string;
+  parentId?: string;
+}
+
+export interface BCMSMediaDuplicateData {
+  _id: string;
+  duplicateTo: string;
+}
+
+export interface BCMSMediaMoveData {
+  _id: string;
+  moveTo: string;
 }
