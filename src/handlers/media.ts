@@ -169,6 +169,18 @@ export function createBcmsMediaHandler({
       cache.mutations.set({ payload: result.item, name: 'media' });
       return result.item;
     },
+    async updateFile(data) {
+      const result: { item: BCMSMedia } = await send({
+        url: `${baseUri}/file`,
+        method: 'PUT',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      cache.mutations.set({ payload: result.item, name: 'media' });
+      return result.item;
+    },
     async count() {
       if (latch.getAll) {
         return cache.getters.items({ name: 'media' }).length;

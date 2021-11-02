@@ -21,6 +21,12 @@ export interface BCMSMediaHandler {
     onProgress?(event: unknown): void;
   }): Promise<BCMSMedia>;
   createDir(data: { name: string; parentId?: string }): Promise<BCMSMedia>;
+  updateFile(data: {
+    _id: string;
+    altText?: string;
+    caption?: string;
+    name?: string;
+  }): Promise<BCMSMedia>;
   deleteById(id: string): Promise<void>;
   count(): Promise<number>;
   duplicateFile(data: { _id: string; duplicateTo: string }): Promise<BCMSMedia>;
