@@ -6,6 +6,8 @@ import type {
 
 export function createBcmsMediaHandler({
   send,
+  isLoggedIn,
+  storage,
   cache,
   stringUtil,
 }: BCMSMediaHandlerConfig): BCMSMediaHandler {
@@ -121,6 +123,18 @@ export function createBcmsMediaHandler({
         },
         responseType: 'arraybuffer',
       });
+    },
+    async getVideoThumbnail(id) {
+      if (!(await isLoggedIn())) {
+        return null;
+      }
+      const act = await storage.get('at');
+      const result: Buffer = await send({
+        url: `${baseUri}/${id}/vid/bin/thumbnail?act=${act}`,
+        method: 'GET',
+        responseType: 'arraybuffer',
+      });
+      return result;
     },
     async createFile(data) {
       const filenameParts = data.file.name.split('.');

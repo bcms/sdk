@@ -224,6 +224,8 @@ export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
   const mediaHandler = createBcmsMediaHandler({
     send,
     cache,
+    isLoggedIn,
+    storage,
     stringUtil,
   });
   const templateHandler = createBcmsTemplateHandler({

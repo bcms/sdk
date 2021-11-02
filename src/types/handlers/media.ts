@@ -1,11 +1,14 @@
 import type { BCMSSdkCache } from '../cache';
 import type { SendFunction } from '../main';
 import type { BCMSMedia } from '../models';
+import type { BCMSStorage } from '../storage';
 import type { BCMSStringUtility } from '../util';
 
 export interface BCMSMediaHandlerConfig {
   send: SendFunction;
   cache: BCMSSdkCache;
+  isLoggedIn(): Promise<boolean>;
+  storage: BCMSStorage;
   stringUtil: BCMSStringUtility;
 }
 
@@ -15,6 +18,7 @@ export interface BCMSMediaHandler {
   getMany(ids: string[], skipCache?: boolean): Promise<BCMSMedia[]>;
   getById(id: string, skipCache?: boolean): Promise<BCMSMedia>;
   getBinary(id: string, size?: 'small'): Promise<Buffer>;
+  getVideoThumbnail(id: string): Promise<Buffer | null>;
   createFile(data: {
     file: File;
     parentId?: string;
