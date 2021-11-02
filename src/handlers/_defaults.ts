@@ -138,7 +138,7 @@ export function createBcmsDefaultHandler<
       return result.item;
     },
     async deleteById(id) {
-      await send({
+      const result: { message: string } = await send({
         url: baseUri + `/${id}`,
         method: 'DELETE',
         headers: {
@@ -149,6 +149,7 @@ export function createBcmsDefaultHandler<
       if (cacheHit) {
         cache.remove(cacheHit);
       }
+      return result.message;
     },
     async count() {
       if (getAllLatch) {
