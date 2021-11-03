@@ -45,6 +45,7 @@ describe('Color API', async () => {
     expect(result).to.have.property('_id').to.be.a('string').eq(idColor);
     expect(result).to.have.property('createdAt').to.be.a('number');
     expect(result).to.have.property('updatedAt').to.be.a('number');
+    expect(result).to.have.property('cid').to.be.a('string');
     ObjectUtil.eq(
       result,
       {
