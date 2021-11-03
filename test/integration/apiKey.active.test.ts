@@ -83,10 +83,10 @@ describe('API Key API', async () => {
   });
   it('should get a specific API Key ', async () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(idApiKey).to.be.not.null;
+    expect(idApiKey).to.be.string;
     const result = await sdk.apiKey.get(idApiKey);
     expect(result).to.be.instanceOf(Object);
-    expect(result).to.have.property('_id').to.be.a('string');
+    expect(result).to.have.property('_id').to.be.a('string').eq(idApiKey);
     expect(result).to.have.property('createdAt').to.be.a('number');
     expect(result).to.have.property('updatedAt').to.be.a('number');
     expect(result).to.have.property('secret').to.be.a('string');
@@ -98,7 +98,7 @@ describe('API Key API', async () => {
   });
   it('should delete API Key', async () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(idApiKey).to.be.not.null;
+    expect(idApiKey).to.be.string;
     const result = await sdk.apiKey.deleteById(idApiKey);
     expect(result).eq('Success.');
   });
