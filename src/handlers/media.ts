@@ -3,6 +3,8 @@ import type {
   BCMSMediaHandler,
   BCMSMediaHandlerConfig,
 } from '../types';
+import { Buffer } from 'buffer';
+import * as FormData from 'form-data';
 
 export function createBcmsMediaHandler({
   send,
@@ -137,17 +139,24 @@ export function createBcmsMediaHandler({
       return result;
     },
     async createFile(data) {
-      const filenameParts = data.file.name.split('.');
+      let fileName: string;
+      if (data.file instanceof Buffer) {
+        if (!data.fileName) {
+          throw Error('File name is required for file of type Buffer.');
+        }
+        fileName = data.fileName;
+      } else {
+        fileName = data.file.name;
+      }
+      const filenameParts = fileName.split('.');
       const filename =
         stringUtil.toSlug(
           filenameParts.splice(0, filenameParts.length - 1).join('.'),
         ) +
         '.' +
         filenameParts[filenameParts.length - 1];
-      const fd: FormData & {
-        getBoundary?(): number;
-      } = new FormData();
-      fd.append('media', data.file, filename);
+      const formData = new FormData();
+      formData.append('media', data.file, filename);
       const result: {
         item: BCMSMedia;
       } = await send({
@@ -160,13 +169,13 @@ export function createBcmsMediaHandler({
         method: 'POST',
         headers: {
           'Content-Type': `multipart/form-data${
-            typeof fd.getBoundary !== 'undefined'
-              ? `; boundary=${fd.getBoundary()}`
+            typeof formData.getBoundary !== 'undefined'
+              ? `; boundary=${formData.getBoundary()}`
               : ''
           }`,
           Authorization: '',
         },
-        data: fd,
+        data: formData,
       });
       cache.mutations.set({ payload: result.item, name: 'media' });
       return result.item;
