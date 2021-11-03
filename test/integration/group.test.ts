@@ -91,6 +91,15 @@ describe('Group API', async () => {
     const result = await sdk.group.count();
     expect(result).to.be.a('number');
   });
+  it('should get where is use Group', async () => {
+    // eslint-disable-next-line no-unused-expressions
+    expect(idGroup).to.be.a('string');
+    const result = await sdk.group.whereIsItUsed(idGroup);
+    expect(result).to.be.instanceOf(Object);
+    expect(result).to.have.property('templateIds').to.be.a('array');
+    expect(result).to.have.property('groupIds').to.be.a('array');
+    expect(result).to.have.property('widgetIds').to.be.a('array');
+  });
   it('should get a specific Group', async () => {
     // eslint-disable-next-line no-unused-expressions
     expect(idGroup).to.be.a('string');
@@ -104,6 +113,21 @@ describe('Group API', async () => {
     expect(result).to.have.property('name').to.be.a('string');
     expect(result).to.have.property('desc').to.be.a('string');
     expect(result).to.have.property('props').to.be.a('array');
+  });
+  it('should get a lite Groups', async () => {
+    // eslint-disable-next-line no-unused-expressions
+    const results = await sdk.group.getAllLite();
+    expect(results).to.be.a('array');
+    expect(results.length).gte(0);
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
+      expect(result).to.be.instanceOf(Object);
+      expect(result).to.have.property('cid').to.be.a('string');
+      expect(result).to.have.property('label').to.be.a('string');
+      expect(result).to.have.property('name').to.be.a('string');
+      expect(result).to.have.property('desc').to.be.a('string');
+      expect(result).to.have.property('propsCount').to.be.a('number');
+    }
   });
   it('should delete Group', async () => {
     // eslint-disable-next-line no-unused-expressions
