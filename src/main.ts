@@ -14,6 +14,7 @@ import {
   createBcmsTemplateHandler,
   createBcmsTemplateOrganizerHandler,
   createBcmsSocketHandler,
+  createBcmsColorHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
 import type { BCMSJwt, BCMSSdk, BCMSSdkConfig } from './types';
@@ -240,6 +241,10 @@ export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
     send,
     cache,
   });
+  const colorHandler = createBcmsColorHandler({
+    send,
+    cache,
+  });
   const socketHandler = createBcmsSocketHandler({
     origin,
     cache,
@@ -256,6 +261,7 @@ export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
     templateHandler,
     userHandler,
     widgetHandler,
+    colorHandler,
   });
 
   return {
@@ -279,7 +285,7 @@ export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
     templateOrganizer: templateOrganizerHandler,
     entry: entryHandler,
     socket: socketHandler,
-
+    color: colorHandler,
     util: {
       string: stringUtil,
       date: dateUtil,

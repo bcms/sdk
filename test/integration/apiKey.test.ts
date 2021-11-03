@@ -11,9 +11,10 @@ describe('API Key API', async () => {
         templates: [],
       },
       blocked: false,
-      desc: 'This is test key all',
+      desc: 'This is test key',
       name: 'Test key',
     });
+    expect(result).to.be.instanceOf(Object);
     expect(result).to.have.property('_id').to.be.a('string');
     expect(result).to.have.property('createdAt').to.be.a('number');
     expect(result).to.have.property('updatedAt').to.be.a('number');
@@ -23,7 +24,7 @@ describe('API Key API', async () => {
       {
         access: { functions: [], templates: [] },
         blocked: false,
-        desc: 'This is test key all',
+        desc: 'This is test key',
         name: 'Test key',
         userId: '111111111111111111111111',
       },
@@ -39,7 +40,7 @@ describe('API Key API', async () => {
         templates: [],
       },
       blocked: false,
-      desc: 'This is update key all',
+      desc: 'This is update key',
       name: 'Update key',
     });
     expect(result).to.be.instanceOf(Object);
@@ -52,7 +53,7 @@ describe('API Key API', async () => {
       {
         access: { functions: [], templates: [] },
         blocked: false,
-        desc: 'This is update key all',
+        desc: 'This is update key',
         name: 'Update key',
         userId: '111111111111111111111111',
       },
@@ -83,7 +84,7 @@ describe('API Key API', async () => {
   });
   it('should get a specific API Key ', async () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(idApiKey).to.be.string;
+    expect(idApiKey).to.be.a('string');
     const result = await sdk.apiKey.get(idApiKey);
     expect(result).to.be.instanceOf(Object);
     expect(result).to.have.property('_id').to.be.a('string').eq(idApiKey);
@@ -98,7 +99,7 @@ describe('API Key API', async () => {
   });
   it('should delete API Key', async () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(idApiKey).to.be.string;
+    expect(idApiKey).to.be.a('string');
     const result = await sdk.apiKey.deleteById(idApiKey);
     expect(result).eq('Success.');
   });

@@ -3,6 +3,7 @@ import type { BCMSSocketEvent, BCMSSocketEventName } from '../models';
 import type { BCMSStorage } from '../storage';
 import type { BCMSThrowable } from '../util';
 import type { BCMSApiKeyHandler } from './api-key';
+import type { BCMSColorHandler } from './color';
 import type { BCMSEntryHandler } from './entry';
 import type { BCMSGroupHandler } from './group';
 import type { BCMSLanguageHandler } from './language';
@@ -29,6 +30,7 @@ export interface BCMSSocketHandlerConfig {
   tempOrgHandler: BCMSTemplateOrganizerHandler;
   userHandler: BCMSUserHandler;
   widgetHandler: BCMSWidgetHandler;
+  colorHandler: BCMSColorHandler;
 }
 
 export interface BCMSSocketHandler {
