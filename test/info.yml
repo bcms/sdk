@@ -1,70 +1,86 @@
 tests:
-  media:
-    - it: should upload "image.jpeg" to root
-      complete: false
-      description: 'Upload `image.jpeg` from `./test/assets/*` to root in
-        the CMS'
-    - it: should upload "image.jpeg" again to the root - name should change.
-      description: 'Do the same as in previous test. Resulting media name
-        should be != "image.jpeg"'
-    - it: should delete media from previous steps.
-      complete: false
-    - it: should create DIR called "p1" in root
-      complete: false
-    - it: should delete DIR called "p1"
-      complete: false
-    - it: should create DIR called "p1" and upload "image.jpeg" and "video.mp4" to it
-      complete: false
-      description: 'Steps to take:
+  unit:
+    date:
+      - it: should check if prettyElapsedTimeSince output is "just now"
+        completed: true
+      - it: should check if prettyElapsedTimeSince output is "2 minutes ago"
+        completed: true
+      - it: should check if prettyElapsedTimeSince output is "2 hours ago"
+        completed: true
+      - it: should check if prettyElapsedTimeSince output is "2 days ago"
+        completed: true
+      - it: should convert "1636011806484" to human readable format "04 Nov, 2021 07:43"
+        complete: false
+        description: 'Have in mind that output is in local time so when writing
+          test, make sure that HOURS parts is tested correctly (we don`t know
+          where will server, which will run the tests, be located).'
+  integration:
+    media:
+      - it: should upload "image.jpeg" to root
+        complete: false
+        description: 'Upload `image.jpeg` from `./test/assets/*` to root in
+          the CMS'
+      - it: should upload "image.jpeg" again to the root - name should change.
+        description: 'Do the same as in previous test. Resulting media name
+          should be != "image.jpeg"'
+      - it: should delete media from previous steps.
+        complete: false
+      - it: should create DIR called "p1" in root
+        complete: false
+      - it: should delete DIR called "p1"
+        complete: false
+      - it: should create DIR called "p1" and upload "image.jpeg" and "video.mp4" to it
+        complete: false
+        description: 'Steps to take:
 
-        1. Create DIR "p1" in root
-        2. Upload "image.jpeg" from `/test/assets` to "p1"
-        3. Try to get "image.jpeg" and it should have parentId of "p1"
-        4. Try to get "p1" DIR.
-        '
-    - it: should get all media from "p1" DIR
-      complete: false
-      description: 'Call "getAllByParentId" and pass "p1" DIR media ID.
-        Response should contain 2 items. 1 should be "image.jpeg" and other
-        should be "video.mp4"'
-    - it: should delete "image.jpeg"
-      complete: false
-      description: 'Call API to delete "image.jpeg" and check if it was
-        really deleted. This should be done by:
-        
-        1. Try to get "image.jpeg" media by its ID - expect NOT_FOUND.
-        2. Get all media for "p1" - expect 1 item and it should be "video.mp4" media.'
-    - it: should delete "p1" DIR
-      completed: false
-      description: 'Make sure that DIR is deleted and all its child media.'
-    - it: should check if Image thumbnail is created
-      completed: false
-      description: 'Steps:
-        
-        1. Upload "image.jpeg".
-        2. Get its thumbnail.
-        3. Delete "image.jpeg".'
-    - it: should check if Video thumbnail is created
-      completed: false
-      description: 'Steps:
-        
-        1. Upload "video.mp4".
-        2. Get its thumbnail.
-        3. Delete "video.mp4".'
-    - it: should get many media by IDs
-      completed: false
-      description: 'Upload "image.jpeg" and "video.mp4" files and use
-        `.getMany` to retrieve them.'
-    - it: should update "image.jpeg" to have name "new-image.jpeg"
-      completed: false
-    - it: should duplicate "video.mp4" to "p1" DIR
-      completed: false
-      description: 'Steps:
-        
-        1. Create "p1".
-        2. Duplicate "video.mp4" to "p1"
-        3. Try to get duplicated media'
-    - it: should clear data from tests
-      completed: false
-      description: 'Create all data from previous tests.'
+          1. Create DIR "p1" in root
+          2. Upload "image.jpeg" from `/test/assets` to "p1"
+          3. Try to get "image.jpeg" and it should have parentId of "p1"
+          4. Try to get "p1" DIR.
+          '
+      - it: should get all media from "p1" DIR
+        complete: false
+        description: 'Call "getAllByParentId" and pass "p1" DIR media ID.
+          Response should contain 2 items. 1 should be "image.jpeg" and other
+          should be "video.mp4"'
+      - it: should delete "image.jpeg"
+        complete: false
+        description: 'Call API to delete "image.jpeg" and check if it was
+          really deleted. This should be done by:
+          
+          1. Try to get "image.jpeg" media by its ID - expect NOT_FOUND.
+          2. Get all media for "p1" - expect 1 item and it should be "video.mp4" media.'
+      - it: should delete "p1" DIR
+        completed: false
+        description: 'Make sure that DIR is deleted and all its child media.'
+      - it: should check if Image thumbnail is created
+        completed: false
+        description: 'Steps:
+          
+          1. Upload "image.jpeg".
+          2. Get its thumbnail.
+          3. Delete "image.jpeg".'
+      - it: should check if Video thumbnail is created
+        completed: false
+        description: 'Steps:
+          
+          1. Upload "video.mp4".
+          2. Get its thumbnail.
+          3. Delete "video.mp4".'
+      - it: should get many media by IDs
+        completed: false
+        description: 'Upload "image.jpeg" and "video.mp4" files and use
+          `.getMany` to retrieve them.'
+      - it: should update "image.jpeg" to have name "new-image.jpeg"
+        completed: false
+      - it: should duplicate "video.mp4" to "p1" DIR
+        completed: false
+        description: 'Steps:
+          
+          1. Create "p1".
+          2. Duplicate "video.mp4" to "p1"
+          3. Try to get duplicated media'
+      - it: should clear data from tests
+        completed: false
+        description: 'Create all data from previous tests.'
       
