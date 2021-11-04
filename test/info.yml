@@ -128,3 +128,23 @@ tests:
         completed: false
       - it: should clear test data
         completed: false
+    status:
+      - it: should create new status
+        completed: false
+      - it: should get a status
+        completed: false
+      - it: should fail when trying to get a status which does not exist
+        completed: false
+      - it: should be able to update status
+        completed: false
+      - it: should get many statues in 1 request
+        completed: false
+      - it: should get how many statuses are available
+        completed: false
+      - it: should be to get all statuses
+        completed: false
+      - it: should be able to delete a status
+        completed: false
+      - it: should clear test data
+        completed: false
+    
