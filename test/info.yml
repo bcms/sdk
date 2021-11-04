@@ -1,6 +1,6 @@
 tests:
   unit:
-    date:
+    date_util:
       - it: should check if prettyElapsedTimeSince output is "just now"
         completed: true
       - it: should check if prettyElapsedTimeSince output is "2 minutes ago"
@@ -14,6 +14,27 @@ tests:
         description: 'Have in mind that output is in local time so when writing
           test, make sure that HOURS parts is tested correctly (we don`t know
           where will server, which will run the tests, be located).'
+    string_util:
+      - it: should convert "test_string" into "Test String" - toPretty
+        completed: false
+      - it: should convert "#test-string" into "Test String" - toPretty
+        completed: false
+      - it: should convert "Test@ String" into "test-string" - toSlug
+        completed: false
+      - it: should convert "Test@ String" into "test_string" - toSlugUnderscore
+        completed: false
+      - it: should convert "Test@ String" into "TEST_STRING" - toEnum
+        completed: false
+      - it: should convert "This is test string" into "This is ... ing" - toShort
+        completed: false
+      - it: should get text between 2 string - textBetween
+        completed: false
+      - it: should get all text between 2 string - allTextBetween
+        completed: false
+        description: 'This is, some example text, that can be used to test,
+          allTextBetween function.'
+      - it: should convert number 9 to "009" - addZerosAtBeginning
+        completed: false
   integration:
     media:
       - it: should upload "image.jpeg" to root
