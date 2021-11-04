@@ -37,9 +37,9 @@ tests:
         completed: false
     throwable_util:
       - it: should call success function
-        completed: false
+        completed: true
       - it: should call error function
-        completed: false
+        completed: true
   integration:
     media:
       - it: should upload "image.jpeg" to root
