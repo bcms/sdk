@@ -59,5 +59,14 @@ tests:
           `.getMany` to retrieve them.'
       - it: should update "image.jpeg" to have name "new-image.jpeg"
         completed: false
-      - it: should move "video.mp4" to "p1" DIR
+      - it: should duplicate "video.mp4" to "p1" DIR
         completed: false
+        description: 'Steps:
+          
+          1. Create "p1".
+          2. Duplicate "video.mp4" to "p1"
+          3. Try to get duplicated media'
+      - it: should clear data from tests
+        completed: false
+        description: 'Create all data from previous tests.'
+      
