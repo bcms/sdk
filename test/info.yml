@@ -73,7 +73,7 @@ tests:
         complete: false
         description: 'Call API to delete "image.jpeg" and check if it was
           really deleted. This should be done by:
-          
+
           1. Try to get "image.jpeg" media by its ID - expect NOT_FOUND.
           2. Get all media for "p1" - expect 1 item and it should be "video.mp4" media.'
       - it: should delete "p1" DIR
@@ -82,14 +82,14 @@ tests:
       - it: should check if Image thumbnail is created
         completed: false
         description: 'Steps:
-          
+
           1. Upload "image.jpeg".
           2. Get its thumbnail.
           3. Delete "image.jpeg".'
       - it: should check if Video thumbnail is created
         completed: false
         description: 'Steps:
-          
+
           1. Upload "video.mp4".
           2. Get its thumbnail.
           3. Delete "video.mp4".'
@@ -102,7 +102,7 @@ tests:
       - it: should duplicate "video.mp4" to "p1" DIR
         completed: false
         description: 'Steps:
-          
+
           1. Create "p1".
           2. Duplicate "video.mp4" to "p1"
           3. Try to get duplicated media'
@@ -147,4 +147,72 @@ tests:
         completed: false
       - it: should clear test data
         completed: false
-    
+    group:
+      - it: should be able to create a group
+        completed: false
+      - it: should be able to get a group
+        completed: false
+      - it: should be able to update group
+        completed: false
+      - it: should be able to get many groups in 1 request
+        completed: false
+      - it: should be able to add STRING prop to a group
+        completed: false
+      - it: should be able to add STRING Array prop to a group
+        completed: false
+      - it: should be able to add NUMBER prop to a group
+        completed: false
+      - it: should be able to add NUMBER Array prop to a group
+        completed: false
+      - it: should be able to add BOOLEAN prop to a group
+        completed: false
+      - it: should be able to add BOOLEAN Array prop to a group
+        completed: false
+      - it: should be able to add DATE prop to a group
+        completed: false
+      - it: should be able to add DATE Array prop to a group
+        completed: false
+      - it: should be able to add ENUM prop to a group
+        completed: false
+      - it: should be able to add ENUM Array prop to a group
+        completed: false
+      - it: should be able to add MEDIA prop to a group
+        completed: false
+      - it: should be able to add MEDIA Array prop to a group
+        completed: false
+      - it: should be able to add COLOR_PICKER prop to a group
+        completed: false
+      - it: should be able to add COLOR_PICKER Array prop to a group
+        completed: false
+      - it: should be able to add RICH_TEXT prop to a group
+        completed: false
+      - it: should be able to add RICH_TEXT Array prop to a group
+        completed: false
+      - it: should be able to add GROUP_POINTER prop to a group
+        completed: false
+      - it: should be able to add GROUP_POINTER Array prop to a group
+        completed: false
+      - it: 'should check if GROUP_POINTER prop is removed if target group is
+          deleted'
+        completed: false
+        description: 'Steps:
+          
+          1. Create child/target group, call it Child.
+          2. Create parent and call it Parent.
+          3. Add GROUP_POINTER prop to Parent group which is pointing to Child group.
+          4. Get Parent group to make sure that prop was added.
+          5. Delete Child group.
+          6. Get Parent group to make sure that GROUP_POINTER does not exist in it.'
+      - it: should check where is a group used
+        completed: false
+        description: 'Steps:
+          
+          1. Create child group called Child.
+          2. Create parent group called Parent.
+          3. Add GROUP_POINTER prop to Parent group which is pointing to Child group.
+          4. Call whereIsItUsed method for Child group.
+          5. Check if Parent group ID is present in groupIds array.'
+      - it: should be able to delete a group
+        completed: false
+      - it: should clear test data
+        completed: false
