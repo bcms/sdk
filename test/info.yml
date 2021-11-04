@@ -109,4 +109,22 @@ tests:
       - it: should clear data from tests
         completed: false
         description: 'Create all data from previous tests.'
-      
+    color:
+      - it: should create new color
+        completed: false
+      - it: should get a color
+        completed: false
+      - it: should fail when trying to get a color which does not exist
+        completed: false
+      - it: should be able to update color
+        completed: false
+      - it: should get many colors in 1 request
+        completed: false
+      - it: should get how many colors are available
+        completed: false
+      - it: should be to get all colors
+        completed: false
+      - it: should be able to delete a color
+        completed: false
+      - it: should clear test data
+        completed: false
