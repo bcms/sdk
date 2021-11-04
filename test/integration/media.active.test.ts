@@ -246,7 +246,6 @@ describe('Media API', async () => {
           hasChildren: true,
           isInRoot: true,
           mimetype: 'dir',
-          name: 'p1',
           parentId: '',
           size: 0,
           type: 'DIR',
@@ -466,50 +465,109 @@ describe('Media API', async () => {
         caption: '',
       });
     }
-    await sdk.media.deleteById(imageId);
-    try {
-      await sdk.media.getById(imageId);
-    } catch (error) {
-      expect(error).to.be.an('object').to.have.property('code').to.eq('mda001');
-    }
-    await sdk.media.deleteById(videoId);
-    try {
-      await sdk.media.getById(videoId);
-    } catch (error) {
-      expect(error).to.be.an('object').to.have.property('code').to.eq('mda001');
+  });
+  it('should update "image.jpeg" to have name "new-image.jpeg"', async () => {
+    expect(imageId).to.be.a('string');
+    const updateMedia = await sdk.media.updateFile({
+      _id: imageId,
+      name: 'new-image',
+    });
+    expect(updateMedia).to.be.instanceOf(Object);
+    expect(updateMedia).to.have.property('_id').to.be.a('string').eq(imageId);
+    expect(updateMedia).to.have.property('createdAt').to.be.a('number');
+    expect(updateMedia).to.have.property('updatedAt').to.be.a('number');
+    expect(updateMedia)
+      .to.have.property('name')
+      .to.be.a('string')
+      .eq('new-image.jpeg');
+    ObjectUtil.eq(
+      updateMedia,
+      {
+        hasChildren: false,
+        isInRoot: true,
+        mimetype: 'image/jpeg',
+        parentId: '',
+        size: 63655,
+        type: 'IMG',
+        userId: '111111111111111111111111',
+        altText: '',
+        caption: '',
+        height: 700,
+        width: 1120,
+      },
+      'media',
+    );
+  });
+  it('should duplicate "video.mp4" to "p1" DIR', async () => {
+    const media = await sdk.media.createDir({
+      name: 'p1',
+      parentId: '',
+    });
+    dirId = media._id;
+    expect(media).to.be.instanceOf(Object);
+    expect(media).to.have.property('_id').to.be.a('string');
+    expect(media).to.have.property('createdAt').to.be.a('number');
+    expect(media).to.have.property('updatedAt').to.be.a('number');
+    expect(media).to.have.property('name').to.be.a('string');
+    ObjectUtil.eq(
+      media,
+      {
+        hasChildren: true,
+        isInRoot: true,
+        mimetype: 'dir',
+        parentId: '',
+        size: 0,
+        type: 'DIR',
+        userId: '111111111111111111111111',
+        altText: '',
+        caption: '',
+        height: -1,
+        width: -1,
+      },
+      'media',
+    );
+    const duplicateMedia = await sdk.media.duplicateFile({
+      _id: videoId,
+      duplicateTo: dirId,
+    });
+    const newDuplicateMedia = await sdk.media.getById(duplicateMedia._id);
+    expect(newDuplicateMedia).to.be.instanceOf(Object);
+    expect(newDuplicateMedia).to.have.property('_id').to.be.a('string');
+    expect(newDuplicateMedia).to.have.property('createdAt').to.be.a('number');
+    expect(newDuplicateMedia).to.have.property('updatedAt').to.be.a('number');
+    expect(newDuplicateMedia).to.have.property('name').to.be.a('string');
+    ObjectUtil.eq(
+      newDuplicateMedia,
+      {
+        hasChildren: false,
+        isInRoot: false,
+        mimetype: 'video/mp4',
+        parentId: dirId,
+        size: 58799,
+        type: 'VID',
+        userId: '111111111111111111111111',
+        altText: '',
+        caption: '',
+        height: -1,
+        width: -1,
+      },
+      'media',
+    );
+  });
+
+  it('should clear data from media tests', async () => {
+    const allMedia: string[] = [imageId, videoId, dirId];
+    for (let i = 0; i < allMedia.length; i++) {
+      await sdk.media.deleteById(allMedia[i]);
+      try {
+        await sdk.media.getById(allMedia[i]);
+        throw Error('Media is still available after deleting it.');
+      } catch (error) {
+        expect(error)
+          .to.be.an('object')
+          .to.have.property('code')
+          .to.eq('mda001');
+      }
     }
   });
-  // it('should update "image.jpeg" to have name "new-image.jpeg"', async () => {
-  //   expect(imageId).to.be.a('string');
-  //   const updateMedia = await sdk.media.updateFile({
-  //     _id: imageId,
-  //     name: 'new-image',
-  //   });
-  //   expect(updateMedia).to.be.instanceOf(Object);
-  //   expect(updateMedia).to.have.property('_id').to.be.a('string');
-  //   expect(updateMedia).to.have.property('createdAt').to.be.a('number');
-  //   expect(updateMedia).to.have.property('updatedAt').to.be.a('number');
-  //   expect(updateMedia)
-  //     .to.have.property('name')
-  //     .to.be.a('string')
-  //     .eq('new-image.jpeg');
-  //   ObjectUtil.eq(
-  //     updateMedia,
-  //     {
-  //       hasChildren: false,
-  //       isInRoot: true,
-  //       mimetype: 'image/jpeg',
-  //       parentId: '',
-  //       size: 63655,
-  //       type: 'IMG',
-  //       userId: '111111111111111111111111',
-  //       altText: '',
-  //       caption: '',
-  //       height: 700,
-  //       width: 1120,
-  //     },
-  //     'media',
-  //   );
-   
-  // });
 });
