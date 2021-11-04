@@ -35,6 +35,11 @@ tests:
           allTextBetween function.'
       - it: should convert number 9 to "009" - addZerosAtBeginning
         completed: false
+    throwable_util:
+      - it: should call success function
+        completed: false
+      - it: should call error function
+        completed: false
   integration:
     media:
       - it: should upload "image.jpeg" to root
