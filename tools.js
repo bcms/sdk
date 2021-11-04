@@ -3,6 +3,7 @@ const path = require('path');
 const fse = require('fs-extra');
 const fs = require('fs');
 const util = require('util');
+const yamljs = require('yamljs');
 
 /**
  * @typedef {{
@@ -80,6 +81,10 @@ function parseArgs(rawArgs) {
     build: args['--build'] === '' || args['--build'] === 'true' || false,
     sudo: args['--sudo'] === '' || args['--sudo'] === 'true' || false,
     pack: args['--pack'] === '' || args['--pack'] === 'true' || false,
+    testCoverage:
+      args['--test-coverage'] === '' ||
+      args['--test-coverage'] === 'true' ||
+      false,
   };
 }
 
@@ -210,6 +215,66 @@ async function publish() {
     stdio: 'inherit',
   });
 }
+async function testCoverage() {
+  const info = yamljs.load(path.join(process.cwd(), 'test', 'info.yml')).tests;
+  console.log(info);
+  const tests = {
+    available: 0,
+    completed: 0,
+    unit: {
+      available: 0,
+      completed: 0,
+    },
+    integration: {
+      available: 0,
+      completed: 0,
+    },
+  };
+  for (const key in info.unit) {
+    const data = info.unit[key];
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      tests.unit.available++;
+      tests.available++;
+      if (item.completed) {
+        tests.unit.completed++;
+        tests.completed++;
+      }
+    }
+  }
+  for (const key in info.integration) {
+    const data = info.integration[key];
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      tests.integration.available++;
+      tests.available++;
+      if (item.completed) {
+        tests.integration.completed++;
+        tests.completed++;
+      }
+    }
+  }
+  console.log(
+    `Unit: ${tests.unit.completed}/${tests.unit.available} - coverage: ${(
+      (tests.unit.completed / tests.unit.available) *
+      100
+    ).toFixed(2)}%`,
+  );
+  console.log(
+    `Integration: ${tests.integration.completed}/${
+      tests.integration.available
+    } - coverage: ${(
+      (tests.integration.completed / tests.integration.available) *
+      100
+    ).toFixed(2)}%`,
+  );
+  console.log(
+    `Overall: ${tests.completed}/${tests.available} - coverage: ${(
+      (tests.completed / tests.available) *
+      100
+    ).toFixed(2)}%`,
+  );
+}
 
 async function main() {
   const options = parseArgs(process.argv);
@@ -225,6 +290,8 @@ async function main() {
     // await build();
   } else if (options.pack === true) {
     await pack();
+  } else if (options.testCoverage) {
+    await testCoverage();
   }
 }
 main().catch((error) => {
