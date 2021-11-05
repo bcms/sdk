@@ -156,38 +156,36 @@ tests:
         completed: true
     language:
       - it: should create new language
-        completed: false
+        completed: true
       - it: should be able to get language
-        completed: false
+        completed: true
       - it: should fail when trying to get a language which does not exist
-        completed: false
-      - it: should get many languages in 1 request
-        completed: false
+        completed: true
       - it: should get how many languages are available
-        completed: false
+        completed: true
       - it: should get all languages
-        completed: false
+        completed: true
       - it: should delete a language
-        completed: false
+        completed: true
       - it: should clear test data
-        completed: false
+        completed: true
     apiKey:
       - it: should create new API Key
-        completed: false
+        completed: true
       - it: should get an API Key
-        completed: false
+        completed: true
       - it: should fail when trying to get an API Key which does not exist
-        completed: false
+        completed: true
       - it: should be able to update API Key
-        completed: false
-      - it: should get how many API Keys are available
-        completed: false
+        completed: true
+      - it: should get how many API Key are available
+        completed: true
       - it: should get all API Keys
-        completed: false
+        completed: true
       - it: should delete a API Key
-        completed: false
+        completed: true
       - it: should clear test data
-        completed: false
+        completed: true
     group:
       - it: should be able to create a group
         completed: false
