@@ -317,3 +317,81 @@ tests:
         completed: false
       - it: should clear test data
         completed: false
+    template:
+      - it: should create a template
+        completed: false
+      - it: should get a template
+        completed: false
+      - it: should fail when trying to get a template that does not exist
+        completed: false
+      - it: should update a template
+        completed: false
+      - it: should get many templates in 1 request
+        completed: false
+      - it: should get how many templates are available
+        completed: false
+      - it: should be able to add STRING prop to a template
+        completed: false
+      - it: should be able to add STRING Array prop to a template
+        completed: false
+      - it: should be able to add NUMBER prop to a template
+        completed: false
+      - it: should be able to add NUMBER Array prop to a template
+        completed: false
+      - it: should be able to add BOOLEAN prop to a template
+        completed: false
+      - it: should be able to add BOOLEAN Array prop to a template
+        completed: false
+      - it: should be able to add DATE prop to a template
+        completed: false
+      - it: should be able to add DATE Array prop to a template
+        completed: false
+      - it: should be able to add ENUM prop to a template
+        completed: false
+      - it: should be able to add ENUM Array prop to a template
+        completed: false
+      - it: should be able to add MEDIA prop to a template
+        completed: false
+      - it: should be able to add MEDIA Array prop to a template
+        completed: false
+      - it: should be able to add COLOR_PICKER prop to a template
+        completed: false
+      - it: should be able to add COLOR_PICKER Array prop to a template
+        completed: false
+      - it: should be able to add RICH_TEXT prop to a template
+        completed: false
+      - it: should be able to add RICH_TEXT Array prop to a template
+        completed: false
+      - it: should be able to add GROUP_POINTER prop to a template
+        completed: false
+      - it: should be able to add GROUP_POINTER Array prop to a template
+        completed: false
+      - it: 'should check if GROUP_POINTER prop is removed if target group is
+          deleted'
+        completed: false
+        description: 'Steps:
+
+          1. Create child/target group, call it Child.
+          2. Create a template called Parent.
+          3. Add GROUP_POINTER prop to Parent template which is pointing to Child group.
+          4. Get Parent template to make sure that prop was added.
+          5. Delete Child group.
+          6. Get Parent template to make sure that GROUP_POINTER does not exist in it.'
+      - it: should be able to add ENTRY_POINTER prop to a template
+        completed: false
+      - it: should be able to add ENTRY_POINTER Array prop to a template
+        completed: false
+      - it: should check if ENTRY_POINTER prop is removed if target template is deleted
+        completed: false
+        description: 'Steps:
+        
+          1. Create a child/target template, called Child.
+          2. Create a parent template, called Parent.
+          3. Add ENTRY_POINTER prop to Parent template which is pointing to Child template.
+          4. Get Parent template to make sure that prop was added.
+          5. Delete Child template.
+          6. Get Parent template to make sure that ENTRY_POINTER prop does not exist in it.'
+      - it: should be able to delete a template
+        completed: false
+      - it: should clear test data
+        completed: false
