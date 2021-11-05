@@ -217,7 +217,6 @@ async function publish() {
 }
 async function testCoverage() {
   const info = yamljs.load(path.join(process.cwd(), 'test', 'info.yml')).tests;
-  console.log(info);
   const tests = {
     available: 0,
     completed: 0,
