@@ -165,6 +165,23 @@ tests:
         completed: false
       - it: should clear test data
         completed: false
+    apiKey:
+      - it: should create new API Key
+        completed: false
+      - it: should get an API Key
+        completed: false
+      - it: should fail when trying to get an API Key which does not exist
+        completed: false
+      - it: should be able to update API Key
+        completed: false
+      - it: should get how many API Keys are available
+        completed: false
+      - it: should get all API Keys
+        completed: false
+      - it: should delete a API Key
+        completed: false
+      - it: should clear test data
+        completed: false
     group:
       - it: should be able to create a group
         completed: false
