@@ -103,7 +103,7 @@ tests:
       - it: should duplicate "video.mp4" to "p1" DIR
         completed: true
         description: 'Steps:
-        
+
           1. Create "p1".
           2. Duplicate "video.mp4" to "p1"
           3. Try to get duplicated media'
@@ -139,23 +139,21 @@ tests:
         completed: true
     status:
       - it: should create new status
-        completed: false
+        completed: true
       - it: should get a status
-        completed: false
+        completed: true
       - it: should fail when trying to get a status which does not exist
-        completed: false
+        completed: true
       - it: should be able to update status
-        completed: false
-      - it: should get many statues in 1 request
-        completed: false
+        completed: true
       - it: should get how many statuses are available
-        completed: false
+        completed: true
       - it: should get all statuses
-        completed: false
+        completed: true
       - it: should delete a status
-        completed: false
+        completed: true
       - it: should clear test data
-        completed: false
+        completed: true
     language:
       - it: should create new language
         completed: false
@@ -459,7 +457,7 @@ tests:
           1. Create a group called G1 and add STRING prop to it.
           2. Create a template called T2 (additional props are not required).
           3. Create a template called T1 and add all props to it. Use G1 as
-            GROUP_POINTER and T2 as ENTRY_POINTER.
+          GROUP_POINTER and T2 as ENTRY_POINTER.
           4. Add 2 entries to T2 template.
           5. Create a widget called W1 and add STRING prop to it.'
       - it: should create an entry with all props
