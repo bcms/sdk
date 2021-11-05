@@ -224,42 +224,31 @@ describe('Media API', async () => {
       },
       'media',
     );
-    try {
-      const parentImage = await sdk.media.getById(mediaImage._id);
-      expect(parentImage)
-        .to.have.property('parentId')
-        .to.be.a('string')
-        .eq(dirId);
-    } catch (error) {
-      expect(error).to.be.an('object').to.have.property('code').to.eq('mda001');
-    }
-    try {
-      const getDir = await sdk.media.getById(dirId);
-      expect(getDir).to.be.instanceOf(Object);
-      expect(getDir).to.have.property('_id').to.be.a('string');
-      expect(getDir).to.have.property('createdAt').to.be.a('number');
-      expect(getDir).to.have.property('updatedAt').to.be.a('number');
-      expect(getDir).to.have.property('name').to.be.a('string');
-      ObjectUtil.eq(
-        getDir,
-        {
-          hasChildren: true,
-          isInRoot: true,
-          mimetype: 'dir',
-          parentId: '',
-          size: 0,
-          type: 'DIR',
-          userId: '111111111111111111111111',
-          altText: '',
-          caption: '',
-          height: -1,
-          width: -1,
-        },
-        'media',
-      );
-    } catch (error) {
-      expect(error).to.be.an('object').to.have.property('code').to.eq('mda001');
-    }
+    expect(mediaImage).to.have.property('parentId').to.be.a('string').eq(dirId);
+
+    const getDir = await sdk.media.getById(dirId);
+    expect(getDir).to.be.instanceOf(Object);
+    expect(getDir).to.have.property('_id').to.be.a('string');
+    expect(getDir).to.have.property('createdAt').to.be.a('number');
+    expect(getDir).to.have.property('updatedAt').to.be.a('number');
+    expect(getDir).to.have.property('name').to.be.a('string');
+    ObjectUtil.eq(
+      getDir,
+      {
+        hasChildren: true,
+        isInRoot: true,
+        mimetype: 'dir',
+        parentId: '',
+        size: 0,
+        type: 'DIR',
+        userId: '111111111111111111111111',
+        altText: '',
+        caption: '',
+        height: -1,
+        width: -1,
+      },
+      'media',
+    );
   });
   it('should get all media from "p1" DIR', async () => {
     const getAllDir = await sdk.media.getAllByParentId(dirId);
@@ -526,16 +515,18 @@ describe('Media API', async () => {
       },
       'media',
     );
-    const duplicateMedia = await sdk.media.duplicateFile({
+    const newDuplicateMedia = await sdk.media.duplicateFile({
       _id: videoId,
       duplicateTo: dirId,
     });
-    const newDuplicateMedia = await sdk.media.getById(duplicateMedia._id);
     expect(newDuplicateMedia).to.be.instanceOf(Object);
     expect(newDuplicateMedia).to.have.property('_id').to.be.a('string');
     expect(newDuplicateMedia).to.have.property('createdAt').to.be.a('number');
     expect(newDuplicateMedia).to.have.property('updatedAt').to.be.a('number');
-    expect(newDuplicateMedia).to.have.property('name').to.be.a('string');
+    expect(newDuplicateMedia)
+      .to.have.property('name')
+      .to.be.a('string')
+      .to.have.string('copyof-');
     ObjectUtil.eq(
       newDuplicateMedia,
       {
@@ -554,9 +545,67 @@ describe('Media API', async () => {
       'media',
     );
   });
-
+  let moveDirId: string;
+  it('should move "new-image.jpeg" to "p2" DIR', async () => {
+    const media = await sdk.media.createDir({
+      name: 'p2',
+      parentId: '',
+    });
+    moveDirId = media._id;
+    expect(media).to.be.instanceOf(Object);
+    expect(media).to.have.property('_id').to.be.a('string');
+    expect(media).to.have.property('createdAt').to.be.a('number');
+    expect(media).to.have.property('updatedAt').to.be.a('number');
+    expect(media).to.have.property('name').to.be.a('string');
+    ObjectUtil.eq(
+      media,
+      {
+        hasChildren: true,
+        isInRoot: true,
+        mimetype: 'dir',
+        parentId: '',
+        size: 0,
+        type: 'DIR',
+        userId: '111111111111111111111111',
+        altText: '',
+        caption: '',
+        height: -1,
+        width: -1,
+      },
+      'media',
+    );
+    const moveMediaAll = await sdk.media.moveFile({
+      _id: imageId,
+      moveTo: moveDirId,
+    });
+    expect(moveMediaAll).to.be.instanceOf(Object);
+    expect(moveMediaAll).to.have.property('_id').to.be.a('string').eq(imageId);
+    expect(moveMediaAll).to.have.property('createdAt').to.be.a('number');
+    expect(moveMediaAll).to.have.property('updatedAt').to.be.a('number');
+    expect(moveMediaAll)
+      .to.have.property('name')
+      .to.be.a('string')
+      .eq('new-image.jpeg');
+    ObjectUtil.eq(
+      moveMediaAll,
+      {
+        hasChildren: false,
+        isInRoot: false,
+        mimetype: 'image/jpeg',
+        parentId: moveDirId,
+        size: 63655,
+        type: 'IMG',
+        userId: '111111111111111111111111',
+        altText: '',
+        caption: '',
+        height: 700,
+        width: 1120,
+      },
+      'media',
+    );
+  });
   it('should clear data from media tests', async () => {
-    const allMedia: string[] = [imageId, videoId, dirId];
+    const allMedia: string[] = [imageId, videoId, dirId, moveDirId];
     for (let i = 0; i < allMedia.length; i++) {
       await sdk.media.deleteById(allMedia[i]);
       try {
