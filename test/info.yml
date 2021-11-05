@@ -103,12 +103,12 @@ tests:
       - it: should duplicate "video.mp4" to "p1" DIR
         completed: true
         description: 'Steps:
-
+        
           1. Create "p1".
           2. Duplicate "video.mp4" to "p1"
           3. Try to get duplicated media'
-      - it: should move "image.jpeg" to "p2" DIR
-        completed: false
+      - it: should move "new-image.jpeg" to "p2" DIR
+        completed: true
         description: 'Steps:
 
           1. Create "p2" DIR.
