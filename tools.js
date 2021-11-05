@@ -253,26 +253,100 @@ async function testCoverage() {
       }
     }
   }
+  const stats = [
+    ['', 'Completed', 'Coverage'],
+    [
+      'Unit',
+      `${tests.unit.completed}/${tests.unit.available}`,
+      `${((tests.unit.completed / tests.unit.available) * 100).toFixed(2)}%`,
+    ],
+    [
+      'Integration',
+      `${tests.integration.completed}/${tests.integration.available}`,
+      `${(
+        (tests.integration.completed / tests.integration.available) *
+        100
+      ).toFixed(2)}%`,
+    ],
+    [
+      'Overall',
+      `${tests.completed}/${tests.available}`,
+      `${((tests.completed / tests.available) * 100).toFixed(2)}%`,
+    ],
+  ];
+  const colWidths = stats[0].map(() => 0);
+  for (let i = 0; i < stats.length; i++) {
+    const row = stats[i];
+    for (let j = 0; j < row.length; j++) {
+      const col = row[j];
+      if (col.length > colWidths[j]) {
+        colWidths[j] = col.length;
+      }
+    }
+  }
   console.log(
-    `Unit: ${tests.unit.completed}/${tests.unit.available} - coverage: ${(
-      (tests.unit.completed / tests.unit.available) *
-      100
-    ).toFixed(2)}%`,
+    '┌' +
+      '─'.repeat(
+        colWidths.reduce((p, c) => {
+          return p + c + 2;
+        }, 0),
+      ) +
+      '──┐',
   );
+  for (let i = 0; i < stats.length; i++) {
+    const row = stats[i];
+    let output = [];
+    for (let j = 0; j < row.length; j++) {
+      const col = row[j];
+      if (col.length < colWidths[j]) {
+        const delta = colWidths[j] - col.length + 1;
+        output.push(' ' + col + ' '.repeat(delta));
+      } else {
+        output.push(` ${col} `);
+      }
+    }
+    console.log(`│${output.join('│')}│`);
+    if (i === 0) {
+      console.log(
+        '├' +
+          '─'.repeat(
+            colWidths.reduce((p, c) => {
+              return p + c + 2;
+            }, 0),
+          ) +
+          '──┤',
+      );
+    }
+  }
   console.log(
-    `Integration: ${tests.integration.completed}/${
-      tests.integration.available
-    } - coverage: ${(
-      (tests.integration.completed / tests.integration.available) *
-      100
-    ).toFixed(2)}%`,
+    '└' +
+      '─'.repeat(
+        colWidths.reduce((p, c) => {
+          return p + c + 2;
+        }, 0),
+      ) +
+      '──┘',
   );
-  console.log(
-    `Overall: ${tests.completed}/${tests.available} - coverage: ${(
-      (tests.completed / tests.available) *
-      100
-    ).toFixed(2)}%`,
-  );
+  // console.log(
+  //   `Unit: ${tests.unit.completed}/${tests.unit.available} - coverage: ${(
+  //     (tests.unit.completed / tests.unit.available) *
+  //     100
+  //   ).toFixed(2)}%`,
+  // );
+  // console.log(
+  //   `Integration: ${tests.integration.completed}/${
+  //     tests.integration.available
+  //   } - coverage: ${(
+  //     (tests.integration.completed / tests.integration.available) *
+  //     100
+  //   ).toFixed(2)}%`,
+  // );
+  // console.log(
+  //   `Overall: ${tests.completed}/${tests.available} - coverage: ${(
+  //     (tests.completed / tests.available) *
+  //     100
+  //   ).toFixed(2)}%`,
+  // );
 }
 
 async function main() {
