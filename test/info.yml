@@ -107,6 +107,14 @@ tests:
           1. Create "p1".
           2. Duplicate "video.mp4" to "p1"
           3. Try to get duplicated media'
+      - it: should move "image.jpeg" to "p2" DIR
+        completed: false
+        description: 'Steps:
+
+          1. Create "p2" DIR.
+          2. Upload "image.jpeg" to the root.
+          3. Move "image.jpeg" to "p2".
+          4. Try to get "image.jpeg" and check parentId.'
       - it: should clear data from tests
         completed: true
         description: 'Delete all data from previous tests.'
@@ -384,7 +392,7 @@ tests:
       - it: should check if ENTRY_POINTER prop is removed if target template is deleted
         completed: false
         description: 'Steps:
-        
+
           1. Create a child/target template, called Child.
           2. Create a parent template, called Parent.
           3. Add ENTRY_POINTER prop to Parent template which is pointing to Child template.
