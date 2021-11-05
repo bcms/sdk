@@ -309,21 +309,23 @@ async function testCoverage() {
     if (i === 0) {
       console.log(
         '├' +
-          '┼'.repeat(
+          '─'.repeat(
             colWidths.reduce((p, c) => {
               return p + c + 2;
             }, 0),
-          ),
+          ) +
+          '──┤',
       );
     }
   }
   console.log(
-    '─' +
+    '└' +
       '─'.repeat(
         colWidths.reduce((p, c) => {
-          return p + c + 3;
+          return p + c + 2;
         }, 0),
-      ),
+      ) +
+      '──┘',
   );
   // console.log(
   //   `Unit: ${tests.unit.completed}/${tests.unit.available} - coverage: ${(
