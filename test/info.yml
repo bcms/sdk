@@ -403,3 +403,33 @@ tests:
         completed: false
       - it: should clear test data
         completed: false
+    templateOrganizer:
+      - it: should create new TO (template organizer)
+        completed: false
+      - it: should get a TO
+        completed: false
+      - it: should fail when trying to get a TO which does not exist
+        completed: false
+      - it: should update TO
+        completed: false
+      - it: should get many TOs in 1 request
+        completed: false
+      - it: should get how many TOs are available
+        completed: false
+      - it: should get all TOs
+        completed: false
+      - it: should delete a TO
+        completed: false
+      - it: should check if TO is updated after deleting a template
+        completed: false
+        description: 'Steps:
+          
+          1. Create TO called Test.
+          2. Create template called Temp.
+          3. Add Temp template to Test TO.
+          4. Get Test TO to make sure that Temp template was added to it.
+          5. Delete Temp template.
+          6. Get Test TO to make sure that Temp template does not exists in it.
+          7. Delete Test TO.'
+      - it: should clear test data
+        completed: false
