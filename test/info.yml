@@ -423,7 +423,7 @@ tests:
       - it: should check if TO is updated after deleting a template
         completed: false
         description: 'Steps:
-          
+
           1. Create TO called Test.
           2. Create template called Temp.
           3. Add Temp template to Test TO.
@@ -433,3 +433,35 @@ tests:
           7. Delete Test TO.'
       - it: should clear test data
         completed: false
+    entry:
+      - it: should create an entry
+        completed: false
+      - it: should get an entry
+        completed: false
+      - it: should get an entry with Lite model
+        completed: false
+      - it: should get many entries with Lite models in 1 request
+        completed: false
+      - it: should get all entries by template ID
+        completed: false
+      - it: should get all entries with Lite models by template ID
+        completed: false
+      - it: should get number of entries by template ID
+        completed: false
+      - it: should be able to update an entry
+        completed: false
+      - it: should be able to delete an entry
+        completed: false
+      - it: should create a data which will be used in next tests
+        completed: false
+        description: 'Steps:
+
+          1. Create a group called G1 and add STRING prop to it.
+          2. Create a template called T2 (additional props are not required).
+          3. Create a template called T1 and add all props to it. Use G1 as
+            GROUP_POINTER and T2 as ENTRY_POINTER.
+          4. Add 2 entries to T2 template.
+          5. Create a widget called W1 and add STRING prop to it.'
+      - it: should create an entry with all props
+        completed: false
+        description: 'Add entry to T1 template.'
