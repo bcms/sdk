@@ -4,19 +4,22 @@ import { Login, ObjectUtil, sdk } from '../util';
 describe('Group API', async () => {
   Login();
   let idGroup: string;
-  it('should create new Group', async () => {
-    const result = await sdk.group.create({
+  let cidGroup: string;
+  it('should be able to create a group', async () => {
+    const group = await sdk.group.create({
       label: 'group two',
       desc: 'group two',
     });
-    expect(result).to.be.instanceOf(Object);
-    expect(result).to.have.property('_id').to.be.a('string');
-    expect(result).to.have.property('createdAt').to.be.a('number');
-    expect(result).to.have.property('updatedAt').to.be.a('number');
-    expect(result).to.have.property('cid').to.be.a('string');
-    expect(result).to.have.property('props').to.be.a('array');
+    idGroup = group._id;
+    cidGroup = group.cid;
+    expect(group).to.be.instanceOf(Object);
+    expect(group).to.have.property('_id').to.be.a('string');
+    expect(group).to.have.property('createdAt').to.be.a('number');
+    expect(group).to.have.property('updatedAt').to.be.a('number');
+    expect(group).to.have.property('cid').to.be.a('string');
+    expect(group).to.have.property('props').to.be.a('array');
     ObjectUtil.eq(
-      result,
+      group,
       {
         desc: 'group two',
         label: 'group two',
@@ -24,23 +27,22 @@ describe('Group API', async () => {
       },
       'group',
     );
-    idGroup = result._id;
   });
-  it('should update Group', async () => {
-    const result = await sdk.group.update({
+  it('should be able to update group', async () => {
+    const updateGroup = await sdk.group.update({
       _id: idGroup,
       label: 'group testing',
       desc: 'group testing',
       propChanges: [],
     });
-    expect(result).to.be.instanceOf(Object);
-    expect(result).to.have.property('_id').to.be.a('string').eq(idGroup);
-    expect(result).to.have.property('createdAt').to.be.a('number');
-    expect(result).to.have.property('updatedAt').to.be.a('number');
-    expect(result).to.have.property('cid').to.be.a('string');
-    expect(result).to.have.property('props').to.be.a('array');
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
     ObjectUtil.eq(
-      result,
+      updateGroup,
       {
         desc: 'group testing',
         label: 'group testing',
@@ -49,7 +51,7 @@ describe('Group API', async () => {
       'group',
     );
   });
-  it('should show all Groups', async () => {
+  it('should show all groups', async () => {
     const results = await sdk.group.getAll();
     expect(results).to.be.a('array');
     expect(results.length).gte(0);
@@ -66,70 +68,70 @@ describe('Group API', async () => {
       expect(result).to.have.property('props').to.be.a('array');
     }
   });
-  it('should show many Group', async () => {
-    const manyId = [idGroup, idGroup];
+  it('should be able to get many groups in 1 request', async () => {
+    const manyId = [cidGroup, cidGroup];
     expect(manyId).to.be.a('array');
-    const results = await sdk.group.getMany(manyId);
-    expect(results).to.be.a('array');
-    expect(results.length).gte(0);
-    for (let i = 0; i < results.length; i++) {
+    const groups = await sdk.group.getMany(manyId);
+    expect(groups).to.be.a('array');
+    expect(groups.length).gte(0);
+    for (let i = 0; i < groups.length; i++) {
       for (let j = 0; j < manyId.length; j++) {
-        const result = results[i];
-        expect(result).to.be.instanceOf(Object);
-        expect(result).to.have.property('_id').to.be.a('string').eq(manyId[j]);
-        expect(result).to.have.property('createdAt').to.be.a('number');
-        expect(result).to.have.property('updatedAt').to.be.a('number');
-        expect(result).to.have.property('cid').to.be.a('string');
-        expect(result).to.have.property('label').to.be.a('string');
-        expect(result).to.have.property('name').to.be.a('string');
-        expect(result).to.have.property('desc').to.be.a('string');
-        expect(result).to.have.property('props').to.be.a('array');
+        const group = groups[i];
+        expect(group).to.be.instanceOf(Object);
+        expect(group).to.have.property('_id').to.be.a('string');
+        expect(group).to.have.property('createdAt').to.be.a('number');
+        expect(group).to.have.property('updatedAt').to.be.a('number');
+        expect(group).to.have.property('cid').to.be.a('string').eq(manyId[j]);
+        expect(group).to.have.property('label').to.be.a('string');
+        expect(group).to.have.property('name').to.be.a('string');
+        expect(group).to.have.property('desc').to.be.a('string');
+        expect(group).to.have.property('props').to.be.a('array');
       }
     }
   });
-  it('should get number of Group', async () => {
+  it('should get how many groups are available', async () => {
     const result = await sdk.group.count();
     expect(result).to.be.a('number');
   });
-  it('should get where is use Group', async () => {
+  it('should get where is use group', async () => {
     // eslint-disable-next-line no-unused-expressions
     expect(idGroup).to.be.a('string');
-    const result = await sdk.group.whereIsItUsed(idGroup);
-    expect(result).to.be.instanceOf(Object);
-    expect(result).to.have.property('templateIds').to.be.a('array');
-    expect(result).to.have.property('groupIds').to.be.a('array');
-    expect(result).to.have.property('widgetIds').to.be.a('array');
+    const whereUseGroup = await sdk.group.whereIsItUsed(idGroup);
+    expect(whereUseGroup).to.be.instanceOf(Object);
+    expect(whereUseGroup).to.have.property('templateIds').to.be.a('array');
+    expect(whereUseGroup).to.have.property('groupIds').to.be.a('array');
+    expect(whereUseGroup).to.have.property('widgetIds').to.be.a('array');
   });
-  it('should get a specific Group', async () => {
+  it('should be able to get a group', async () => {
     // eslint-disable-next-line no-unused-expressions
     expect(idGroup).to.be.a('string');
-    const result = await sdk.group.get(idGroup);
-    expect(result).to.be.instanceOf(Object);
-    expect(result).to.have.property('_id').to.be.a('string').eq(idGroup);
-    expect(result).to.have.property('createdAt').to.be.a('number');
-    expect(result).to.have.property('updatedAt').to.be.a('number');
-    expect(result).to.have.property('cid').to.be.a('string');
-    expect(result).to.have.property('label').to.be.a('string');
-    expect(result).to.have.property('name').to.be.a('string');
-    expect(result).to.have.property('desc').to.be.a('string');
-    expect(result).to.have.property('props').to.be.a('array');
+    const group = await sdk.group.get(idGroup);
+    expect(group).to.be.instanceOf(Object);
+    expect(group).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(group).to.have.property('createdAt').to.be.a('number');
+    expect(group).to.have.property('updatedAt').to.be.a('number');
+    expect(group).to.have.property('cid').to.be.a('string');
+    expect(group).to.have.property('label').to.be.a('string');
+    expect(group).to.have.property('name').to.be.a('string');
+    expect(group).to.have.property('desc').to.be.a('string');
+    expect(group).to.have.property('props').to.be.a('array');
   });
-  it('should get a lite Groups', async () => {
+  it('should be able to get a lite group', async () => {
     // eslint-disable-next-line no-unused-expressions
-    const results = await sdk.group.getAllLite();
-    expect(results).to.be.a('array');
-    expect(results.length).gte(0);
-    for (let i = 0; i < results.length; i++) {
-      const result = results[i];
-      expect(result).to.be.instanceOf(Object);
-      expect(result).to.have.property('cid').to.be.a('string');
-      expect(result).to.have.property('label').to.be.a('string');
-      expect(result).to.have.property('name').to.be.a('string');
-      expect(result).to.have.property('desc').to.be.a('string');
-      expect(result).to.have.property('propsCount').to.be.a('number');
+    const groups = await sdk.group.getAllLite();
+    expect(groups).to.be.a('array');
+    expect(groups.length).gte(0);
+    for (let i = 0; i < groups.length; i++) {
+      const group = groups[i];
+      expect(group).to.be.instanceOf(Object);
+      expect(group).to.have.property('cid').to.be.a('string');
+      expect(group).to.have.property('label').to.be.a('string');
+      expect(group).to.have.property('name').to.be.a('string');
+      expect(group).to.have.property('desc').to.be.a('string');
+      expect(group).to.have.property('propsCount').to.be.a('number');
     }
   });
-  it('should delete Group', async () => {
+  it('should be able to delete a group', async () => {
     // eslint-disable-next-line no-unused-expressions
     expect(idGroup).to.be.a('string');
     const result = await sdk.group.deleteById(idGroup);

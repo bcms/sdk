@@ -188,15 +188,21 @@ tests:
         completed: true
     group:
       - it: should be able to create a group
-        completed: false
+        completed: true
       - it: should be able to get a group
-        completed: false
+        completed: true
       - it: should be able to update group
-        completed: false
+        completed: true
+      - it: should be able to get a lite group
+        completed: true
+      - it: should get all groups
+        completed: true
+      - it: should get where is use group
+        completed: true
       - it: should get how many groups are available
-        completed: false
+        completed: true
       - it: should be able to get many groups in 1 request
-        completed: false
+        completed: true
       - it: should be able to add STRING prop to a group
         completed: false
       - it: should be able to add STRING Array prop to a group
