@@ -204,23 +204,25 @@ tests:
       - it: should be able to get many groups in 1 request
         completed: true
       - it: should be able to add STRING prop to a group
-        completed: false
+        completed: true
       - it: should be able to add STRING Array prop to a group
-        completed: false
+        completed: true
       - it: should be able to add NUMBER prop to a group
-        completed: false
+        completed: true
       - it: should be able to add NUMBER Array prop to a group
-        completed: false
+        completed: true
       - it: should be able to add BOOLEAN prop to a group
-        completed: false
+        completed: true
       - it: should be able to add BOOLEAN Array prop to a group
-        completed: false
+        completed: true
+        # Do not work DATE, ENUM and MEDIA
       - it: should be able to add DATE prop to a group
         completed: false
       - it: should be able to add DATE Array prop to a group
         completed: false
       - it: should be able to add ENUM prop to a group
         completed: false
+        # ENUM Array do not exist
       - it: should be able to add ENUM Array prop to a group
         completed: false
       - it: should be able to add MEDIA prop to a group
@@ -228,20 +230,20 @@ tests:
       - it: should be able to add MEDIA Array prop to a group
         completed: false
       - it: should be able to add COLOR_PICKER prop to a group
-        completed: false
+        completed: true
       - it: should be able to add COLOR_PICKER Array prop to a group
-        completed: false
+        completed: true
       - it: should be able to add RICH_TEXT prop to a group
-        completed: false
+        completed: true
       - it: should be able to add RICH_TEXT Array prop to a group
-        completed: false
+        completed: true
       - it: should be able to add GROUP_POINTER prop to a group
-        completed: false
+        completed: true
       - it: should be able to add GROUP_POINTER Array prop to a group
-        completed: false
+        completed: true
       - it: 'should check if GROUP_POINTER prop is removed if target group is
           deleted'
-        completed: false
+        completed: true
         description: 'Steps:
 
           1. Create child/target group, call it Child.
