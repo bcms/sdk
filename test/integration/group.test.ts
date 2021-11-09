@@ -7,6 +7,7 @@ describe('Group API', async () => {
   let idGroup: string;
   let idGroupSecond: string;
   let cidGroup: string;
+  let cidGroupSecond: string;
   it('should be able to create a group', async () => {
     const group = await sdk.group.create({
       label: 'group first',
@@ -34,6 +35,7 @@ describe('Group API', async () => {
       desc: 'group second',
     });
     idGroupSecond = secondGroup._id;
+    cidGroupSecond = secondGroup.cid;
     expect(secondGroup).to.be.instanceOf(Object);
     expect(secondGroup).to.have.property('_id').to.be.a('string');
     expect(secondGroup).to.have.property('createdAt').to.be.a('number');
@@ -91,24 +93,22 @@ describe('Group API', async () => {
     }
   });
   it('should be able to get many groups in 1 request', async () => {
-    const manyId = [cidGroup, cidGroup];
+    const manyId = [cidGroup, cidGroupSecond];
     expect(manyId).to.be.a('array');
     const groups = await sdk.group.getMany(manyId);
     expect(groups).to.be.a('array');
     expect(groups.length).gte(0);
     for (let i = 0; i < groups.length; i++) {
-      for (let j = 0; j < manyId.length; j++) {
-        const group = groups[i];
-        expect(group).to.be.instanceOf(Object);
-        expect(group).to.have.property('_id').to.be.a('string');
-        expect(group).to.have.property('createdAt').to.be.a('number');
-        expect(group).to.have.property('updatedAt').to.be.a('number');
-        expect(group).to.have.property('cid').to.be.a('string').eq(manyId[j]);
-        expect(group).to.have.property('label').to.be.a('string');
-        expect(group).to.have.property('name').to.be.a('string');
-        expect(group).to.have.property('desc').to.be.a('string');
-        expect(group).to.have.property('props').to.be.a('array');
-      }
+      const group = groups[i];
+      expect(group).to.be.instanceOf(Object);
+      expect(group).to.have.property('_id').to.be.a('string');
+      expect(group).to.have.property('createdAt').to.be.a('number');
+      expect(group).to.have.property('updatedAt').to.be.a('number');
+      expect(group).to.have.property('cid').to.be.a('string').eq(manyId[i]);
+      expect(group).to.have.property('label').to.be.a('string');
+      expect(group).to.have.property('name').to.be.a('string');
+      expect(group).to.have.property('desc').to.be.a('string');
+      expect(group).to.have.property('props').to.be.a('array');
     }
   });
   it('should get how many groups are available', async () => {
@@ -746,12 +746,34 @@ describe('Group API', async () => {
   // });
   let firstColorId: string;
   let secondColorId: string;
+  let templateId: string;
   it('should be able to add COLOR_PICKER prop to a group', async () => {
+    const template = await sdk.template.create({
+      label: 'Template',
+      desc: 'Template',
+      singleEntry: true,
+    });
+    templateId = template._id;
+    expect(template).to.be.instanceOf(Object);
+    expect(template).to.have.property('_id').to.be.a('string');
+    expect(template).to.have.property('createdAt').to.be.a('number');
+    expect(template).to.have.property('updatedAt').to.be.a('number');
+    expect(template).to.have.property('cid').to.be.a('string');
+    expect(template).to.have.property('props').to.be.a('array');
+    ObjectUtil.eq(
+      template,
+      {
+        desc: 'Template',
+        label: 'Template',
+        name: 'template',
+      },
+      'template',
+    );
     const firstColor = await sdk.color.create({
       label: 'red',
       value: '#030504',
       source: {
-        id: '618504c1d114b206f56fd6fe',
+        id: template._id,
         type: 'template',
       },
     });
@@ -760,7 +782,7 @@ describe('Group API', async () => {
       label: 'black',
       value: '#030505',
       source: {
-        id: '618504c1d114b206f56fd6fe',
+        id: template._id,
         type: 'template',
       },
     });
@@ -879,8 +901,12 @@ describe('Group API', async () => {
         },
       ],
     });
-    await sdk.color.deleteById(firstColorId);
-    await sdk.color.deleteById(secondColorId);
+    const deleteFirstColor = await sdk.color.deleteById(firstColorId);
+    expect(deleteFirstColor).eq('Success.');
+    const deleteSecondColor = await sdk.color.deleteById(secondColorId);
+    expect(deleteSecondColor).eq('Success.');
+    const deleteTemplate = await sdk.template.deleteById(templateId);
+    expect(deleteTemplate).eq('Success.');
   });
   it('should be able to add RICH_TEXT prop to a group', async () => {
     const updateGroup = await sdk.group.update({
