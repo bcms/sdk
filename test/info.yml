@@ -267,29 +267,31 @@ tests:
         completed: true
     widget:
       - it: should create a widget
-        completed: false
+        completed: true
       - it: should be able to get a widget
-        completed: false
+        completed: true
       - it: should fail when trying to get a widget that does not exist
-        completed: false
+        completed: true
       - it: should update a widget
-        completed: false
+        completed: true
+      - it: should show all widget
+        completed: true
       - it: should get many widgets in 1 request
-        completed: false
+        completed: true
       - it: should get how many widgets are available
-        completed: false
+        completed: true
       - it: should be able to add STRING prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add STRING Array prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add NUMBER prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add NUMBER Array prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add BOOLEAN prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add BOOLEAN Array prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add DATE prop to a widget
         completed: false
       - it: should be able to add DATE Array prop to a widget
@@ -303,20 +305,20 @@ tests:
       - it: should be able to add MEDIA Array prop to a widget
         completed: false
       - it: should be able to add COLOR_PICKER prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add COLOR_PICKER Array prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add RICH_TEXT prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add RICH_TEXT Array prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add GROUP_POINTER prop to a widget
-        completed: false
+        completed: true
       - it: should be able to add GROUP_POINTER Array prop to a widget
-        completed: false
+        completed: true
       - it: 'should check if GROUP_POINTER prop is removed if target group is
           deleted'
-        completed: false
+        completed: true
         description: 'Steps:
 
           1. Create child/target group, call it Child.
@@ -326,9 +328,9 @@ tests:
           5. Delete Child group.
           6. Get Parent widget to make sure that GROUP_POINTER does not exist in it.'
       - it: should be able to delete a widget
-        completed: false
+        completed: true
       - it: should clear test data
-        completed: false
+        completed: true
     template:
       - it: should create a template
         completed: false
