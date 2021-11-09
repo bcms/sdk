@@ -1121,12 +1121,14 @@ describe('Group API', async () => {
     const secondResult = await sdk.group.deleteById(idGroupSecond);
     expect(secondResult).eq('Success.');
   });
+  let idChildGroup: string;
+  let idParentGroup: string;
   it('should check if GROUP_POINTER prop is removed if target group is deleted', async () => {
     const childGroup = await sdk.group.create({
       label: 'Child',
       desc: 'Child',
     });
-    const idChildGroup = childGroup._id;
+    idChildGroup = childGroup._id;
     expect(childGroup).to.be.instanceOf(Object);
     expect(childGroup).to.have.property('_id').to.be.a('string');
     expect(childGroup).to.have.property('createdAt').to.be.a('number');
@@ -1146,7 +1148,7 @@ describe('Group API', async () => {
       label: 'Parent',
       desc: 'Parent',
     });
-    const idParentGroup = parentGroup._id;
+    idParentGroup = parentGroup._id;
     expect(parentGroup).to.be.instanceOf(Object);
     expect(parentGroup).to.have.property('_id').to.be.a('string');
     expect(parentGroup).to.have.property('createdAt').to.be.a('number');
@@ -1223,5 +1225,106 @@ describe('Group API', async () => {
     expect(group).to.have.property('props').to.be.a('array').that.eql([]);
     const parentGroupDelete = await sdk.group.deleteById(idParentGroup);
     expect(parentGroupDelete).eq('Success.');
+  });
+  it('should check where is a group used', async () => {
+    const childGroup = await sdk.group.create({
+      label: 'Child',
+      desc: 'Child',
+    });
+    idChildGroup = childGroup._id;
+    expect(childGroup).to.be.instanceOf(Object);
+    expect(childGroup).to.have.property('_id').to.be.a('string');
+    expect(childGroup).to.have.property('createdAt').to.be.a('number');
+    expect(childGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(childGroup).to.have.property('cid').to.be.a('string');
+    expect(childGroup).to.have.property('props').to.be.a('array');
+    ObjectUtil.eq(
+      childGroup,
+      {
+        desc: 'Child',
+        label: 'Child',
+        name: 'child',
+      },
+      'group',
+    );
+    const parentGroup = await sdk.group.create({
+      label: 'Parent',
+      desc: 'Parent',
+    });
+    idParentGroup = parentGroup._id;
+    expect(parentGroup).to.be.instanceOf(Object);
+    expect(parentGroup).to.have.property('_id').to.be.a('string');
+    expect(parentGroup).to.have.property('createdAt').to.be.a('number');
+    expect(parentGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(parentGroup).to.have.property('cid').to.be.a('string');
+    expect(parentGroup).to.have.property('props').to.be.a('array');
+    ObjectUtil.eq(
+      parentGroup,
+      {
+        desc: 'Parent',
+        label: 'Parent',
+        name: 'parent',
+      },
+      'group',
+    );
+    const updateParentGroup = await sdk.group.update({
+      _id: idParentGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'Pointer to child',
+            type: BCMSPropType.GROUP_POINTER,
+            required: true,
+            array: false,
+            defaultData: {
+              _id: idChildGroup,
+            },
+          },
+        },
+      ],
+    });
+    expect(updateParentGroup).to.be.instanceOf(Object);
+    expect(updateParentGroup)
+      .to.have.property('_id')
+      .to.be.a('string')
+      .eq(idParentGroup);
+    expect(updateParentGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateParentGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateParentGroup).to.have.property('cid').to.be.a('string');
+    expect(updateParentGroup).to.have.property('props').to.be.a('array');
+    expect(updateParentGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateParentGroup.props[0]).to.have.deep.property('defaultData', {
+      _id: idChildGroup,
+    });
+    ObjectUtil.eq(
+      updateParentGroup,
+      {
+        desc: 'Parent',
+        label: 'Parent',
+        name: 'parent',
+        props: [
+          {
+            name: 'pointer_to_child',
+            label: 'Pointer to child',
+            array: false,
+            required: true,
+            type: 'GROUP_POINTER',
+          },
+        ],
+      },
+      'group',
+    );
+    const checkChild = await sdk.group.whereIsItUsed(idChildGroup);
+    expect(checkChild).to.be.instanceOf(Object);
+    expect(checkChild.groupIds[0]._id).to.be.eq(idParentGroup);
+  });
+  it('should clear test data', async () => {
+    // eslint-disable-next-line no-unused-expressions
+    expect(idParentGroup).to.be.a('string');
+    const result = await sdk.group.deleteById(idParentGroup);
+    expect(result).eq('Success.');
+    expect(idChildGroup).to.be.a('string');
+    const secondResult = await sdk.group.deleteById(idChildGroup);
+    expect(secondResult).eq('Success.');
   });
 });

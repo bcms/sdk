@@ -253,7 +253,7 @@ tests:
           5. Delete Child group.
           6. Get Parent group to make sure that GROUP_POINTER does not exist in it.'
       - it: should check where is a group used
-        completed: false
+        completed: true
         description: 'Steps:
 
           1. Create child group called Child.
@@ -262,9 +262,9 @@ tests:
           4. Call whereIsItUsed method for Child group.
           5. Check if Parent group ID is present in groupIds array.'
       - it: should be able to delete a group
-        completed: false
+        completed: true
       - it: should clear test data
-        completed: false
+        completed: true
     widget:
       - it: should create a widget
         completed: false
