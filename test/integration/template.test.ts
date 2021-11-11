@@ -297,7 +297,7 @@ describe('Template API', async () => {
       expect(template)
         .to.have.property('_id')
         .to.be.a('string')
-        .eq(idTemplateSecond);
+        .eq('6184f06acbf8c33bfe92b042');
       expect(template).to.have.property('createdAt').to.be.a('number');
       expect(template).to.have.property('updatedAt').to.be.a('number');
       expect(template).to.have.property('cid').to.be.a('string');
