@@ -413,21 +413,23 @@ tests:
         completed: true
     templateOrganizer:
       - it: should create new TO (template organizer)
-        completed: false
+        completed: true
       - it: should get a TO
-        completed: false
+        completed: true
       - it: should fail when trying to get a TO which does not exist
-        completed: false
+        completed: true
       - it: should update TO
-        completed: false
+        completed: true
+        # TO do not have cid
       - it: should get many TOs in 1 request
         completed: false
       - it: should get how many TOs are available
-        completed: false
+        completed: true
       - it: should get all TOs
-        completed: false
+        completed: true
       - it: should delete a TO
-        completed: false
+        completed: true
+        # ID exist in TO after delete template.
       - it: should check if TO is updated after deleting a template
         completed: false
         description: 'Steps:
@@ -443,23 +445,25 @@ tests:
         completed: false
     entry:
       - it: should create an entry
-        completed: false
+        completed: true
       - it: should get an entry
-        completed: false
+        completed: true
       - it: should get an entry with Lite model
-        completed: false
+        completed: true
       - it: should get many entries with Lite models in 1 request
         completed: false
+        # Do't have this method in SDK
       - it: should get all entries by template ID
         completed: false
       - it: should get all entries with Lite models by template ID
-        completed: false
+        completed: true
+        #  change entry count 
       - it: should get number of entries by template ID
-        completed: false
+        completed: true
       - it: should be able to update an entry
-        completed: false
+        completed: true
       - it: should be able to delete an entry
-        completed: false
+        completed: true
       - it: should create a data which will be used in next tests
         completed: false
         description: 'Steps:
