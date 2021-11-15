@@ -457,7 +457,7 @@ tests:
         completed: false
       - it: should get all entries with Lite models by template ID
         completed: true
-        #  change entry count 
+        #  change entry count
       - it: should get number of entries by template ID
         completed: true
       - it: should be able to update an entry
@@ -465,7 +465,7 @@ tests:
       - it: should be able to delete an entry
         completed: true
       - it: should create a data which will be used in next tests
-        completed: false
+        completed: true
         description: 'Steps:
 
           1. Create a group called G1 and add STRING prop to it.
@@ -475,5 +475,5 @@ tests:
           4. Add 2 entries to T2 template.
           5. Create a widget called W1 and add STRING prop to it.'
       - it: should create an entry with all props
-        completed: false
+        completed: true
         description: 'Add entry to T1 template.'

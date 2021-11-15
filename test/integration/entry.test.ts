@@ -1,10 +1,12 @@
 import { expect } from 'chai';
+import { BCMSPropType } from '../../src/types';
 // import { BCMSPropType } from '../../src/types';
 import { Login, ObjectUtil, sdk } from '../util';
 
 describe('Entry API', async () => {
   Login();
   let idTemplate: string;
+  let idTemplate2: string;
   let idEntry: string;
   let idEntrySecond: string;
   let propIdFirst: string;
@@ -419,70 +421,603 @@ describe('Entry API', async () => {
     const deleteTemplate = await sdk.template.deleteById(idTemplate);
     expect(deleteTemplate).eq('Success.');
   });
-  // let idGroup: string;
-  // it('should create a data which will be used in next tests', async() =>{
-  //   const group = await sdk.group.create({
-  //     label: 'group first',
-  //     desc: 'group first',
-  //   });
-  //   idGroup = group._id;
-  //   expect(group).to.be.instanceOf(Object);
-  //   expect(group).to.have.property('_id').to.be.a('string');
-  //   expect(group).to.have.property('createdAt').to.be.a('number');
-  //   expect(group).to.have.property('updatedAt').to.be.a('number');
-  //   expect(group).to.have.property('cid').to.be.a('string');
-  //   expect(group).to.have.property('props').to.be.a('array');
-  //   ObjectUtil.eq(
-  //     group,
-  //     {
-  //       desc: 'group first',
-  //       label: 'group first',
-  //       name: 'group_first',
-  //     },
-  //     'group',
-  //   );
-  //   const updateGroup = await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         add: {
-  //           label: 'First string',
-  //           type: BCMSPropType.STRING,
-  //           required: true,
-  //           array: false,
-  //           defaultData: ['This is first string'],
-  //         },
-  //       },
-  //     ],
-  //   });
-  //   expect(updateGroup).to.be.instanceOf(Object);
-  //   expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  //   expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('cid').to.be.a('string');
-  //   expect(updateGroup).to.have.property('props').to.be.a('array');
-  //   expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
-  //   expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
-  //     'This is first string',
-  //   ]);
-  //   ObjectUtil.eq(
-  //     updateGroup,
-  //     {
-  //       desc: 'group testing',
-  //       label: 'group testing',
-  //       name: 'group_testing',
-  //       props: [
-  //         {
-  //           name: 'first_string',
-  //           label: 'First string',
-  //           array: false,
-  //           required: true,
-  //           type: 'STRING',
-  //         },
-  //       ],
-  //     },
-  //     'group',
-  //   );
+  let idGroup: string;
+  let idWidget: string;
+  let stringFirstId: string;
+  let stringSecondId: string;
+  let numberPropId: string;
+  let booleanPropId: string;
+  let richTextPropId: string;
+  let colorPickerPropId: string;
+  let groupPointerPropId: string;
+  // let entryPointerPropId: string;
+  let firstColorId: string;
+  let secondColorId: string;
+  it('should create a data which will be used in next tests', async () => {
+    const group = await sdk.group.create({
+      label: 'G1',
+      desc: 'G1',
+    });
+    idGroup = group._id;
+    expect(group).to.be.instanceOf(Object);
+    expect(group).to.have.property('_id').to.be.a('string');
+    expect(group).to.have.property('createdAt').to.be.a('number');
+    expect(group).to.have.property('updatedAt').to.be.a('number');
+    expect(group).to.have.property('cid').to.be.a('string');
+    expect(group).to.have.property('props').to.be.a('array');
+    ObjectUtil.eq(
+      group,
+      {
+        desc: 'G1',
+        label: 'G1',
+        name: 'g1',
+      },
+      'group',
+    );
+    const updateGroup = await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'First string',
+            type: BCMSPropType.STRING,
+            required: true,
+            array: false,
+            defaultData: ['This is first string'],
+          },
+        },
+      ],
+    });
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
+    expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
+      'This is first string',
+    ]);
+    ObjectUtil.eq(
+      updateGroup,
+      {
+        desc: 'G1',
+        label: 'G1',
+        name: 'g1',
+        props: [
+          {
+            name: 'first_string',
+            label: 'First string',
+            array: false,
+            required: true,
+            type: 'STRING',
+          },
+        ],
+      },
+      'group',
+    );
+    const template2 = await sdk.template.create({
+      label: 'T2',
+      desc: 'T2',
+      singleEntry: true,
+    });
 
-  // })
+    idTemplate2 = template2._id;
+    expect(template2).to.be.instanceOf(Object);
+    expect(template2).to.have.property('_id').to.be.a('string');
+    expect(template2).to.have.property('createdAt').to.be.a('number');
+    expect(template2).to.have.property('updatedAt').to.be.a('number');
+    expect(template2).to.have.property('cid').to.be.a('string');
+    expect(template2).to.have.property('props').to.be.a('array');
+    expect(template2.props[0]).to.have.property('id').to.be.a('string');
+    expect(template2.props[1]).to.have.property('id').to.be.a('string');
+    ObjectUtil.eq(
+      template2,
+      {
+        name: 't2',
+        label: 'T2',
+        desc: 'T2',
+        singleEntry: true,
+        userId: '111111111111111111111111',
+        props: [
+          {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: 'STRING',
+            defaultData: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: 'STRING',
+            defaultData: [''],
+          },
+        ],
+      },
+      'template',
+    );
+    const template = await sdk.template.create({
+      label: 'T1',
+      desc: 'T1',
+      singleEntry: true,
+    });
+
+    idTemplate = template._id;
+    expect(template).to.be.instanceOf(Object);
+    expect(template).to.have.property('_id').to.be.a('string');
+    expect(template).to.have.property('createdAt').to.be.a('number');
+    expect(template).to.have.property('updatedAt').to.be.a('number');
+    expect(template).to.have.property('cid').to.be.a('string');
+    expect(template).to.have.property('props').to.be.a('array');
+    expect(template.props[0]).to.have.property('id').to.be.a('string');
+    expect(template.props[1]).to.have.property('id').to.be.a('string');
+    ObjectUtil.eq(
+      template,
+      {
+        name: 't1',
+        label: 'T1',
+        desc: 'T1',
+        singleEntry: true,
+        userId: '111111111111111111111111',
+        props: [
+          {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: 'STRING',
+            defaultData: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: 'STRING',
+            defaultData: [''],
+          },
+        ],
+      },
+      'template',
+    );
+    const firstColor = await sdk.color.create({
+      label: 'red',
+      value: '#030504',
+      source: {
+        id: idTemplate,
+        type: 'template',
+      },
+    });
+    firstColorId = firstColor._id;
+
+    const secondColor = await sdk.color.create({
+      label: 'black',
+      value: '#030505',
+      source: {
+        id: idTemplate,
+        type: 'template',
+      },
+    });
+    secondColorId = secondColor._id;
+    const updateTemplate = await sdk.template.update({
+      _id: idTemplate,
+      propChanges: [
+        {
+          add: {
+            label: 'One number',
+            type: BCMSPropType.NUMBER,
+            required: true,
+            array: false,
+            defaultData: [2],
+          },
+        },
+        {
+          add: {
+            label: 'One boolean prop',
+            type: BCMSPropType.BOOLEAN,
+            required: true,
+            array: false,
+            defaultData: [true],
+          },
+        },
+        {
+          add: {
+            label: 'Color Picker',
+            type: BCMSPropType.COLOR_PICKER,
+            required: true,
+            array: false,
+            defaultData: {
+              allowCustom: false,
+              options: [firstColorId, secondColorId],
+              selected: [secondColorId],
+            },
+          },
+        },
+        {
+          add: {
+            label: 'Rich text',
+            type: BCMSPropType.RICH_TEXT,
+            required: true,
+            array: false,
+            defaultData: [
+              {
+                nodes: [],
+              },
+            ],
+          },
+        },
+        {
+          add: {
+            label: 'group pointer',
+            type: BCMSPropType.GROUP_POINTER,
+            required: true,
+            array: false,
+            defaultData: {
+              _id: idGroup,
+            },
+          },
+        },
+        // {
+        //   add: {
+        //     label: 'Entry pointer',
+        //     type: BCMSPropType.ENTRY_POINTER,
+        //     required: true,
+        //     array: false,
+        //     defaultData: {
+        //       templateId: idTemplate2,
+        //       entryIds: [],
+        //       displayProp: 'title',
+        //     },
+        //   },
+        // },
+      ],
+    });
+    stringFirstId = updateTemplate.props[0].id;
+    stringSecondId = updateTemplate.props[1].id;
+    numberPropId = updateTemplate.props[2].id;
+    booleanPropId = updateTemplate.props[3].id;
+    colorPickerPropId = updateTemplate.props[4].id;
+    richTextPropId = updateTemplate.props[5].id;
+    groupPointerPropId = updateTemplate.props[6].id;
+    // entryPointerPropId = updateTemplate.props[7].id;
+    expect(updateTemplate).to.be.instanceOf(Object);
+    expect(updateTemplate)
+      .to.have.property('_id')
+      .to.be.a('string')
+      .eq(idTemplate);
+    expect(updateTemplate).to.have.property('createdAt').to.be.a('number');
+    expect(updateTemplate).to.have.property('updatedAt').to.be.a('number');
+    expect(updateTemplate).to.have.property('cid').to.be.a('string');
+    expect(updateTemplate).to.have.property('props').to.be.a('array');
+    expect(updateTemplate.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[1]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[2]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[3]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[4]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[5]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[6]).to.have.property('id').to.be.a('string');
+    // expect(updateTemplate.props[7]).to.have.property('id').to.be.a('string');
+    ObjectUtil.eq(
+      updateTemplate,
+      {
+        desc: 'T1',
+        label: 'T1',
+        name: 't1',
+        singleEntry: true,
+        userId: '111111111111111111111111',
+        props: [
+          {
+            label: 'Title',
+            name: 'title',
+            array: false,
+            required: true,
+            type: 'STRING',
+            defaultData: [''],
+          },
+          {
+            label: 'Slug',
+            name: 'slug',
+            array: false,
+            required: true,
+            type: 'STRING',
+            defaultData: [''],
+          },
+          {
+            name: 'one_number',
+            label: 'One number',
+            array: false,
+            required: true,
+            type: 'NUMBER',
+          },
+          {
+            name: 'one_boolean_prop',
+            label: 'One boolean prop',
+            array: false,
+            required: true,
+            type: 'BOOLEAN',
+          },
+          {
+            name: 'color_picker',
+            label: 'Color Picker',
+            array: false,
+            required: true,
+            type: 'COLOR_PICKER',
+          },
+          {
+            name: 'rich_text',
+            label: 'Rich text',
+            array: false,
+            required: true,
+            type: 'RICH_TEXT',
+          },
+          {
+            name: 'group_pointer',
+            label: 'group pointer',
+            array: false,
+            required: true,
+            type: 'GROUP_POINTER',
+          },
+          // {
+          //   name: 'entry_pointer',
+          //   label: 'Entry pointer',
+          //   array: false,
+          //   required: true,
+          //   type: 'ENTRY_POINTER',
+          // },
+        ],
+      },
+      'template',
+    );
+    const entry = await sdk.entry.create({
+      templateId: idTemplate2,
+      status: '',
+      meta: [
+        {
+          lng: 'en',
+          props: [
+            {
+              id: template2.props[0].id,
+              data: ['Test'],
+            },
+            {
+              id: template2.props[1].id,
+              data: ['Test2'],
+            },
+          ],
+        },
+      ],
+      content: [{ lng: 'en', nodes: [] }],
+    });
+    idEntry = entry._id;
+    propIdFirst = entry.meta[0].props[0].id;
+    propIdSecond = entry.meta[0].props[1].id;
+    expect(entry).to.be.instanceOf(Object);
+    expect(entry).to.have.property('_id').to.be.a('string');
+    expect(entry).to.have.property('createdAt').to.be.a('number');
+    expect(entry).to.have.property('updatedAt').to.be.a('number');
+    expect(entry).to.have.property('cid').to.be.a('string');
+    expect(entry)
+      .to.have.property('templateId')
+      .to.be.a('string')
+      .eq(idTemplate2);
+    expect(entry.meta[0]).to.have.property('props').to.be.a('array');
+    expect(entry.meta[0].props[0])
+      .to.have.property('id')
+      .to.be.a('string')
+      .eq(template2.props[0].id);
+    expect(entry.meta[0].props[1])
+      .to.have.property('id')
+      .to.be.a('string')
+      .eq(template2.props[1].id);
+    ObjectUtil.eq(
+      entry,
+      {
+        status: '',
+        userId: '111111111111111111111111',
+        meta: [
+          {
+            lng: 'en',
+            props: [
+              {
+                data: ['Test'],
+              },
+              {
+                data: ['Test2'],
+              },
+            ],
+          },
+        ],
+        content: [{ lng: 'en', nodes: [] }],
+      },
+      'entry',
+    );
+    const widget = await sdk.widget.create({
+      label: 'W1',
+      desc: 'W1',
+      previewImage: 'old image',
+      previewScript: 'old script',
+      previewStyle: 'old style',
+    });
+    idWidget = widget._id;
+    expect(widget).to.be.instanceOf(Object);
+    expect(widget).to.have.property('_id').to.be.a('string');
+    expect(widget).to.have.property('createdAt').to.be.a('number');
+    expect(widget).to.have.property('updatedAt').to.be.a('number');
+    expect(widget).to.have.property('cid').to.be.a('string');
+    expect(widget).to.have.property('props').to.be.a('array');
+    ObjectUtil.eq(
+      widget,
+      {
+        name: 'w1',
+        label: 'W1',
+        desc: 'W1',
+        previewImage: 'old image',
+        previewScript: 'old script',
+        previewStyle: 'old style',
+      },
+      'widget',
+    );
+    const updateWidget = await sdk.widget.update({
+      _id: idWidget,
+      propChanges: [
+        {
+          add: {
+            label: 'First string',
+            type: BCMSPropType.STRING,
+            required: true,
+            array: false,
+            defaultData: ['This is first string'],
+          },
+        },
+      ],
+    });
+    expect(updateWidget).to.be.instanceOf(Object);
+    expect(updateWidget).to.have.property('_id').to.be.a('string').eq(idWidget);
+    expect(updateWidget).to.have.property('createdAt').to.be.a('number');
+    expect(updateWidget).to.have.property('updatedAt').to.be.a('number');
+    expect(updateWidget).to.have.property('cid').to.be.a('string');
+    expect(updateWidget).to.have.property('props').to.be.a('array');
+    expect(updateWidget.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateWidget.props[0]).to.have.deep.property('defaultData', [
+      'This is first string',
+    ]);
+    ObjectUtil.eq(
+      updateWidget,
+      {
+        desc: 'W1',
+        label: 'W1',
+        name: 'w1',
+        previewImage: 'old image',
+        previewScript: 'old script',
+        previewStyle: 'old style',
+        props: [
+          {
+            name: 'first_string',
+            label: 'First string',
+            array: false,
+            required: true,
+            type: 'STRING',
+          },
+        ],
+      },
+      'widget',
+    );
+  });
+  it(' should create an entry with all props', async () => {
+    const entry = await sdk.entry.create({
+      templateId: idTemplate,
+      status: '',
+      meta: [
+        {
+          lng: 'en',
+          props: [
+            {
+              id: stringFirstId,
+              data: ['Test'],
+            },
+            {
+              id: stringSecondId,
+              data: ['Test2'],
+            },
+            {
+              id: numberPropId,
+              data: [6],
+            },
+            {
+              id: booleanPropId,
+              data: [false],
+            },
+            {
+              id: colorPickerPropId,
+              data: [secondColorId],
+            },
+            {
+              id: richTextPropId,
+              data: [
+                {
+                  nodes: [],
+                },
+              ],
+            },
+            {
+              id: groupPointerPropId,
+              data: { _id: idGroup, items: [] },
+            },
+            // {
+            //   id: entryPointerPropId,
+            //   data: [idTemplate2],
+            // },
+          ],
+        },
+      ],
+      content: [{ lng: 'en', nodes: [] }],
+    });
+
+    expect(entry).to.be.instanceOf(Object);
+    expect(entry).to.have.property('_id').to.be.a('string');
+    expect(entry).to.have.property('createdAt').to.be.a('number');
+    expect(entry).to.have.property('updatedAt').to.be.a('number');
+    expect(entry).to.have.property('cid').to.be.a('string');
+    expect(entry)
+      .to.have.property('templateId')
+      .to.be.a('string')
+      .eq(idTemplate);
+    expect(entry.meta[0]).to.have.property('props').to.be.a('array');
+    expect(entry.meta[0].props[0]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[1]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[2]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[3]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[4]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[5]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[6]).to.have.property('id').to.be.a('string');
+    // expect(entry.meta[0].props[7]).to.have.property('id').to.be.a('string');
+    ObjectUtil.eq(
+      entry,
+      {
+        status: '',
+        userId: '111111111111111111111111',
+        meta: [
+          {
+            lng: 'en',
+            props: [
+              {
+                data: ['Test'],
+              },
+              {
+                data: ['Test2'],
+              },
+              {
+                data: [6],
+              },
+              {
+                data: [false],
+              },
+              {
+                data: [secondColorId],
+              },
+              {
+                data: [
+                  {
+                    nodes: [],
+                  },
+                ],
+              },
+              {
+                data: { _id: idGroup, items: [] },
+              },
+              // {
+              //   data: [idTemplate2],
+              // },
+            ],
+          },
+        ],
+        content: [{ lng: 'en', nodes: [] }],
+      },
+      'entry',
+    );
+  });
 });
