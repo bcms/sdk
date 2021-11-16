@@ -10,31 +10,31 @@ tests:
       - it: should check if prettyElapsedTimeSince output is "2 days ago"
         completed: true
       - it: should convert "1636011806484" to human readable format "04 Nov, 2021 07:43"
-        complete: false
+        complete: true
         description: 'Have in mind that output is in local time so when writing
           test, make sure that HOURS parts is tested correctly (we don`t know
           where will server, which will run the tests, be located).'
     string_util:
       - it: should convert "test_string" into "Test String" - toPretty
-        completed: false
+        completed: true
       - it: should convert "#test-string" into "Test String" - toPretty
-        completed: false
+        completed: true
       - it: should convert "Test@ String" into "test-string" - toSlug
-        completed: false
+        completed: true
       - it: should convert "Test@ String" into "test_string" - toSlugUnderscore
-        completed: false
+        completed: true
       - it: should convert "Test@ String" into "TEST_STRING" - toEnum
-        completed: false
-      - it: should convert "This is test string" into "This is ... ing" - toShort
-        completed: false
+        completed: true
+      - it: should convert "This is test string" into "Thi ... ing" - toShort
+        completed: true
       - it: should get text between 2 string - textBetween
-        completed: false
+        completed: true
       - it: should get all text between 2 string - allTextBetween
-        completed: false
+        completed: true
         description: 'This is, some example text, that can be used to test,
           allTextBetween function.'
       - it: should convert number 9 to "009" - addZerosAtBeginning
-        completed: false
+        completed: true
     throwable_util:
       - it: should call success function
         completed: true
