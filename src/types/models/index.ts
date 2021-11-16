@@ -12,6 +12,7 @@ export * from './function';
 export * from './group';
 export * from './language';
 export * from './status';
+export * from './tag';
 export * from './template-organizer';
 export * from './template';
 export * from './widget';

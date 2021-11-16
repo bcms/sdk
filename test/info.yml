@@ -477,3 +477,36 @@ tests:
       - it: should create an entry with all props
         completed: true
         description: 'Add entry to T1 template.'
+    tag:
+      - it: should create new tag
+        completed: false
+      - it: should get a tag by ID
+        completed: false
+      - it: should get a tag by value
+        completed: false
+      - it: should fail when trying to get a tag which does not exist
+        completed: false
+      - it: should be able to update tag
+        completed: false
+      - it: should get many tags in 1 request
+        completed: false
+      - it: should be to get all tags
+        completed: false
+      - it: should be able to delete a tag
+        completed: false
+      - it: should check if groups, templates and widgets are updated after deleting a tag.
+        completed: false
+        description: 'Steps:
+
+          1. Create tag call "test-tag".
+          2. Create template called "t1".
+          3. Add test-tag to template t1.
+          4. Create group called "g1".
+          5. Add test-tag to group g1.
+          6. Create widget called "w1".
+          7. Add test-tag to widget w1.
+          8. Delete "test-tag".
+          9. Check if t1, g1 and w1 are updated.
+          '
+      - it: should clear test data
+        completed: true

@@ -467,283 +467,283 @@ describe('Group API', async () => {
       ],
     });
   });
-  // it('should be able to add DATE prop to a group', async () => {
-  //   const updateGroup = await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         add: {
-  //           label: 'Date',
-  //           type: BCMSPropType.DATE,
-  //           required: true,
-  //           array: false,
-  //           defaultData: [1636364095],
-  //         },
-  //       },
-  //     ],
-  //   });
+  it('should be able to add DATE prop to a group', async () => {
+    const updateGroup = await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'Date',
+            type: BCMSPropType.DATE,
+            required: true,
+            array: false,
+            defaultData: [1636364095],
+          },
+        },
+      ],
+    });
 
-  //   expect(updateGroup).to.be.instanceOf(Object);
-  //   expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  //   expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('cid').to.be.a('string');
-  //   expect(updateGroup).to.have.property('props').to.be.a('array');
-  //   expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
+    expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
 
-  //   expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
-  //     1636364095,
-  //   ]);
+    expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
+      1636364095,
+    ]);
 
-  //   ObjectUtil.eq(
-  //     updateGroup,
-  //     {
-  //       desc: 'group testing',
-  //       label: 'group testing',
-  //       name: 'group_testing',
-  //       props: [
-  //         {
-  //           name: 'date',
-  //           label: 'Date',
-  //           array: false,
-  //           required: true,
-  //           type: 'DATE',
-  //         },
-  //       ],
-  //     },
-  //     'group',
-  //   );
-  //   await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         remove: updateGroup.props[0].id,
-  //       },
-  //     ],
-  //   });
-  // });
-  // it('should be able to add DATE Array prop to a group', async () => {
-  //   const updateGroup = await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         add: {
-  //           label: 'Array date',
-  //           type: BCMSPropType.DATE,
-  //           required: true,
-  //           array: true,
-  //           defaultData: [1636364095, 1636364966, 1635845695],
-  //         },
-  //       },
-  //     ],
-  //   });
+    ObjectUtil.eq(
+      updateGroup,
+      {
+        desc: 'group testing',
+        label: 'group testing',
+        name: 'group_testing',
+        props: [
+          {
+            name: 'date',
+            label: 'Date',
+            array: false,
+            required: true,
+            type: 'DATE',
+          },
+        ],
+      },
+      'group',
+    );
+    await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          remove: updateGroup.props[0].id,
+        },
+      ],
+    });
+  });
+  it('should be able to add DATE Array prop to a group', async () => {
+    const updateGroup = await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'Array date',
+            type: BCMSPropType.DATE,
+            required: true,
+            array: true,
+            defaultData: [1636364095, 1636364966, 1635845695],
+          },
+        },
+      ],
+    });
 
-  //   expect(updateGroup).to.be.instanceOf(Object);
-  //   expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  //   expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('cid').to.be.a('string');
-  //   expect(updateGroup).to.have.property('props').to.be.a('array');
-  //   expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
-  //   expect(updateGroup.props[0]).to.have.deep.property(
-  //     'defaultData',
-  //     [1636364095, 1636364966, 1635845695],
-  //   );
-  //   ObjectUtil.eq(
-  //     updateGroup,
-  //     {
-  //       desc: 'group testing',
-  //       label: 'group testing',
-  //       name: 'group_testing',
-  //       props: [
-  //         {
-  //           name: 'array_date',
-  //           label: 'Array date',
-  //           array: true,
-  //           required: true,
-  //           type: 'DATE',
-  //         },
-  //       ],
-  //     },
-  //     'group',
-  //   );
-  //   await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         remove: updateGroup.props[0].id,
-  //       },
-  //     ],
-  //   });
-  // });
-  // it('should be able to add ENUM prop to a group', async () => {
-  //   const updateGroup = await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         add: {
-  //           label: 'One enum',
-  //           type: BCMSPropType.ENUMERATION,
-  //           required: true,
-  //           array: false,
-  //           defaultData: {
-  //             items: ['km', 'm', 'dm', 'cm', 'mm'],
-  //             selected: 'm',
-  //           },
-  //         },
-  //       },
-  //     ],
-  //   });
-  //   expect(updateGroup).to.be.instanceOf(Object);
-  //   expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  //   expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('cid').to.be.a('string');
-  //   expect(updateGroup).to.have.property('props').to.be.a('array');
-  //   expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
-  //   expect(updateGroup.props[0]).to.have.deep.property('defaultData', {
-  //     items: ['km', 'm', 'dm', 'cm', 'mm'],
-  //     selected: 'm',
-  //   });
-  //   ObjectUtil.eq(
-  //     updateGroup,
-  //     {
-  //       desc: 'group testing',
-  //       label: 'group testing',
-  //       name: 'group_testing',
-  //       props: [
-  //         {
-  //           name: 'one_enum',
-  //           label: 'One enum',
-  //           array: false,
-  //           required: true,
-  //           type: 'ENUMERATION',
-  //         },
-  //       ],
-  //     },
-  //     'group',
-  //   );
-  //   await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         remove: updateGroup.props[0].id,
-  //       },
-  //     ],
-  //   });
-  // });
-  // it('should be able to add ENUM Array prop to a group', async () => {
-  //   const updateGroup = await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         add: {
-  //           label: 'Array enum',
-  //           type: BCMSPropType.ENUMERATION,
-  //           required: true,
-  //           array: true,
-  //           defaultData: {
-  //             items: ['km', 'm', 'dm', 'cm', 'mm'],
-  //             selected: 'm',
-  //           },
-  //         },
-  //       },
-  //     ],
-  //   });
-  //   expect(updateGroup).to.be.instanceOf(Object);
-  //   expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  //   expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  //   expect(updateGroup).to.have.property('cid').to.be.a('string');
-  //   expect(updateGroup).to.have.property('props').to.be.a('array');
-  //   expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
-  //   expect(updateGroup.props[0]).to.have.deep.property('defaultData', {
-  //     items: ['km', 'm', 'dm', 'cm', 'mm'],
-  //     selected: 'm',
-  //   });
-  //   ObjectUtil.eq(
-  //     updateGroup,
-  //     {
-  //       desc: 'group testing',
-  //       label: 'group testing',
-  //       name: 'group_testing',
-  //       props: [
-  //         {
-  //           name: 'array_enum',
-  //           label: 'Array enum',
-  //           array: true,
-  //           required: true,
-  //           type: 'ENUMERATION',
-  //         },
-  //       ],
-  //     },
-  //     'group',
-  //   );
-  //   await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         remove: updateGroup.props[0].id,
-  //       },
-  //     ],
-  //   });
-  // });
-  // it('should be able to add MEDIA prop to a group', async () => {
-  //   const updateGroup = await sdk.group.update({
-  //     _id: idGroup,
-  //     propChanges: [
-  //       {
-  //         add: {
-  //           label: 'Media',
-  //           type: BCMSPropType.MEDIA,
-  //           required: true,
-  //           array: false,
-  //           defaultData: ['618921a9838150fb59f13e32'],
-  //         },
-  //       },
-  //     ],
-  //   });
-  //   console.log(updateGroup)
-  // expect(updateGroup).to.be.instanceOf(Object);
-  // expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  // expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  // expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  // expect(updateGroup).to.have.property('cid').to.be.a('string');
-  // expect(updateGroup).to.have.property('props').to.be.a('array');
-  // expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
-  // expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
-  // //  true,
-  // // false
-  // // true,
-  // //  true
-  // ]);
-  // ObjectUtil.eq(
-  //   updateGroup,
-  //   {
-  //     desc: 'group testing',
-  //     label: 'group testing',
-  //     name: 'group_testing',
-  //     props: [
-  //       {
-  //         name: 'media',
-  //         label: 'Media',
-  //         array: false,
-  //         required: true,
-  //         type: 'MEDIA',
-  //       },
-  //     ],
-  //   },
-  //   'group',
-  // );
-  // await sdk.group.update({
-  //   _id: idGroup,
-  //   propChanges: [
-  //     {
-  //       remove: updateGroup.props[0].id,
-  //     },
-  //   ],
-  // });
-  // });
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
+    expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateGroup.props[0]).to.have.deep.property(
+      'defaultData',
+      [1636364095, 1636364966, 1635845695],
+    );
+    ObjectUtil.eq(
+      updateGroup,
+      {
+        desc: 'group testing',
+        label: 'group testing',
+        name: 'group_testing',
+        props: [
+          {
+            name: 'array_date',
+            label: 'Array date',
+            array: true,
+            required: true,
+            type: 'DATE',
+          },
+        ],
+      },
+      'group',
+    );
+    await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          remove: updateGroup.props[0].id,
+        },
+      ],
+    });
+  });
+  it('should be able to add ENUM prop to a group', async () => {
+    const updateGroup = await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'One enum',
+            type: BCMSPropType.ENUMERATION,
+            required: true,
+            array: false,
+            defaultData: {
+              items: ['km', 'm', 'dm', 'cm', 'mm'],
+              selected: 'm',
+            },
+          },
+        },
+      ],
+    });
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
+    expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateGroup.props[0]).to.have.deep.property('defaultData', {
+      items: ['km', 'm', 'dm', 'cm', 'mm'],
+      selected: 'm',
+    });
+    ObjectUtil.eq(
+      updateGroup,
+      {
+        desc: 'group testing',
+        label: 'group testing',
+        name: 'group_testing',
+        props: [
+          {
+            name: 'one_enum',
+            label: 'One enum',
+            array: false,
+            required: true,
+            type: 'ENUMERATION',
+          },
+        ],
+      },
+      'group',
+    );
+    await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          remove: updateGroup.props[0].id,
+        },
+      ],
+    });
+  });
+  it('should be able to add ENUM Array prop to a group', async () => {
+    const updateGroup = await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'Array enum',
+            type: BCMSPropType.ENUMERATION,
+            required: true,
+            array: true,
+            defaultData: {
+              items: ['km', 'm', 'dm', 'cm', 'mm'],
+              selected: 'm',
+            },
+          },
+        },
+      ],
+    });
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
+    expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateGroup.props[0]).to.have.deep.property('defaultData', {
+      items: ['km', 'm', 'dm', 'cm', 'mm'],
+      selected: 'm',
+    });
+    ObjectUtil.eq(
+      updateGroup,
+      {
+        desc: 'group testing',
+        label: 'group testing',
+        name: 'group_testing',
+        props: [
+          {
+            name: 'array_enum',
+            label: 'Array enum',
+            array: true,
+            required: true,
+            type: 'ENUMERATION',
+          },
+        ],
+      },
+      'group',
+    );
+    await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          remove: updateGroup.props[0].id,
+        },
+      ],
+    });
+  });
+  it('should be able to add MEDIA prop to a group', async () => {
+    const updateGroup = await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
+        {
+          add: {
+            label: 'Media',
+            type: BCMSPropType.MEDIA,
+            required: true,
+            array: false,
+            defaultData: ['618921a9838150fb59f13e32'],
+          },
+        },
+      ],
+    });
+    console.log(updateGroup)
+  expect(updateGroup).to.be.instanceOf(Object);
+  expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+  expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+  expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+  expect(updateGroup).to.have.property('cid').to.be.a('string');
+  expect(updateGroup).to.have.property('props').to.be.a('array');
+  expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+  expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
+  //  true,
+  // false
+  // true,
+  //  true
+  ]);
+  ObjectUtil.eq(
+    updateGroup,
+    {
+      desc: 'group testing',
+      label: 'group testing',
+      name: 'group_testing',
+      props: [
+        {
+          name: 'media',
+          label: 'Media',
+          array: false,
+          required: true,
+          type: 'MEDIA',
+        },
+      ],
+    },
+    'group',
+  );
+  await sdk.group.update({
+    _id: idGroup,
+    propChanges: [
+      {
+        remove: updateGroup.props[0].id,
+      },
+    ],
+  });
+  });
   let firstColorId: string;
   let secondColorId: string;
   let templateId: string;
