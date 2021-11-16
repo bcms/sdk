@@ -10,13 +10,17 @@ export function createBcmsEntryHandler({
   cache,
 }: BCMSEntryHandlerConfig): BCMSEntryHandler {
   const baseUri = '/entry';
-  const getAllLatch: {
-    [templateId: string]: boolean;
-  } = {};
 
+  const getAllLatch: {
+    getAllLite: { [templateId: string]: boolean };
+    count: { [templateId: string]: boolean };
+  } = {
+    getAllLite: {},
+    count: {},
+  };
   return {
     async getAllLite(data) {
-      if (getAllLatch[data.templateId]) {
+      if (getAllLatch.getAllLite[data.templateId]) {
         return cache.getters.find({
           query: (e) => e.templateId === data.templateId,
           name: 'entryLite',
@@ -29,7 +33,7 @@ export function createBcmsEntryHandler({
           Authorization: '',
         },
       });
-      getAllLatch[data.templateId] = true;
+      getAllLatch.getAllLite[data.templateId] = true;
       cache.mutations.set({ payload: result.items, name: 'entryLite' });
       return result.items;
     },
@@ -106,7 +110,7 @@ export function createBcmsEntryHandler({
       return result.item;
     },
     async count(data) {
-      if (getAllLatch[data.templateId]) {
+      if (!getAllLatch.count[data.templateId]) {
         return cache.getters.find<BCMSEntry>({
           query: (e) => e.templateId === data.templateId,
           name: 'entryLite',
@@ -184,7 +188,7 @@ export function createBcmsEntryHandler({
       return result.item;
     },
     async deleteById(data) {
-      await send({
+      const result: { message: string } = await send({
         url: `${baseUri}/${data.templateId}/${data.entryId}`,
         method: 'DELETE',
         headers: {
@@ -212,6 +216,7 @@ export function createBcmsEntryHandler({
           name: 'entry',
         });
       }
+      return result.message;
     },
   };
 }

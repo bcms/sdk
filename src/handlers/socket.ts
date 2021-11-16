@@ -3,6 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import {
   BCMSApiKey,
   BCMSSocketApiKeyEvent,
+  BCMSSocketColorEvent,
   BCMSSocketEntryEvent,
   BCMSSocketEvent,
   BCMSSocketEventName,
@@ -36,6 +37,7 @@ export function createBcmsSocketHandler({
   templateHandler,
   userHandler,
   widgetHandler,
+  colorHandler,
 }: BCMSSocketHandlerConfig): BCMSSocketHandler {
   const subs: {
     [eventName: string]: {
@@ -279,6 +281,25 @@ export function createBcmsSocketHandler({
         });
         if (item) {
           cache.mutations.remove({ payload: item, name: 'widget' });
+        }
+      }
+
+      triggerSubs(eventName, data);
+    });
+    soc.on(BCMSSocketEventName.COLOR, async (data: BCMSSocketColorEvent) => {
+      const eventName = BCMSSocketEventName.COLOR;
+
+      if (data.t === BCMSSocketEventType.UPDATE) {
+        await throwable(async () => {
+          await colorHandler.get(data.c, true);
+        });
+      } else if (data.t === BCMSSocketEventType.REMOVE) {
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.c,
+          name: 'color',
+        });
+        if (item) {
+          cache.mutations.remove({ payload: item, name: 'color' });
         }
       }
 

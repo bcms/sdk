@@ -1,6 +1,7 @@
 import type { BCMSStringUtility } from '../types';
 
 export function createBcmsStringUtility(): BCMSStringUtility {
+  let c: string;
   return {
     toPretty(s) {
       if (s.indexOf('_') !== -1) {
@@ -14,7 +15,11 @@ export function createBcmsStringUtility(): BCMSStringUtility {
           })
           .join(' ');
       } else {
-        return s
+        if (s.startsWith('#')) {
+          c = s.substring(1);
+        }
+
+        return c
           .split('-')
           .map((part) => {
             return (
@@ -61,6 +66,7 @@ export function createBcmsStringUtility(): BCMSStringUtility {
         return '';
       }
       const endIndex = src.indexOf(end, startIndex + begin.length);
+
       if (endIndex === -1) {
         return '';
       }
@@ -72,6 +78,7 @@ export function createBcmsStringUtility(): BCMSStringUtility {
         begin: src.indexOf(begin, 0),
         end: 0,
       };
+
       if (index.begin === -1) {
         return [];
       }

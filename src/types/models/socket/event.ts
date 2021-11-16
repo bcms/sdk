@@ -10,6 +10,7 @@ export enum BCMSSocketEventName {
   TEMPLATE_ORGANIZER = 'TEMPLATE_ORGANIZER',
   USER = 'USER',
   WIDGET = 'WIDGET',
+  COLOR = 'COLOR',
 }
 
 // eslint-disable-next-line no-shadow
@@ -131,6 +132,16 @@ export interface BCMSSocketWidgetEvent {
    */
   t: BCMSSocketEventType;
 }
+export interface BCMSSocketColorEvent {
+  /**
+   * Widget ID.
+   */
+  c: string;
+  /**
+   * Event type.
+   */
+  t: BCMSSocketEventType;
+}
 
 export type BCMSSocketEvent =
   | BCMSSocketApiKeyEvent
@@ -142,4 +153,5 @@ export type BCMSSocketEvent =
   | BCMSSocketTemplateEvent
   | BCMSSocketTemplateOrganizerEvent
   | BCMSSocketUserEvent
-  | BCMSSocketWidgetEvent;
+  | BCMSSocketWidgetEvent
+  | BCMSSocketColorEvent;

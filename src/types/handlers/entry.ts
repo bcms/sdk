@@ -31,6 +31,6 @@ export interface BCMSEntryHandler {
   }): Promise<BCMSEntry>;
   create(data: BCMSEntryCreateData): Promise<BCMSEntry>;
   update(data: BCMSEntryUpdateData): Promise<BCMSEntry>;
-  deleteById(data: { templateId: string; entryId: string }): Promise<void>;
+  deleteById(data: { templateId: string; entryId: string }): Promise<string>;
   count(data: { templateId: string }): Promise<number>;
 }

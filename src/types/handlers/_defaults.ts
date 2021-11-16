@@ -25,6 +25,6 @@ export interface BCMSDefaultHandler<
   getMany(ids: string[], skipCache?: boolean): Promise<Model[]>;
   create(data: AddData): Promise<Model>;
   update(data: UpdateData): Promise<Model>;
-  deleteById(id: string): Promise<void>;
+  deleteById(id: string): Promise<string>;
   count(): Promise<number>;
 }

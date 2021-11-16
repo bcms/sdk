@@ -15,6 +15,7 @@ import type {
   BCMSUserHandler,
   BCMSWidgetHandler,
 } from './handlers';
+import type { BCMSColorHandler } from './handlers/color';
 import type { BCMSJwt } from './models';
 import type { BCMSStorage } from './storage';
 import type { BCMSDateUtility, BCMSStringUtility, BCMSThrowable } from './util';
@@ -48,7 +49,7 @@ export interface BCMSSdk {
   template: BCMSTemplateHandler;
   entry: BCMSEntryHandler;
   socket: BCMSSocketHandler;
-
+  color: BCMSColorHandler;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;
