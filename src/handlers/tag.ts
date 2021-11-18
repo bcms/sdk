@@ -28,6 +28,13 @@ export function createBcmsTagHandler({
   return {
     ...defaultHandler,
     async getByValue(value) {
+      const cacheHit = cache.getters.findOne<BCMSTag>({
+        name: 'tag',
+        query: (e) => e.value === value,
+      });
+      if (cacheHit) {
+        return cacheHit;
+      }
       const result: { item: BCMSTag } = await send({
         url: `${baseUri}/value/${value}`,
         method: 'GET',
@@ -35,6 +42,7 @@ export function createBcmsTagHandler({
           Authorization: '',
         },
       });
+      cache.mutations.set({ payload: result.item, name: 'tag' });
       return result.item;
     },
   };
