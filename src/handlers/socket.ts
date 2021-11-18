@@ -15,6 +15,7 @@ import {
   BCMSSocketMediaEvent,
   BCMSSocketStatusEvent,
   BCMSSocketSubscriptionCallback,
+  BCMSSocketTagEvent,
   BCMSSocketTemplateEvent,
   BCMSSocketTemplateOrganizerEvent,
   BCMSSocketUserEvent,
@@ -38,6 +39,7 @@ export function createBcmsSocketHandler({
   userHandler,
   widgetHandler,
   colorHandler,
+  tagHandler,
 }: BCMSSocketHandlerConfig): BCMSSocketHandler {
   const subs: {
     [eventName: string]: {
@@ -300,6 +302,25 @@ export function createBcmsSocketHandler({
         });
         if (item) {
           cache.mutations.remove({ payload: item, name: 'color' });
+        }
+      }
+
+      triggerSubs(eventName, data);
+    });
+    soc.on(BCMSSocketEventName.TAG, async (data: BCMSSocketTagEvent) => {
+      const eventName = BCMSSocketEventName.TAG;
+
+      if (data.t === BCMSSocketEventType.UPDATE) {
+        await throwable(async () => {
+          await tagHandler.get(data.tg, true);
+        });
+      } else if (data.t === BCMSSocketEventType.REMOVE) {
+        const item = cache.getters.findOne({
+          query: (e) => e._id === data.tg,
+          name: 'tag',
+        });
+        if (item) {
+          cache.mutations.remove({ payload: item, name: 'tag' });
         }
       }
 
