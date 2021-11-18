@@ -38,6 +38,9 @@ export enum BCMSStoreMutationTypes {
 
   color_set = 'color_set',
   color_remove = 'color_remove',
+
+  tag_set = 'tag_set',
+  tag_remove = 'tag_remove',
 }
 
 // eslint-disable-next-line no-shadow
@@ -94,6 +97,10 @@ export enum BCMSStoreGetterTypes {
   color_items = 'color_items',
   color_find = 'color_find',
   color_findOne = 'color_findOne',
+
+  tag_items = 'tag_items',
+  tag_find = 'tag_find',
+  tag_findOne = 'tag_findOne',
 }
 
 // eslint-disable-next-line no-shadow
@@ -136,4 +143,7 @@ export enum BCMSStoreActionTypes {
 
   color_set = 'color_set',
   color_remove = 'color_remove',
+
+  tag_set = 'tag_set',
+  tag_remove = 'tag_remove',
 }

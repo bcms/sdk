@@ -10,6 +10,7 @@ import type {
   BCMSLanguage,
   BCMSMedia,
   BCMSStatus,
+  BCMSTag,
   BCMSTemplate,
   BCMSTemplateOrganizer,
   BCMSUser,
@@ -38,6 +39,7 @@ import type {
   BCMSStoreStatusGetters,
   BCMSStoreStatusMutations,
 } from './status';
+import type { BCMSStoreTagGetters, BCMSStoreTagMutations } from './tag';
 import type {
   BCMSStoreTemplateGetters,
   BCMSStoreTemplateMutations,
@@ -70,6 +72,7 @@ export interface BCMSStoreState {
   entryLite: BCMSEntryLite[];
   templateOrganizer: BCMSTemplateOrganizer[];
   color: BCMSColor[];
+  tag: BCMSTag[];
 }
 
 export type BCMSStoreMutations = BCMSStoreUserMutations &
@@ -84,7 +87,8 @@ export type BCMSStoreMutations = BCMSStoreUserMutations &
   BCMSStoreEntryLiteMutations &
   BCMSStoreEntryMutations &
   BCMSStoreTemplateOrganizerMutations &
-  BCMSStoreColorMutations;
+  BCMSStoreColorMutations &
+  BCMSStoreTagMutations;
 
 export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreApiKeyGetters &
@@ -98,7 +102,8 @@ export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreEntryLiteGetters &
   BCMSStoreEntryGetters &
   BCMSStoreTemplateOrganizerGetters &
-  BCMSStoreColorGetters;
+  BCMSStoreColorGetters &
+  BCMSStoreTagGetters;
 
 export interface BCMSStore {
   state: BCMSStoreState;

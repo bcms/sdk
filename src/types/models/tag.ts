@@ -1,6 +1,7 @@
 import type { BCMSEntity } from './entity';
 
 export interface BCMSTag extends BCMSEntity {
+  cid: string;
   value: string;
 }
 

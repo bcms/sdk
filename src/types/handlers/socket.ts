@@ -9,6 +9,7 @@ import type { BCMSGroupHandler } from './group';
 import type { BCMSLanguageHandler } from './language';
 import type { BCMSMediaHandler } from './media';
 import type { BCMSStatusHandler } from './status';
+import type { BCMSTagHandler } from './tag';
 import type { BCMSTemplateHandler } from './template';
 import type { BCMSTemplateOrganizerHandler } from './template-organizer';
 import type { BCMSUserHandler } from './user';
@@ -31,6 +32,7 @@ export interface BCMSSocketHandlerConfig {
   userHandler: BCMSUserHandler;
   widgetHandler: BCMSWidgetHandler;
   colorHandler: BCMSColorHandler;
+  tagHandler: BCMSTagHandler;
 }
 
 export interface BCMSSocketHandler {
