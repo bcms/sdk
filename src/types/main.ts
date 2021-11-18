@@ -10,6 +10,7 @@ import type {
   BCMSShimHandler,
   BCMSSocketHandler,
   BCMSStatusHandler,
+  BCMSTagHandler,
   BCMSTemplateHandler,
   BCMSTemplateOrganizerHandler,
   BCMSUserHandler,
@@ -50,6 +51,7 @@ export interface BCMSSdk {
   entry: BCMSEntryHandler;
   socket: BCMSSocketHandler;
   color: BCMSColorHandler;
+  tag: BCMSTagHandler;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;

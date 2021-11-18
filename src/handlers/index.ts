@@ -12,3 +12,4 @@ export * from './template';
 export * from './user';
 export * from './widget';
 export * from './color';
+export * from './tag';

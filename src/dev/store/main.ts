@@ -13,6 +13,7 @@ import * as EntryLiteStore from './entry-lite';
 import * as EntryStore from './entry';
 import * as TempOrgStore from './template-organizer';
 import * as ColorStore from './color';
+import * as TagStore from './tag';
 
 export const store: BCMSStore = {
   state: {
@@ -29,6 +30,7 @@ export const store: BCMSStore = {
     entry: [],
     templateOrganizer: [],
     color: [],
+    tag: [],
   },
   mutations: {
     ...UserStore.mutations,
@@ -44,6 +46,7 @@ export const store: BCMSStore = {
     ...EntryStore.mutations,
     ...TempOrgStore.mutations,
     ...ColorStore.mutations,
+    ...TagStore.mutations,
   },
   getters: {
     ...UserStore.getters,
@@ -59,5 +62,6 @@ export const store: BCMSStore = {
     ...EntryStore.getters,
     ...TempOrgStore.getters,
     ...ColorStore.getters,
+    ...TagStore.getters,
   },
 };
