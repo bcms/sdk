@@ -429,7 +429,7 @@ describe('Entry API', async () => {
   let booleanPropId: string;
   let richTextPropId: string;
   let colorPickerPropId: string;
-  let groupPointerPropId: string;
+  // let groupPointerPropId: string;
   // let entryPointerPropId: string;
   let firstColorId: string;
   let secondColorId: string;
@@ -650,17 +650,17 @@ describe('Entry API', async () => {
             ],
           },
         },
-        {
-          add: {
-            label: 'group pointer',
-            type: BCMSPropType.GROUP_POINTER,
-            required: true,
-            array: false,
-            defaultData: {
-              _id: idGroup,
-            },
-          },
-        },
+        // {
+        //   add: {
+        //     label: 'group pointer',
+        //     type: BCMSPropType.GROUP_POINTER,
+        //     required: true,
+        //     array: false,
+        //     defaultData: {
+        //       _id: idGroup,
+        //     },
+        //   },
+        // },
         // {
         //   add: {
         //     label: 'Entry pointer',
@@ -682,7 +682,7 @@ describe('Entry API', async () => {
     booleanPropId = updateTemplate.props[3].id;
     colorPickerPropId = updateTemplate.props[4].id;
     richTextPropId = updateTemplate.props[5].id;
-    groupPointerPropId = updateTemplate.props[6].id;
+    // groupPointerPropId = updateTemplate.props[6].id;
     // entryPointerPropId = updateTemplate.props[7].id;
     expect(updateTemplate).to.be.instanceOf(Object);
     expect(updateTemplate)
@@ -699,7 +699,7 @@ describe('Entry API', async () => {
     expect(updateTemplate.props[3]).to.have.property('id').to.be.a('string');
     expect(updateTemplate.props[4]).to.have.property('id').to.be.a('string');
     expect(updateTemplate.props[5]).to.have.property('id').to.be.a('string');
-    expect(updateTemplate.props[6]).to.have.property('id').to.be.a('string');
+    // expect(updateTemplate.props[6]).to.have.property('id').to.be.a('string');
     // expect(updateTemplate.props[7]).to.have.property('id').to.be.a('string');
     ObjectUtil.eq(
       updateTemplate,
@@ -754,13 +754,13 @@ describe('Entry API', async () => {
             required: true,
             type: 'RICH_TEXT',
           },
-          {
-            name: 'group_pointer',
-            label: 'group pointer',
-            array: false,
-            required: true,
-            type: 'GROUP_POINTER',
-          },
+          // {
+          //   name: 'group_pointer',
+          //   label: 'group pointer',
+          //   array: false,
+          //   required: true,
+          //   type: 'GROUP_POINTER',
+          // },
           // {
           //   name: 'entry_pointer',
           //   label: 'Entry pointer',
@@ -943,10 +943,10 @@ describe('Entry API', async () => {
                 },
               ],
             },
-            {
-              id: groupPointerPropId,
-              data: { _id: idGroup, items: [] },
-            },
+            // {
+            //   id: groupPointerPropId,
+            //   data: { _id: idGroup, items: [] },
+            // },
             // {
             //   id: entryPointerPropId,
             //   data: [idTemplate2],
@@ -973,7 +973,7 @@ describe('Entry API', async () => {
     expect(entry.meta[0].props[3]).to.have.property('id').to.be.a('string');
     expect(entry.meta[0].props[4]).to.have.property('id').to.be.a('string');
     expect(entry.meta[0].props[5]).to.have.property('id').to.be.a('string');
-    expect(entry.meta[0].props[6]).to.have.property('id').to.be.a('string');
+    // expect(entry.meta[0].props[6]).to.have.property('id').to.be.a('string');
     // expect(entry.meta[0].props[7]).to.have.property('id').to.be.a('string');
     ObjectUtil.eq(
       entry,
@@ -1006,9 +1006,9 @@ describe('Entry API', async () => {
                   },
                 ],
               },
-              {
-                data: { _id: idGroup, items: [] },
-              },
+              // {
+              //   data: { _id: idGroup, items: [] },
+              // },
               // {
               //   data: [idTemplate2],
               // },
@@ -1019,5 +1019,28 @@ describe('Entry API', async () => {
       },
       'entry',
     );
+  });
+  it('should get all parsed entries by template ID', async () => {
+    const entry = await sdk.entry.getAllParsed({ templateId: idTemplate });
+    expect(entry[0].meta).to.have.deep.property('en',{
+      title: 'Test',
+      slug: 'Test2',
+      one_number: 6,
+      one_boolean_prop: false,
+      color_picker: '#030505'
+    });
+
+  });
+  it('should be able to delete an entry', async () => {
+    // eslint-disable-next-line no-unused-expressions
+    expect(idEntry).to.be.a('string');
+    const result = await sdk.entry.deleteById({
+      templateId: idTemplate,
+      entryId: idEntry,
+    });
+    expect(result).eq('Success.');
+    expect(idTemplate).to.be.a('string');
+    const deleteTemplate = await sdk.template.deleteById(idTemplate);
+    expect(deleteTemplate).eq('Success.');
   });
 });

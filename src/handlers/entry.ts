@@ -3,6 +3,7 @@ import type {
   BCMSEntryHandler,
   BCMSEntryHandlerConfig,
   BCMSEntryLite,
+  BCMSEntryParsed,
 } from '../types';
 
 export function createBcmsEntryHandler({
@@ -13,10 +14,13 @@ export function createBcmsEntryHandler({
 
   const getAllLatch: {
     getAllLite: { [templateId: string]: boolean };
+    getAllParsed:{[templateId: string]: boolean}
     count: { [templateId: string]: boolean };
   } = {
     getAllLite: {},
+    getAllParsed: {},
     count: {},
+
   };
   return {
     async getAllLite(data) {
@@ -35,6 +39,24 @@ export function createBcmsEntryHandler({
       });
       getAllLatch.getAllLite[data.templateId] = true;
       cache.mutations.set({ payload: result.items, name: 'entryLite' });
+      return result.items;
+    },
+    async getAllParsed(data){
+      if (getAllLatch.getAllParsed[data.templateId]) {
+        return cache.getters.find({
+          query: (e) => e.templateId === data.templateId,
+          name: 'entry',
+        });
+      }
+      const result: { items: BCMSEntryParsed[] } = await send({
+        url: `${baseUri}/all/${data.templateId}/parse`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      getAllLatch.getAllLite[data.templateId] = true;
+      cache.mutations.set({ payload: result.items, name: 'entry' });
       return result.items;
     },
     async getManyLite(data) {
