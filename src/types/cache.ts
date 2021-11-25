@@ -18,8 +18,7 @@ export type BCMSSdkCacheDataName =
   | 'template'
   | 'user'
   | 'widget'
-  | 'tag'
-  | 'parse';
+  | 'tag';
 
 export interface BCMSSdkCacheData {
   name: BCMSSdkCacheDataName;
