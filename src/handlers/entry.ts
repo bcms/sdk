@@ -14,13 +14,12 @@ export function createBcmsEntryHandler({
 
   const getAllLatch: {
     getAllLite: { [templateId: string]: boolean };
-    getAllParsed:{[templateId: string]: boolean}
+    getAllParsed: { [templateId: string]: boolean };
     count: { [templateId: string]: boolean };
   } = {
     getAllLite: {},
     getAllParsed: {},
     count: {},
-
   };
   return {
     async getAllLite(data) {
@@ -41,7 +40,7 @@ export function createBcmsEntryHandler({
       cache.mutations.set({ payload: result.items, name: 'entryLite' });
       return result.items;
     },
-    async getAllParsed(data){
+    async getAllParsed(data) {
       if (getAllLatch.getAllParsed[data.templateId]) {
         return cache.getters.find({
           query: (e) => e.templateId === data.templateId,
@@ -123,6 +122,26 @@ export function createBcmsEntryHandler({
       }
       const result: { item: BCMSEntry } = await send({
         url: `${baseUri}/${data.templateId}/${data.entryId}`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      cache.mutations.set({ payload: result.item, name: 'entry' });
+      return result.item;
+    },
+    async getOneParsed(data) {
+      if (!data.skipCache) {
+        const cacheHit = cache.getters.findOne<BCMSEntryParsed>({
+          query: (e) => e._id === data.entryId,
+          name: 'entry',
+        });
+        if (cacheHit) {
+          return cacheHit;
+        }
+      }
+      const result: { item: BCMSEntryParsed } = await send({
+        url: `${baseUri}/${data.templateId}/${data.entryId}/parse`,
         method: 'GET',
         headers: {
           Authorization: '',

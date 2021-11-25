@@ -1220,6 +1220,47 @@ describe('Entry API', async () => {
       tag: idTag,
     });
   });
+  it('should get one parsed entry by template ID', async () => {
+    const entry = await sdk.entry.getOneParsed({
+      templateId: idTemplate,
+      entryId: idEntry,
+    });
+    expect(entry.meta).to.have.deep.property('en', {
+      title: 'Test',
+      slug: 'Test2',
+      date: '619CD324',
+      one_number: 6,
+      one_boolean_prop: false,
+      color_picker: '#030505',
+      entry_pointer: {
+        en: {
+          _id: idEntryTemplate2,
+          slug: 'Test2',
+          title: 'Test',
+        },
+      },
+      group_pointer: {
+        first_string: 'This is test',
+      },
+      media: {
+        _id: idMedia,
+        alt_text: '',
+        caption: '',
+        height: 700,
+        name: 'image.jpeg',
+        src: '/image.jpeg',
+        width: 1120,
+      },
+      widget: {
+        first_string: 'ok',
+      },
+      enum: {
+        items: ['one', 'two', 'six'],
+        selected: 'one',
+      },
+      tag: idTag,
+    });
+  });
   it('should clear test data', async () => {
     // eslint-disable-next-line no-unused-expressions
     expect(idEntry).to.be.a('string');
