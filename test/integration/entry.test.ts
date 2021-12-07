@@ -1,4 +1,6 @@
 import { expect } from 'chai';
+import * as fs from 'fs/promises';
+import path = require('path');
 import { BCMSPropType } from '../../src/types';
 // import { BCMSPropType } from '../../src/types';
 import { Login, ObjectUtil, sdk } from '../util';
@@ -422,7 +424,9 @@ describe('Entry API', async () => {
     expect(deleteTemplate).eq('Success.');
   });
   let idGroup: string;
+  let idGroupProp: string;
   let idWidget: string;
+  let idWidgetProp: string;
   let stringFirstId: string;
   let stringSecondId: string;
   let numberPropId: string;
@@ -430,9 +434,17 @@ describe('Entry API', async () => {
   let richTextPropId: string;
   let colorPickerPropId: string;
   let groupPointerPropId: string;
-  // let entryPointerPropId: string;
+  let entryPointerPropId: string;
+  let widgetPointerPropId: string;
+  let datePointerPropId: string;
+  let mediaPointerPropId: string;
+  let enumPointerPropId: string;
+  let tagPointerPropId: string;
+  let idEntryTemplate2: string;
   let firstColorId: string;
   let secondColorId: string;
+  let idMedia: string;
+  let idTag: string;
   it('should create a data which will be used in next tests', async () => {
     const group = await sdk.group.create({
       label: 'G1',
@@ -468,6 +480,8 @@ describe('Entry API', async () => {
         },
       ],
     });
+    idGroup = updateGroup._id;
+    idGroupProp = updateGroup.props[0].id;
     expect(updateGroup).to.be.instanceOf(Object);
     expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
     expect(updateGroup).to.have.property('createdAt').to.be.a('number');
@@ -503,6 +517,14 @@ describe('Entry API', async () => {
     });
 
     idTemplate2 = template2._id;
+    const file = await fs.readFile(
+      path.join(__dirname, '..', 'assets', 'image.jpeg'),
+    );
+    const media = await sdk.media.createFile({
+      file,
+      fileName: 'image.jpeg',
+    });
+    idMedia = media._id;
     expect(template2).to.be.instanceOf(Object);
     expect(template2).to.have.property('_id').to.be.a('string');
     expect(template2).to.have.property('createdAt').to.be.a('number');
@@ -540,12 +562,108 @@ describe('Entry API', async () => {
       },
       'template',
     );
+    const entryTemplate2 = await sdk.entry.create({
+      templateId: idTemplate2,
+      status: '',
+      meta: [
+        {
+          lng: 'en',
+          props: [
+            {
+              id: template2.props[0].id,
+              data: ['Test'],
+            },
+            {
+              id: template2.props[1].id,
+              data: ['Test2'],
+            },
+          ],
+        },
+      ],
+      content: [{ lng: 'en', nodes: [] }],
+    });
+    idEntryTemplate2 = entryTemplate2._id;
+    const widget = await sdk.widget.create({
+      label: 'W1',
+      desc: 'W1',
+      previewImage: 'old image',
+      previewScript: 'old script',
+      previewStyle: 'old style',
+    });
+    idWidget = widget._id;
+    expect(widget).to.be.instanceOf(Object);
+    expect(widget).to.have.property('_id').to.be.a('string');
+    expect(widget).to.have.property('createdAt').to.be.a('number');
+    expect(widget).to.have.property('updatedAt').to.be.a('number');
+    expect(widget).to.have.property('cid').to.be.a('string');
+    expect(widget).to.have.property('props').to.be.a('array');
+    ObjectUtil.eq(
+      widget,
+      {
+        name: 'w1',
+        label: 'W1',
+        desc: 'W1',
+        previewImage: 'old image',
+        previewScript: 'old script',
+        previewStyle: 'old style',
+      },
+      'widget',
+    );
+    const updateWidget = await sdk.widget.update({
+      _id: idWidget,
+      propChanges: [
+        {
+          add: {
+            label: 'First string',
+            type: BCMSPropType.STRING,
+            required: true,
+            array: false,
+            defaultData: ['This is first string'],
+          },
+        },
+      ],
+    });
+    idWidgetProp = updateWidget.props[0].id;
+    expect(updateWidget).to.be.instanceOf(Object);
+    expect(updateWidget).to.have.property('_id').to.be.a('string').eq(idWidget);
+    expect(updateWidget).to.have.property('createdAt').to.be.a('number');
+    expect(updateWidget).to.have.property('updatedAt').to.be.a('number');
+    expect(updateWidget).to.have.property('cid').to.be.a('string');
+    expect(updateWidget).to.have.property('props').to.be.a('array');
+    expect(updateWidget.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateWidget.props[0]).to.have.deep.property('defaultData', [
+      'This is first string',
+    ]);
+    ObjectUtil.eq(
+      updateWidget,
+      {
+        desc: 'W1',
+        label: 'W1',
+        name: 'w1',
+        previewImage: 'old image',
+        previewScript: 'old script',
+        previewStyle: 'old style',
+        props: [
+          {
+            name: 'first_string',
+            label: 'First string',
+            array: false,
+            required: true,
+            type: 'STRING',
+          },
+        ],
+      },
+      'widget',
+    );
+    const tag = await sdk.tag.create({
+      value: 'first',
+    });
+    idTag = tag._id;
     const template = await sdk.template.create({
       label: 'T1',
       desc: 'T1',
       singleEntry: true,
     });
-
     idTemplate = template._id;
     expect(template).to.be.instanceOf(Object);
     expect(template).to.have.property('_id').to.be.a('string');
@@ -661,19 +779,64 @@ describe('Entry API', async () => {
             },
           },
         },
-        // {
-        //   add: {
-        //     label: 'Entry pointer',
-        //     type: BCMSPropType.ENTRY_POINTER,
-        //     required: true,
-        //     array: false,
-        //     defaultData: {
-        //       templateId: idTemplate2,
-        //       entryIds: [],
-        //       displayProp: 'title',
-        //     },
-        //   },
-        // },
+        {
+          add: {
+            label: 'Entry pointer',
+            type: BCMSPropType.ENTRY_POINTER,
+            required: true,
+            array: false,
+            defaultData: {
+              templateId: idTemplate2,
+              entryIds: [idEntryTemplate2],
+              displayProp: 'title',
+            },
+          },
+        },
+        {
+          add: {
+            label: 'Date',
+            type: BCMSPropType.DATE,
+            required: true,
+            array: false,
+            defaultData: ['619CD2FF', '619CD324'],
+          },
+        },
+        {
+          add: {
+            label: 'Widget',
+            type: BCMSPropType.WIDGET,
+            required: true,
+            array: false,
+            defaultData: { _id: idWidget },
+          },
+        },
+        {
+          add: {
+            label: 'Media',
+            type: BCMSPropType.MEDIA,
+            required: true,
+            array: false,
+            defaultData: [idMedia],
+          },
+        },
+        {
+          add: {
+            label: 'Enum',
+            type: BCMSPropType.ENUMERATION,
+            required: true,
+            array: false,
+            defaultData: { items: ['one', 'two', 'six'], selected: 'one' },
+          },
+        },
+        {
+          add: {
+            label: 'Tag',
+            type: BCMSPropType.TAG,
+            required: true,
+            array: false,
+            defaultData: [idTag],
+          },
+        },
       ],
     });
     stringFirstId = updateTemplate.props[0].id;
@@ -683,7 +846,12 @@ describe('Entry API', async () => {
     colorPickerPropId = updateTemplate.props[4].id;
     richTextPropId = updateTemplate.props[5].id;
     groupPointerPropId = updateTemplate.props[6].id;
-    // entryPointerPropId = updateTemplate.props[7].id;
+    entryPointerPropId = updateTemplate.props[7].id;
+    datePointerPropId = updateTemplate.props[8].id;
+    widgetPointerPropId = updateTemplate.props[9].id;
+    mediaPointerPropId = updateTemplate.props[10].id;
+    enumPointerPropId = updateTemplate.props[11].id;
+    tagPointerPropId = updateTemplate.props[12].id;
     expect(updateTemplate).to.be.instanceOf(Object);
     expect(updateTemplate)
       .to.have.property('_id')
@@ -700,7 +868,12 @@ describe('Entry API', async () => {
     expect(updateTemplate.props[4]).to.have.property('id').to.be.a('string');
     expect(updateTemplate.props[5]).to.have.property('id').to.be.a('string');
     expect(updateTemplate.props[6]).to.have.property('id').to.be.a('string');
-    // expect(updateTemplate.props[7]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[7]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[8]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[9]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[10]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[11]).to.have.property('id').to.be.a('string');
+    expect(updateTemplate.props[12]).to.have.property('id').to.be.a('string');
     ObjectUtil.eq(
       updateTemplate,
       {
@@ -761,152 +934,54 @@ describe('Entry API', async () => {
             required: true,
             type: 'GROUP_POINTER',
           },
-          // {
-          //   name: 'entry_pointer',
-          //   label: 'Entry pointer',
-          //   array: false,
-          //   required: true,
-          //   type: 'ENTRY_POINTER',
-          // },
+          {
+            name: 'entry_pointer',
+            label: 'Entry pointer',
+            array: false,
+            required: true,
+            type: 'ENTRY_POINTER',
+          },
+          {
+            name: 'date',
+            label: 'Date',
+            array: false,
+            required: true,
+            type: 'DATE',
+          },
+          {
+            name: 'widget',
+            label: 'Widget',
+            array: false,
+            required: true,
+            type: 'WIDGET',
+          },
+          {
+            name: 'media',
+            label: 'Media',
+            array: false,
+            required: true,
+            type: 'MEDIA',
+          },
+          {
+            name: 'enum',
+            label: 'Enum',
+            array: false,
+            required: true,
+            type: 'ENUMERATION',
+          },
+          {
+            name: 'tag',
+            label: 'Tag',
+            array: false,
+            required: true,
+            type: 'TAG',
+          },
         ],
       },
       'template',
     );
-    const entry = await sdk.entry.create({
-      templateId: idTemplate2,
-      status: '',
-      meta: [
-        {
-          lng: 'en',
-          props: [
-            {
-              id: template2.props[0].id,
-              data: ['Test'],
-            },
-            {
-              id: template2.props[1].id,
-              data: ['Test2'],
-            },
-          ],
-        },
-      ],
-      content: [{ lng: 'en', nodes: [] }],
-    });
-    idEntry = entry._id;
-    propIdFirst = entry.meta[0].props[0].id;
-    propIdSecond = entry.meta[0].props[1].id;
-    expect(entry).to.be.instanceOf(Object);
-    expect(entry).to.have.property('_id').to.be.a('string');
-    expect(entry).to.have.property('createdAt').to.be.a('number');
-    expect(entry).to.have.property('updatedAt').to.be.a('number');
-    expect(entry).to.have.property('cid').to.be.a('string');
-    expect(entry)
-      .to.have.property('templateId')
-      .to.be.a('string')
-      .eq(idTemplate2);
-    expect(entry.meta[0]).to.have.property('props').to.be.a('array');
-    expect(entry.meta[0].props[0])
-      .to.have.property('id')
-      .to.be.a('string')
-      .eq(template2.props[0].id);
-    expect(entry.meta[0].props[1])
-      .to.have.property('id')
-      .to.be.a('string')
-      .eq(template2.props[1].id);
-    ObjectUtil.eq(
-      entry,
-      {
-        status: '',
-        userId: '111111111111111111111111',
-        meta: [
-          {
-            lng: 'en',
-            props: [
-              {
-                data: ['Test'],
-              },
-              {
-                data: ['Test2'],
-              },
-            ],
-          },
-        ],
-        content: [{ lng: 'en', nodes: [] }],
-      },
-      'entry',
-    );
-    const widget = await sdk.widget.create({
-      label: 'W1',
-      desc: 'W1',
-      previewImage: 'old image',
-      previewScript: 'old script',
-      previewStyle: 'old style',
-    });
-    idWidget = widget._id;
-    expect(widget).to.be.instanceOf(Object);
-    expect(widget).to.have.property('_id').to.be.a('string');
-    expect(widget).to.have.property('createdAt').to.be.a('number');
-    expect(widget).to.have.property('updatedAt').to.be.a('number');
-    expect(widget).to.have.property('cid').to.be.a('string');
-    expect(widget).to.have.property('props').to.be.a('array');
-    ObjectUtil.eq(
-      widget,
-      {
-        name: 'w1',
-        label: 'W1',
-        desc: 'W1',
-        previewImage: 'old image',
-        previewScript: 'old script',
-        previewStyle: 'old style',
-      },
-      'widget',
-    );
-    const updateWidget = await sdk.widget.update({
-      _id: idWidget,
-      propChanges: [
-        {
-          add: {
-            label: 'First string',
-            type: BCMSPropType.STRING,
-            required: true,
-            array: false,
-            defaultData: ['This is first string'],
-          },
-        },
-      ],
-    });
-    expect(updateWidget).to.be.instanceOf(Object);
-    expect(updateWidget).to.have.property('_id').to.be.a('string').eq(idWidget);
-    expect(updateWidget).to.have.property('createdAt').to.be.a('number');
-    expect(updateWidget).to.have.property('updatedAt').to.be.a('number');
-    expect(updateWidget).to.have.property('cid').to.be.a('string');
-    expect(updateWidget).to.have.property('props').to.be.a('array');
-    expect(updateWidget.props[0]).to.have.property('id').to.be.a('string');
-    expect(updateWidget.props[0]).to.have.deep.property('defaultData', [
-      'This is first string',
-    ]);
-    ObjectUtil.eq(
-      updateWidget,
-      {
-        desc: 'W1',
-        label: 'W1',
-        name: 'w1',
-        previewImage: 'old image',
-        previewScript: 'old script',
-        previewStyle: 'old style',
-        props: [
-          {
-            name: 'first_string',
-            label: 'First string',
-            array: false,
-            required: true,
-            type: 'STRING',
-          },
-        ],
-      },
-      'widget',
-    );
   });
+
   it(' should create an entry with all props', async () => {
     const entry = await sdk.entry.create({
       templateId: idTemplate,
@@ -945,18 +1020,58 @@ describe('Entry API', async () => {
             },
             {
               id: groupPointerPropId,
-              data: { _id: idGroup, items: [] },
+              data: {
+                _id: idGroup,
+                items: [
+                  {
+                    props: [
+                      {
+                        id: idGroupProp,
+                        data: ['This is test'],
+                      },
+                    ],
+                  },
+                ],
+              },
             },
-            // {
-            //   id: entryPointerPropId,
-            //   data: [idTemplate2],
-            // },
+            {
+              id: entryPointerPropId,
+              data: [idEntryTemplate2],
+            },
+            {
+              id: datePointerPropId,
+              data: ['619CD324'],
+            },
+            {
+              id: widgetPointerPropId,
+              data: {
+                _id: idWidget,
+                props: [
+                  {
+                    id: idWidgetProp,
+                    data: ['ok'],
+                  },
+                ],
+              },
+            },
+            {
+              id: mediaPointerPropId,
+              data: [idMedia],
+            },
+            {
+              id: enumPointerPropId,
+              data: ['one'],
+            },
+            {
+              id: tagPointerPropId,
+              data: [idTag],
+            },
           ],
         },
       ],
       content: [{ lng: 'en', nodes: [] }],
     });
-
+    idEntry = entry._id;
     expect(entry).to.be.instanceOf(Object);
     expect(entry).to.have.property('_id').to.be.a('string');
     expect(entry).to.have.property('createdAt').to.be.a('number');
@@ -974,7 +1089,12 @@ describe('Entry API', async () => {
     expect(entry.meta[0].props[4]).to.have.property('id').to.be.a('string');
     expect(entry.meta[0].props[5]).to.have.property('id').to.be.a('string');
     expect(entry.meta[0].props[6]).to.have.property('id').to.be.a('string');
-    // expect(entry.meta[0].props[7]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[7]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[8]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[9]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[10]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[11]).to.have.property('id').to.be.a('string');
+    expect(entry.meta[0].props[12]).to.have.property('id').to.be.a('string');
     ObjectUtil.eq(
       entry,
       {
@@ -1007,11 +1127,53 @@ describe('Entry API', async () => {
                 ],
               },
               {
-                data: { _id: idGroup, items: [] },
+                data: {
+                  _id: idGroup,
+                  items: [
+                    {
+                      props: [
+                        {
+                          id: idGroupProp,
+                          data: ['This is test'],
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
-              // {
-              //   data: [idTemplate2],
-              // },
+
+              {
+                id: entryPointerPropId,
+                data: [idEntryTemplate2],
+              },
+              {
+                id: datePointerPropId,
+                data: ['619CD324'],
+              },
+              {
+                id: widgetPointerPropId,
+                data: {
+                  _id: idWidget,
+                  props: [
+                    {
+                      id: idWidgetProp,
+                      data: ['ok'],
+                    },
+                  ],
+                },
+              },
+              {
+                id: mediaPointerPropId,
+                data: [idMedia],
+              },
+              {
+                id: enumPointerPropId,
+                data: ['one'],
+              },
+              {
+                id: tagPointerPropId,
+                data: [idTag],
+              },
             ],
           },
         ],
@@ -1019,5 +1181,96 @@ describe('Entry API', async () => {
       },
       'entry',
     );
+  });
+  it('should get all parsed entries by template ID', async () => {
+    const entry = await sdk.entry.getAllParsed({ templateId: idTemplate });
+    expect(entry[0].meta).to.have.deep.property('en', {
+      title: 'Test',
+      slug: 'Test2',
+      date: '619CD324',
+      one_number: 6,
+      one_boolean_prop: false,
+      color_picker: '#030505',
+      entry_pointer: {
+        en: {
+          _id: idEntryTemplate2,
+          slug: 'Test2',
+          title: 'Test',
+        },
+      },
+      group_pointer: {
+        first_string: 'This is test',
+      },
+      media: {
+        _id: idMedia,
+        alt_text: '',
+        caption: '',
+        height: 700,
+        name: 'image.jpeg',
+        src: '/image.jpeg',
+        width: 1120,
+      },
+      widget: {
+        first_string: 'ok',
+      },
+      enum: {
+        items: ['one', 'two', 'six'],
+        selected: 'one',
+      },
+      tag: idTag,
+    });
+  });
+  it('should get one parsed entry by template ID', async () => {
+    const entry = await sdk.entry.getOneParsed({
+      templateId: idTemplate,
+      entryId: idEntry,
+    });
+    expect(entry.meta).to.have.deep.property('en', {
+      title: 'Test',
+      slug: 'Test2',
+      date: '619CD324',
+      one_number: 6,
+      one_boolean_prop: false,
+      color_picker: '#030505',
+      entry_pointer: {
+        en: {
+          _id: idEntryTemplate2,
+          slug: 'Test2',
+          title: 'Test',
+        },
+      },
+      group_pointer: {
+        first_string: 'This is test',
+      },
+      media: {
+        _id: idMedia,
+        alt_text: '',
+        caption: '',
+        height: 700,
+        name: 'image.jpeg',
+        src: '/image.jpeg',
+        width: 1120,
+      },
+      widget: {
+        first_string: 'ok',
+      },
+      enum: {
+        items: ['one', 'two', 'six'],
+        selected: 'one',
+      },
+      tag: idTag,
+    });
+  });
+  it('should clear test data', async () => {
+    // eslint-disable-next-line no-unused-expressions
+    expect(idEntry).to.be.a('string');
+    const result = await sdk.entry.deleteById({
+      templateId: idTemplate,
+      entryId: idEntry,
+    });
+    expect(result).eq('Success.');
+    expect(idTemplate).to.be.a('string');
+    const deleteTemplate = await sdk.template.deleteById(idTemplate);
+    expect(deleteTemplate).eq('Success.');
   });
 });

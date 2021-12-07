@@ -477,6 +477,8 @@ tests:
       - it: should create an entry with all props
         completed: true
         description: 'Add entry to T1 template.'
+      - it: should get all parsed entries by template ID
+        completed: true
     tag:
       - it: should create new tag
         completed: true

@@ -4,6 +4,7 @@ import type {
   BCMSEntry,
   BCMSEntryCreateData,
   BCMSEntryLite,
+  BCMSEntryParsed,
   BCMSEntryUpdateData,
 } from '../models';
 
@@ -14,6 +15,7 @@ export interface BCMSEntryHandlerConfig {
 
 export interface BCMSEntryHandler {
   getAllLite(data: { templateId: string }): Promise<BCMSEntryLite[]>;
+  getAllParsed(data: { templateId: string }): Promise<BCMSEntryParsed[]>;
   getManyLite(data: {
     templateId: string;
     entryIds: string[];
@@ -29,6 +31,11 @@ export interface BCMSEntryHandler {
     entryId: string;
     skipCache?: boolean;
   }): Promise<BCMSEntry>;
+  getOneParsed(data: {
+    templateId: string;
+    entryId: string;
+    skipCache?: boolean;
+  }): Promise<BCMSEntryParsed>;
   create(data: BCMSEntryCreateData): Promise<BCMSEntry>;
   update(data: BCMSEntryUpdateData): Promise<BCMSEntry>;
   deleteById(data: { templateId: string; entryId: string }): Promise<string>;
