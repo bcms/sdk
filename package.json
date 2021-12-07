@@ -33,9 +33,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@becomes/purple-cheetah": "^3.0.1",
-    "@types/chai": "^4.2.21",
-    "@types/mocha": "^8.2.3",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^14.17.5",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
@@ -44,19 +43,12 @@
     "chai": "^4.3.4",
     "env-cmd": "^10.0.1",
     "eslint": "^7.30.0",
-    "eslint-plugin-prettier": "^3.4.0",
     "form-data": "^4.0.0",
     "fs-extra": "^9.1.0",
-    "html-loader": "^2.1.2",
-    "html-webpack-plugin": "^5.3.2",
-    "mocha": "^8.3.2",
+    "mocha": "^9.1.3",
     "prettier": "^2.3.2",
-    "ts-loader": "^9.2.3",
     "ts-node": "^8.6.1",
     "typescript": "^4.3.5",
-    "webpack": "^5.43.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2",
     "yamljs": "^0.3.0"
   }
 }
