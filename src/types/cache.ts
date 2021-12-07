@@ -1,4 +1,4 @@
-import type { BCMSEntity } from '.';
+import type { BCMSEntity } from './models';
 
 export interface BCMSSdkCacheQuery<Item extends BCMSEntity> {
   (item: Item): boolean;
@@ -22,6 +22,12 @@ export type BCMSSdkCacheDataName =
 
 export interface BCMSSdkCacheData {
   name: BCMSSdkCacheDataName;
+}
+
+export interface BCMSSdkCacheConfig {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fromVuex?: any;
+  custom?: BCMSSdkCache;
 }
 
 export interface BCMSSdkCache {

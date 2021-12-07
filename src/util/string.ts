@@ -1,34 +1,25 @@
 import type { BCMSStringUtility } from '../types';
 
 export function createBcmsStringUtility(): BCMSStringUtility {
-  let c: string;
   return {
     toPretty(s) {
+      let c = s;
+      let splitBy = '-';
       if (s.indexOf('_') !== -1) {
-        return s
-          .split('_')
-          .map((part) => {
-            return (
-              part.substring(0, 1).toUpperCase() +
-              part.substring(1, part.length).toLowerCase()
-            );
-          })
-          .join(' ');
-      } else {
-        if (s.startsWith('#')) {
-          c = s.substring(1);
-        }
-
-        return c
-          .split('-')
-          .map((part) => {
-            return (
-              part.substring(0, 1).toUpperCase() +
-              part.substring(1, part.length).toLowerCase()
-            );
-          })
-          .join(' ');
+        splitBy = '_';
       }
+      if (s.startsWith('#')) {
+        c = s.substring(1);
+      }
+      return c
+        .split(splitBy)
+        .map((part) => {
+          return (
+            part.substring(0, 1).toUpperCase() +
+            part.substring(1, part.length).toLowerCase()
+          );
+        })
+        .join(' ');
     },
     toSlug(s) {
       return s

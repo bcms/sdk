@@ -1,4 +1,5 @@
 import type { AxiosRequestConfig } from 'axios';
+import type { BCMSSdkCacheConfig } from '.';
 import type { BCMSSdkCache } from './cache';
 import type {
   BCMSApiKeyHandler,
@@ -26,7 +27,7 @@ export interface BCMSSdkConfig {
    * Origin of the BCMS. For example: https://bcms.example.com
    */
   origin?: string;
-  cache: BCMSSdkCache;
+  cache: BCMSSdkCacheConfig;
 }
 
 export interface BCMSSdk {

@@ -18,14 +18,41 @@ import {
   createBcmsTagHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
-import type { BCMSJwt, BCMSSdk, BCMSSdkConfig } from './types';
+import type { BCMSJwt, BCMSSdk, BCMSSdkCache, BCMSSdkConfig } from './types';
 import {
   createBcmsDateUtility,
   createBcmsStringUtility,
   createBcmsThrowable,
 } from './util';
 
-export function createBcmsSdk({ origin, cache }: BCMSSdkConfig): BCMSSdk {
+export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
+  const origin = config.origin;
+  const cache: BCMSSdkCache | undefined = config.cache.fromVuex
+    ? {
+        getters: {
+          find({ query, name }) {
+            return config.cache.fromVuex.getters[`${name}_find`](query);
+          },
+          findOne({ query, name }) {
+            return config.cache.fromVuex.getters[`${name}_findOne`](query);
+          },
+          items({ name }) {
+            return config.cache.fromVuex.getters[`${name}_items`];
+          },
+        },
+        mutations: {
+          remove({ payload, name }) {
+            config.cache.fromVuex.commit(`${name}_remove`, payload);
+          },
+          set({ payload, name }) {
+            config.cache.fromVuex.commit(`${name}_set`, payload);
+          },
+        },
+      }
+    : config.cache.custom;
+  if (!cache) {
+    throw Error('Cache handler was not provided.');
+  }
   const storage = createBcmsStorage({
     prfx: 'bcms',
   });
