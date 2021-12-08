@@ -512,3 +512,6 @@ tests:
           '
       - it: should clear test data
         completed: true
+    typeConverter:
+      - it: should get all types converted to typescript
+        completed: false

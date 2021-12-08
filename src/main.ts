@@ -16,6 +16,7 @@ import {
   createBcmsSocketHandler,
   createBcmsColorHandler,
   createBcmsTagHandler,
+  createBcmsTypeConverterHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
 import type { BCMSJwt, BCMSSdk, BCMSSdkCache, BCMSSdkConfig } from './types';
@@ -277,6 +278,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     send,
     cache,
   });
+  const typeConverterHandler = createBcmsTypeConverterHandler({ send });
   const socketHandler = createBcmsSocketHandler({
     origin,
     cache,
@@ -320,6 +322,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     socket: socketHandler,
     color: colorHandler,
     tag: tagHandler,
+    typeConverter: typeConverterHandler,
     util: {
       string: stringUtil,
       date: dateUtil,

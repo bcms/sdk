@@ -6,6 +6,7 @@ export * from './prop';
 export * from './socket';
 export * from './user';
 
+export * from './color';
 export * from './entity';
 export * from './entry';
 export * from './function';
@@ -15,6 +16,5 @@ export * from './status';
 export * from './tag';
 export * from './template-organizer';
 export * from './template';
+export * from './type-converter';
 export * from './widget';
-export * from './color';
-export * from './tag';

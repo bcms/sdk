@@ -1,4 +1,5 @@
 export * from './api-key';
+export * from './color';
 export * from './entry';
 export * from './function';
 export * from './group';
@@ -10,7 +11,6 @@ export * from './status';
 export * from './tag';
 export * from './template-organizer';
 export * from './template';
+export * from './type-converter';
 export * from './user';
 export * from './widget';
-export * from './color';
-export * from './tag';
