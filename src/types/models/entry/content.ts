@@ -8,7 +8,7 @@ export interface BCMSEntryContent {
 export interface BCMSEntryContentNode {
   type: BCMSEntryContentNodeType;
   content?: BCMSEntryContentNode[];
-  attrs:
+  attrs?:
     | BCMSEntryContentNodeHeadingAttr
     | BCMSPropValueWidgetData
     | BCMSEntryContentNodeLinkAttr;
