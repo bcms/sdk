@@ -1,5 +1,6 @@
 export * from './api-key';
 export * from './color';
+export * from './change'
 export * from './entry';
 export * from './function';
 export * from './group';

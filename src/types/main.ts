@@ -17,6 +17,7 @@ import type {
   BCMSUserHandler,
   BCMSWidgetHandler,
   BCMSTypeConverterHandler,
+  BCMSChangeHandler
 } from './handlers';
 import type { BCMSColorHandler } from './handlers/color';
 import type { BCMSJwt } from './models';
@@ -55,6 +56,7 @@ export interface BCMSSdk {
   color: BCMSColorHandler;
   tag: BCMSTagHandler;
   typeConverter: BCMSTypeConverterHandler;
+  change: BCMSChangeHandler
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;

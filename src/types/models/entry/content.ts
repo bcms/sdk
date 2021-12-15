@@ -8,7 +8,7 @@ export interface BCMSEntryContent {
 export interface BCMSEntryContentNode {
   type: BCMSEntryContentNodeType;
   content?: BCMSEntryContentNode[];
-  attrs?:
+  attrs:
     | BCMSEntryContentNodeHeadingAttr
     | BCMSPropValueWidgetData
     | BCMSEntryContentNodeLinkAttr;
@@ -47,6 +47,6 @@ export enum BCMSEntryContentNodeMarkerType {
   bold = 'bold',
   italic = 'italic',
   underline = 'underline',
-  stripe = 'stripe',
+  strike = 'strike',
   link = 'link',
 }

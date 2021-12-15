@@ -7,6 +7,7 @@ export * from './socket';
 export * from './user';
 
 export * from './color';
+export * from './change';
 export * from './entity';
 export * from './entry';
 export * from './function';
