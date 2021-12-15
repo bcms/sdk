@@ -15,19 +15,19 @@ export interface BCMSChange extends BCMSEntity {
   count: number;
 }
 
-interface GetInfoDataProp {
+export interface BCMSChangeGetDataProp {
   count: number;
   lastChangeAt: number;
 }
 
-export interface GetInfoData {
-  entry: GetInfoDataProp;
-  group: GetInfoDataProp;
-  color: GetInfoDataProp;
-  language: GetInfoDataProp;
-  media: GetInfoDataProp;
-  status: GetInfoDataProp;
-  tag: GetInfoDataProp;
-  templates: GetInfoDataProp;
-  widget: GetInfoDataProp;
+export interface BCMSChangeGetData {
+  entry: BCMSChangeGetDataProp;
+  group: BCMSChangeGetDataProp;
+  color: BCMSChangeGetDataProp;
+  language: BCMSChangeGetDataProp;
+  media: BCMSChangeGetDataProp;
+  status: BCMSChangeGetDataProp;
+  tag: BCMSChangeGetDataProp;
+  templates: BCMSChangeGetDataProp;
+  widget: BCMSChangeGetDataProp;
 }
