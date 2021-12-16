@@ -10,11 +10,11 @@ export function createBcmsTypeConverterHandler({
   const baseUri = '/type-converter';
 
   return {
-    async getAll() {
+    async getAll(language) {
       const result: {
         items: BCMSTypeConverterResultItem[];
       } = await send({
-        url: `${baseUri}/all`,
+        url: `${baseUri}/${language}/all`,
         method: 'GET',
         headers: {
           Authorization: '',

@@ -5,7 +5,7 @@ export interface BCMSTypeConverterHandlerConfig {
   send: SendFunction;
 }
 
-export type BCMSTypeConverterLanguage = 'typescript';
+export type BCMSTypeConverterLanguage = 'typescript' | 'JSDoc';
 
 export interface BCMSTypeConverterHandler {
   getAll(
