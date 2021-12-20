@@ -8,7 +8,7 @@ import {
 import { CacheControlPrototype } from '../../cache';
 import { SocketEventHandlers } from './event-handlers';
 import * as uuid from 'uuid';
-import SocketIO, {Socket} from 'socket.io-client';
+import {Socket, io} from 'socket.io-client';
 import { Queueable } from '../../util';
 
 export interface SocketHandlerPrototype {
@@ -66,7 +66,7 @@ export function SocketHandler(
         isConnected = true;
         return new Promise((resolve, reject) => {
           try {
-            socket = SocketIO(server.url, {
+            socket = io(server.url, {
               path: server.path,
               query: {
                 at: accessToken,
