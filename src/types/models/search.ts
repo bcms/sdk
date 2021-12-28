@@ -15,6 +15,7 @@ export interface BCMSGetAllSearchResultItem {
    */
   type: BCMSSearchResultType;
   id: string;
+  templateId?: string;
   score: number;
   matches: number;
   positions: number[][];
