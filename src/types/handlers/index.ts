@@ -6,6 +6,7 @@ export * from './function';
 export * from './group';
 export * from './language';
 export * from './media';
+export * from './search';
 export * from './shim';
 export * from './socket';
 export * from './status';

@@ -1,6 +1,5 @@
 import type { AxiosRequestConfig } from 'axios';
-import type { BCMSSdkCacheConfig } from '.';
-import type { BCMSSdkCache } from './cache';
+import type { BCMSSdkCacheConfig, BCMSSdkCache } from './cache';
 import type {
   BCMSApiKeyHandler,
   BCMSEntryHandler,
@@ -17,9 +16,10 @@ import type {
   BCMSUserHandler,
   BCMSWidgetHandler,
   BCMSTypeConverterHandler,
-  BCMSChangeHandler
+  BCMSChangeHandler,
+  BCMSSearchHandler,
+  BCMSColorHandler,
 } from './handlers';
-import type { BCMSColorHandler } from './handlers/color';
 import type { BCMSJwt } from './models';
 import type { BCMSStorage } from './storage';
 import type { BCMSDateUtility, BCMSStringUtility, BCMSThrowable } from './util';
@@ -56,7 +56,8 @@ export interface BCMSSdk {
   color: BCMSColorHandler;
   tag: BCMSTagHandler;
   typeConverter: BCMSTypeConverterHandler;
-  change: BCMSChangeHandler
+  change: BCMSChangeHandler;
+  search: BCMSSearchHandler;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;
