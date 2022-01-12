@@ -68,7 +68,7 @@ export function createBcmsDefaultHandler<
     },
     async get(cid, skipCache) {
       if (!skipCache) {
-        const cacheHit = cache.findOne((e) => e.cid === cid);
+        const cacheHit = cache.findOne((e) => e.cid === cid || e._id === cid);
         if (cacheHit) {
           return cacheHit;
         }
@@ -87,10 +87,12 @@ export function createBcmsDefaultHandler<
       let items: Model[] = [];
       let missingIds: string[] = [];
       if (!skipCache) {
-        const cacheHits = cache.find((e) => cids.includes(e.cid as string));
+        const cacheHits = cache.find(
+          (e) => cids.includes(e.cid as string) || cids.includes(e._id),
+        );
         for (let i = 0; i < cids.length; i++) {
           const cid = cids[i];
-          if (!cacheHits.find((e) => e.cid === cid)) {
+          if (!cacheHits.find((e) => e.cid === cid || e._id === cid)) {
             missingIds.push(cid);
           }
         }
@@ -145,7 +147,7 @@ export function createBcmsDefaultHandler<
           Authorization: '',
         },
       });
-      const cacheHit = cache.findOne((e) => e._id === id);
+      const cacheHit = cache.findOne((e) => e._id === id || e.cid === id);
       if (cacheHit) {
         cache.remove(cacheHit);
       }
