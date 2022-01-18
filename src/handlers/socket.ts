@@ -22,7 +22,7 @@ import {
   BCMSSocketWidgetEvent,
 } from '../types';
 
-export function createBcmsSocketHandler({
+export function createBcmsSocketHandler<CustomEventsData = unknown>({
   origin,
   cache,
   storage,
@@ -40,10 +40,10 @@ export function createBcmsSocketHandler({
   widgetHandler,
   colorHandler,
   tagHandler,
-}: BCMSSocketHandlerConfig): BCMSSocketHandler {
+}: BCMSSocketHandlerConfig): BCMSSocketHandler<CustomEventsData> {
   const subs: {
     [eventName: string]: {
-      [id: string]: BCMSSocketSubscriptionCallback;
+      [id: string]: BCMSSocketSubscriptionCallback<CustomEventsData>;
     };
   } = {};
   const eventNames = Object.keys(BCMSSocketEventName);
@@ -56,8 +56,8 @@ export function createBcmsSocketHandler({
   subs.ANY = {};
 
   function triggerSubs(
-    eventName: BCMSSocketEventName | 'ANY',
-    event: BCMSSocketEvent,
+    eventName: BCMSSocketEventName | string | 'ANY',
+    event: BCMSSocketEvent | CustomEventsData,
   ) {
     for (const id in subs[eventName]) {
       subs[eventName][id](event).catch((error) => {
@@ -326,6 +326,13 @@ export function createBcmsSocketHandler({
 
       triggerSubs(eventName, data);
     });
+    for (const event in subs) {
+      if (!eventNames.includes(event) && event !== 'ANY') {
+        soc.on(event, async (data: CustomEventsData) => {
+          triggerSubs(event, data);
+        });
+      }
+    }
   }
 
   return {
@@ -403,10 +410,26 @@ export function createBcmsSocketHandler({
     },
     subscribe(event, cb) {
       const id = uuidv4();
+      if (subs[event]) {
+        throw Error(`Socket event for "${event}" is not registered.`);
+      }
       subs[event][id] = cb;
       return () => {
         delete subs[event][id];
       };
+    },
+    registerEvents(events) {
+      for (let i = 0; i < events.length; i++) {
+        const event = events[i];
+        if (!subs[event]) {
+          subs[event] = {};
+          if (isConnected && socket) {
+            socket.on(event, async (data: CustomEventsData) => {
+              triggerSubs(event, data);
+            });
+          }
+        }
+      }
     },
   };
 }

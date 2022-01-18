@@ -35,18 +35,21 @@ export interface BCMSSocketHandlerConfig {
   tagHandler: BCMSTagHandler;
 }
 
-export interface BCMSSocketHandler {
+export interface BCMSSocketHandler<
+  CustomEventsData = unknown,
+> {
   id(): string | null;
   connect(): Promise<void>;
   disconnect(): void;
   connected(): boolean;
   emit(event: string, data: unknown): void;
   subscribe(
-    event: BCMSSocketEventName | 'ANY',
-    callback: BCMSSocketSubscriptionCallback,
+    event: BCMSSocketEventName | string | 'ANY',
+    callback: BCMSSocketSubscriptionCallback<CustomEventsData>,
   ): () => void;
+  registerEvents(events: string[]): void;
 }
 
-export interface BCMSSocketSubscriptionCallback {
-  (event: BCMSSocketEvent): Promise<void>;
+export interface BCMSSocketSubscriptionCallback<CustomEventsData = unknown> {
+  (event: BCMSSocketEvent | CustomEventsData): Promise<void>;
 }

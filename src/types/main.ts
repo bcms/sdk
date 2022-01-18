@@ -32,7 +32,7 @@ export interface BCMSSdkConfig {
   cache: BCMSSdkCacheConfig;
 }
 
-export interface BCMSSdk {
+export interface BCMSSdk<CustomSocketEventsData = unknown> {
   send: SendFunction;
   storage: BCMSStorage;
   cache: BCMSSdkCache;
@@ -52,7 +52,7 @@ export interface BCMSSdk {
   templateOrganizer: BCMSTemplateOrganizerHandler;
   template: BCMSTemplateHandler;
   entry: BCMSEntryHandler;
-  socket: BCMSSocketHandler;
+  socket: BCMSSocketHandler<CustomSocketEventsData>;
   color: BCMSColorHandler;
   tag: BCMSTagHandler;
   typeConverter: BCMSTypeConverterHandler;
