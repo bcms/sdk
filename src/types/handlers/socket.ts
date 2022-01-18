@@ -47,7 +47,6 @@ export interface BCMSSocketHandler<
     event: BCMSSocketEventName | string | 'ANY',
     callback: BCMSSocketSubscriptionCallback<CustomEventsData>,
   ): () => void;
-  registerEvents(events: string[]): void;
 }
 
 export interface BCMSSocketSubscriptionCallback<CustomEventsData = unknown> {

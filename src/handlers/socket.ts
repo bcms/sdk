@@ -410,26 +410,18 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
     },
     subscribe(event, cb) {
       const id = uuidv4();
-      if (subs[event]) {
-        throw Error(`Socket event for "${event}" is not registered.`);
+      if (!subs[event]) {
+        subs[event] = {};
+        if (isConnected && socket) {
+          socket.on(event, async (data: CustomEventsData) => {
+            triggerSubs(event, data);
+          });
+        }
       }
       subs[event][id] = cb;
       return () => {
         delete subs[event][id];
       };
-    },
-    registerEvents(events) {
-      for (let i = 0; i < events.length; i++) {
-        const event = events[i];
-        if (!subs[event]) {
-          subs[event] = {};
-          if (isConnected && socket) {
-            socket.on(event, async (data: CustomEventsData) => {
-              triggerSubs(event, data);
-            });
-          }
-        }
-      }
     },
   };
 }
