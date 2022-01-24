@@ -1,7 +1,12 @@
-import type { BCMSUserPolicyCRUD } from "../user";
+import type { BCMSUserPolicyCRUD } from '../user';
+
+export interface BCMSApiKeyAccessTemplate extends BCMSUserPolicyCRUD {
+  _id: string;
+  name: string;
+}
 
 export interface BCMSApiKeyAccess {
-  templates: Array<BCMSUserPolicyCRUD & { _id: string }>;
+  templates: BCMSApiKeyAccessTemplate[];
   functions: Array<{
     name: string;
   }>;
