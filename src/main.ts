@@ -19,6 +19,7 @@ import {
   createBcmsTypeConverterHandler,
   createBcmsChangeHandler,
   createBcmsSearchHandler,
+  createBcmsPluginHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
 import type { BCMSJwt, BCMSSdk, BCMSSdkCache, BCMSSdkConfig } from './types';
@@ -304,6 +305,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     colorHandler,
     tagHandler,
   });
+  const pluginHandler = createBcmsPluginHandler({ send });
 
   return {
     send,
@@ -331,6 +333,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     typeConverter: typeConverterHandler,
     change: changeHandler,
     search: searchHandler,
+    plugin: pluginHandler,
     util: {
       string: stringUtil,
       date: dateUtil,

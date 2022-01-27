@@ -13,6 +13,7 @@ export * from './entry';
 export * from './function';
 export * from './group';
 export * from './language';
+export * from './plugin';
 export * from './search';
 export * from './status';
 export * from './tag';

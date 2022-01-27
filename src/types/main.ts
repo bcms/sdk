@@ -19,6 +19,7 @@ import type {
   BCMSChangeHandler,
   BCMSSearchHandler,
   BCMSColorHandler,
+  BCMSPluginHandler,
 } from './handlers';
 import type { BCMSJwt } from './models';
 import type { BCMSStorage } from './storage';
@@ -58,6 +59,7 @@ export interface BCMSSdk<CustomSocketEventsData = unknown> {
   typeConverter: BCMSTypeConverterHandler;
   change: BCMSChangeHandler;
   search: BCMSSearchHandler;
+  plugin: BCMSPluginHandler;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;
