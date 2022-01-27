@@ -10,7 +10,25 @@ export function createBcmsUserHandler({
   cache,
 }: BCMSUserHandlerConfig): BCMSUserHandler {
   const baseUri = '/user';
+  const getAllLatch = false;
   return {
+    async getAll() {
+      if (getAllLatch) {
+        return cache.getters.items({ name: 'user' });
+      }
+      const result = await send<{items: BCMSUser[]}>({
+        url: `${baseUri}/all`,
+        method: 'GET',
+        headers: {
+          Authorization: ''
+        }
+      })
+      cache.mutations.set({
+        name: 'user',
+        payload: result.items
+      });
+      return result.items;
+    },
     async get(id, skipCache) {
       if (!skipCache) {
         const accessToken = getAccessToken();
