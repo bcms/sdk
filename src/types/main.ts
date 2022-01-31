@@ -68,5 +68,5 @@ export interface BCMSSdk<CustomSocketEventsData = unknown> {
 }
 
 export interface SendFunction {
-  <Data>(config: AxiosRequestConfig): Promise<Data>;
+  <Data>(config: AxiosRequestConfig & { doNotAuth?: boolean }): Promise<Data>;
 }

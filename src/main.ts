@@ -22,7 +22,13 @@ import {
   createBcmsPluginHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
-import type { BCMSJwt, BCMSSdk, BCMSSdkCache, BCMSSdkConfig } from './types';
+import {
+  BCMSJwt,
+  BCMSSdk,
+  BCMSSdkCache,
+  BCMSSdkCacheDataNames,
+  BCMSSdkConfig,
+} from './types';
 import {
   createBcmsDateUtility,
   createBcmsStringUtility,
@@ -98,8 +104,10 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
    * REST API request. It is recommended to use this method
    * for sending requests to the REST API.
    */
-  async function send<T>(conf: AxiosRequestConfig): Promise<T> {
-    if (conf.headers && conf.headers.Authorization === '') {
+  async function send<T>(
+    conf: AxiosRequestConfig & { doNotAuth?: boolean },
+  ): Promise<T> {
+    if (conf.headers && conf.headers.Authorization === '' && !conf.doNotAuth) {
       const loggedIn = await isLoggedIn();
       conf.headers.Authorization = `Bearer ${accessTokenRaw}`;
       if (!loggedIn || !accessTokenRaw) {
@@ -230,6 +238,30 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     send,
     getAccessToken,
     cache,
+    logout: async () => {
+      const at = storage.get<string>('at');
+      if (!at) {
+        throw Error('You must be logged in.');
+      }
+      const rt = storage.get<string>('rt');
+      if (rt) {
+        await send({
+          url: `/auth/logout/${accessToken}`,
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${rt}`,
+          },
+        });
+      }
+      storage.clear();
+      for (let i = 0; i < BCMSSdkCacheDataNames.length; i++) {
+        const cacheName = BCMSSdkCacheDataNames[i];
+        cache.mutations.set({
+          name: cacheName as never,
+          payload: [],
+        });
+      }
+    },
   });
   const apiKeyHandler = createBcmsApiKeyHandler({
     send,

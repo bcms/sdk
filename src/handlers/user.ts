@@ -8,6 +8,7 @@ export function createBcmsUserHandler({
   send,
   getAccessToken,
   cache,
+  logout,
 }: BCMSUserHandlerConfig): BCMSUserHandler {
   const baseUri = '/user';
   const getAllLatch = false;
@@ -16,16 +17,16 @@ export function createBcmsUserHandler({
       if (getAllLatch) {
         return cache.getters.items({ name: 'user' });
       }
-      const result = await send<{items: BCMSUser[]}>({
+      const result = await send<{ items: BCMSUser[] }>({
         url: `${baseUri}/all`,
         method: 'GET',
         headers: {
-          Authorization: ''
-        }
-      })
+          Authorization: '',
+        },
+      });
       cache.mutations.set({
         name: 'user',
-        payload: result.items
+        payload: result.items,
       });
       return result.items;
     },
@@ -56,5 +57,6 @@ export function createBcmsUserHandler({
       cache.mutations.set({ payload: result.item, name: 'user' });
       return result.item;
     },
+    logout,
   };
 }

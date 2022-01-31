@@ -4,6 +4,22 @@ export interface BCMSSdkCacheQuery<Item extends BCMSEntity> {
   (item: Item): boolean;
 }
 
+export const BCMSSdkCacheDataNames = [
+  'apiKey',
+  'color',
+  'entry',
+  'entryLite',
+  'group',
+  'groupLite',
+  'language',
+  'media',
+  'status',
+  'templateOrganizer',
+  'template',
+  'user',
+  'widget',
+  'tag',
+];
 export type BCMSSdkCacheDataName =
   | 'apiKey'
   | 'color'
