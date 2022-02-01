@@ -8,6 +8,6 @@ export interface BCMSShimHandlerConfig {
 
 export interface BCMSShimHandler {
   verify: {
-    otp(otp: string): Promise<void>;
+    otp(otp: string, user?: boolean): Promise<void>;
   };
 }
