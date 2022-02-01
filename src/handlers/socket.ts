@@ -27,6 +27,7 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
   cache,
   storage,
   throwable,
+  refreshAccessToken,
 
   apiKeyHandler,
   entryHandler,
@@ -75,6 +76,13 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
     }
   }
   function initSocket(soc: Socket) {
+    soc.on(BCMSSocketEventName.REFRESH, async (data) => {
+      await refreshAccessToken();
+      triggerSubs(BCMSSocketEventName.REFRESH, data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const w = window as any;
+      w.bcms.vue.router.replace(w.bcms.vue.router.currentRoute.value.path)
+    });
     soc.on(BCMSSocketEventName.API_KEY, async (data: BCMSSocketApiKeyEvent) => {
       const eventName = BCMSSocketEventName.API_KEY;
 

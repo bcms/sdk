@@ -20,6 +20,7 @@ export interface BCMSSocketHandlerConfig {
   cache: BCMSSdkCache;
   storage: BCMSStorage;
   throwable: BCMSThrowable;
+  refreshAccessToken(): Promise<void>;
 
   apiKeyHandler: BCMSApiKeyHandler;
   entryHandler: BCMSEntryHandler;
@@ -35,9 +36,7 @@ export interface BCMSSocketHandlerConfig {
   tagHandler: BCMSTagHandler;
 }
 
-export interface BCMSSocketHandler<
-  CustomEventsData = unknown,
-> {
+export interface BCMSSocketHandler<CustomEventsData = unknown> {
   id(): string | null;
   connect(): Promise<void>;
   disconnect(): void;
