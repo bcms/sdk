@@ -19,6 +19,6 @@ export function createBcmsPluginHandler({
        })
        plugins = result.items;
        return result.items;
-     }
+     },
   }
 }
