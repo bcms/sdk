@@ -14,5 +14,5 @@ export interface BCMSPluginPolicy {
 
 export interface BCMSPlugin {
   name: string;
-  policy: BCMSPluginPolicy[];
+  policies: BCMSPluginPolicy[];
 }
