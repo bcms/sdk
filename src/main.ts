@@ -323,6 +323,9 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     cache,
     storage,
     throwable,
+    refreshAccessToken: async () => {
+      await refreshAccessToken(true);
+    },
 
     apiKeyHandler,
     entryHandler,
