@@ -57,6 +57,21 @@ export function createBcmsUserHandler({
       cache.mutations.set({ payload: result.item, name: 'user' });
       return result.item;
     },
+    async update(data) {
+      const result = await send<{ item: BCMSUser }>({
+        url: `${baseUri}`,
+        method: 'PUT',
+        headers: {
+          Authorization: '',
+        },
+        data,
+      });
+      cache.mutations.set({
+        name: 'user',
+        payload: result.item,
+      });
+      return result.item;
+    },
     logout,
   };
 }
