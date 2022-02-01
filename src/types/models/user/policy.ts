@@ -5,10 +5,24 @@ export interface BCMSUserPolicyCRUD {
   delete: boolean;
 }
 
+export interface BCMSUserPolicyTemplate extends BCMSUserPolicyCRUD {
+  _id: string;
+}
+
+export interface BCMSUserPolicyPluginOption {
+  name: string;
+  value: string[];
+}
+
+export interface BCMSUserPolicyPlugin {
+  name: string;
+  allowed: boolean;
+  fullAccess: boolean;
+  options: BCMSUserPolicyPluginOption[];
+}
+
 export interface BCMSUserPolicy {
   media: BCMSUserPolicyCRUD;
-  customPortal: BCMSUserPolicyCRUD;
-  templates: Array<{ _id: string } & BCMSUserPolicyCRUD>;
-  webhooks: Array<{ _id: string } & BCMSUserPolicyCRUD>;
-  plugins: Array<{ name: string } & BCMSUserPolicyCRUD>;
+  templates: BCMSUserPolicyTemplate[];
+  plugins?: BCMSUserPolicyPlugin[];
 }
