@@ -7,12 +7,12 @@ export function createBcmsShimHandler({
   const baseUri = '/shim';
   return {
     verify: {
-      async otp(otp) {
+      async otp(otp, user) {
         const result: {
           accessToken: string;
           refreshToken: string;
         } = await send({
-          url: `${baseUri}/user/verify/otp`,
+          url: `${baseUri}/user/verify/otp${user ? '?user=true' : ''}`,
           method: 'POST',
           data: {
             otp,
