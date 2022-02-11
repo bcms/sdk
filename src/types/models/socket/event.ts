@@ -13,6 +13,7 @@ export enum BCMSSocketEventName {
   COLOR = 'COLOR',
   TAG = 'TAG',
   REFRESH = 'REFRESH',
+  SIGN_OUT = 'SIGN_OUT',
 }
 
 // eslint-disable-next-line no-shadow
@@ -164,6 +165,16 @@ export interface BCMSSocketRefreshEvent {
    */
   t: BCMSSocketEventType;
 }
+export interface BCMSSocketSignOutEvent {
+  /**
+   * User ID.
+   */
+  u: string;
+  /**
+   * Event type.
+   */
+  t: BCMSSocketEventType;
+}
 
 export type BCMSSocketEvent =
   | BCMSSocketApiKeyEvent
@@ -178,4 +189,5 @@ export type BCMSSocketEvent =
   | BCMSSocketWidgetEvent
   | BCMSSocketColorEvent
   | BCMSSocketTagEvent
-  | BCMSSocketRefreshEvent;
+  | BCMSSocketRefreshEvent
+  | BCMSSocketSignOutEvent;
