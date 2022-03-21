@@ -20,6 +20,7 @@ import {
   createBcmsChangeHandler,
   createBcmsSearchHandler,
   createBcmsPluginHandler,
+  createBcmsBackupHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
 import {
@@ -341,6 +342,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     tagHandler,
   });
   const pluginHandler = createBcmsPluginHandler({ send });
+  const backupHandler = createBcmsBackupHandler({ send });
 
   return {
     send,
@@ -369,6 +371,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     change: changeHandler,
     search: searchHandler,
     plugin: pluginHandler,
+    backup: backupHandler,
     util: {
       string: stringUtil,
       date: dateUtil,
