@@ -120,6 +120,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     }
     conf.url = `${origin ? origin : ''}/api${conf.url}`;
     try {
+      conf.maxBodyLength = 100000000;
       const response = await Axios(conf);
       return response.data;
     } catch (error) {
