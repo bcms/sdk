@@ -22,14 +22,29 @@ export function createBcmsBackupHandler({
       });
       return res.hash;
     },
-    async restore(data) {
-      const formData = new FormData();
-      formData.append('media', data.file, '_backup.zip');
+    async restoreEntities(data) {
       await send({
-        url: `${baseUri}/restore`,
+        url: `${baseUri}/restore-entities`,
         method: 'POST',
         headers: {
           Authorization: '',
+        },
+        data,
+      });
+    },
+    async restoreMediaFile(data) {
+      const formData = new FormData();
+      formData.append('media', data.file, data.name);
+      await send({
+        url: `${baseUri}/restore-media-file/${data.id}`,
+        method: 'POST',
+        headers: {
+          Authorization: '',
+          'Content-Type': `multipart/form-data${
+            typeof formData.getBoundary !== 'undefined'
+              ? `; boundary=${formData.getBoundary()}`
+              : ''
+          }`,
         },
         data: formData,
       });
