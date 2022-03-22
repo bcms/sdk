@@ -19,6 +19,7 @@ export interface BCMSMediaHandler {
   getById(id: string, skipCache?: boolean): Promise<BCMSMedia>;
   getBinary(id: string, size?: 'small'): Promise<Buffer>;
   getVideoThumbnail(id: string): Promise<Buffer | null>;
+  requestUploadToken(): Promise<string>;
   createFile(data: {
     file: File | Buffer;
     fileName?: string;

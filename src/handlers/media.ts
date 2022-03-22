@@ -138,6 +138,18 @@ export function createBcmsMediaHandler({
       });
       return result;
     },
+    async requestUploadToken() {
+      const result = await send<{
+        token: string;
+      }>({
+        url: `${baseUri}/request-upload-token`,
+        method: 'post',
+        headers: {
+          Authorization: '',
+        },
+      });
+      return result.token;
+    },
     async createFile(data) {
       let fileName: string;
       if (data.file instanceof Buffer) {
@@ -157,6 +169,7 @@ export function createBcmsMediaHandler({
         filenameParts[filenameParts.length - 1];
       const formData = new FormData();
       formData.append('media', data.file, filename);
+      const uploadToken = await self.requestUploadToken();
       const result: {
         item: BCMSMedia;
       } = await send({
@@ -174,6 +187,7 @@ export function createBcmsMediaHandler({
               : ''
           }`,
           Authorization: '',
+          'X-Bcms-Upload-Token': uploadToken,
         },
         data: formData,
       });
