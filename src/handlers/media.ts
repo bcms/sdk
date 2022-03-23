@@ -186,7 +186,6 @@ export function createBcmsMediaHandler({
               ? `; boundary=${formData.getBoundary()}`
               : ''
           }`,
-          Authorization: '',
           'X-Bcms-Upload-Token': uploadToken,
         },
         data: formData,

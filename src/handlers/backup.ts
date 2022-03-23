@@ -1,10 +1,16 @@
-import type { BCMSBackupHandler, SendFunction } from '../types';
+import type {
+  BCMSBackupHandler,
+  BCMSMediaHandler,
+  SendFunction,
+} from '../types';
 import * as FormData from 'form-data';
 
 export function createBcmsBackupHandler({
   send,
+  mediaHandler,
 }: {
   send: SendFunction;
+  mediaHandler: BCMSMediaHandler;
 }): BCMSBackupHandler {
   const baseUri = '/backup';
 
@@ -35,11 +41,12 @@ export function createBcmsBackupHandler({
     async restoreMediaFile(data) {
       const formData = new FormData();
       formData.append('media', data.file, data.name);
+      const uploadToken = await mediaHandler.requestUploadToken();
       await send({
         url: `${baseUri}/restore-media-file/${data.id}`,
         method: 'POST',
         headers: {
-          Authorization: '',
+          'X-Bcms-Upload-Token': uploadToken,
           'Content-Type': `multipart/form-data${
             typeof formData.getBoundary !== 'undefined'
               ? `; boundary=${formData.getBoundary()}`

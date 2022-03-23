@@ -174,7 +174,10 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     if (!force) {
       let refresh = true;
       if (accessToken) {
-        if (accessToken.payload.iat + accessToken.payload.exp > Date.now()) {
+        if (
+          accessToken.payload.iat + accessToken.payload.exp - 5000 >
+          Date.now()
+        ) {
           refresh = false;
         }
       } else {
@@ -184,7 +187,8 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
           accessTokenRaw = at;
           if (
             accessToken &&
-            accessToken.payload.iat + accessToken.payload.exp > Date.now()
+            accessToken.payload.iat + accessToken.payload.exp - 5000 >
+              Date.now()
           ) {
             refresh = false;
           }
@@ -343,7 +347,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     tagHandler,
   });
   const pluginHandler = createBcmsPluginHandler({ send });
-  const backupHandler = createBcmsBackupHandler({ send });
+  const backupHandler = createBcmsBackupHandler({ send, mediaHandler });
 
   return {
     send,
