@@ -9,3 +9,8 @@ export interface BCMSPropEntryPointerData {
 export interface BCMSPropEntryPointerDataParsed {
   [lng: string]: BCMSPropParsed;
 }
+
+export interface BCMSPropValueEntryPointer {
+  tid: string;
+  eid: string;
+}

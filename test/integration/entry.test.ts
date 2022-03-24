@@ -785,11 +785,13 @@ describe('Entry API', async () => {
             type: BCMSPropType.ENTRY_POINTER,
             required: true,
             array: false,
-            defaultData: {
-              templateId: idTemplate2,
-              entryIds: [idEntryTemplate2],
-              displayProp: 'title',
-            },
+            defaultData: [
+              {
+                templateId: idTemplate2,
+                entryIds: [idEntryTemplate2],
+                displayProp: 'title',
+              },
+            ],
           },
         },
         {

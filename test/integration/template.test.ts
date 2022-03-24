@@ -1594,11 +1594,13 @@ describe('Template API', async () => {
             type: BCMSPropType.ENTRY_POINTER,
             required: true,
             array: false,
-            defaultData: {
-              templateId: idTemplate,
-              entryIds: [],
-              displayProp: 'title',
-            },
+            defaultData: [
+              {
+                templateId: idTemplate,
+                entryIds: [],
+                displayProp: 'title',
+              },
+            ],
           },
         },
       ],
@@ -1675,11 +1677,13 @@ describe('Template API', async () => {
             type: BCMSPropType.ENTRY_POINTER,
             required: true,
             array: true,
-            defaultData: {
-              templateId: idTemplate,
-              entryIds: [],
-              displayProp: 'title',
-            },
+            defaultData: [
+              {
+                templateId: idTemplate,
+                entryIds: [],
+                displayProp: 'title',
+              },
+            ],
           },
         },
       ],
@@ -1847,11 +1851,13 @@ describe('Template API', async () => {
             type: BCMSPropType.ENTRY_POINTER,
             required: true,
             array: false,
-            defaultData: {
-              templateId: idTemplateChild,
-              entryIds: [],
-              displayProp: 'title',
-            },
+            defaultData: [
+              {
+                templateId: idTemplateChild,
+                entryIds: [],
+                displayProp: 'title',
+              },
+            ],
           },
         },
       ],
