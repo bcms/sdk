@@ -2,7 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Socket, io } from 'socket.io-client';
 import {
   BCMSApiKey,
+  BCMSBackupListItem,
   BCMSSocketApiKeyEvent,
+  BCMSSocketBackupEvent,
   BCMSSocketColorEvent,
   BCMSSocketEntryEvent,
   BCMSSocketEvent,
@@ -86,6 +88,25 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const w = window as any;
       w.bcms.vue.router.replace(w.bcms.vue.router.currentRoute.value.path);
+    });
+    soc.on(BCMSSocketEventName.BACKUP, async (data: BCMSSocketBackupEvent) => {
+      const eventName = BCMSSocketEventName.BACKUP;
+      if (data.t === BCMSSocketEventType.UPDATE) {
+        cache.mutations.set({
+          payload: {
+            _id: data.f,
+            size: data.s,
+            available: data.s !== -1,
+          } as BCMSBackupListItem,
+          name: 'backupItem',
+        });
+      } else if (data.t === BCMSSocketEventType.REMOVE) {
+        cache.mutations.remove({
+          payload: { _id: data.f },
+          name: 'backupItem',
+        });
+      }
+      triggerSubs(eventName, data);
     });
     soc.on(BCMSSocketEventName.API_KEY, async (data: BCMSSocketApiKeyEvent) => {
       const eventName = BCMSSocketEventName.API_KEY;

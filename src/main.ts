@@ -347,7 +347,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     tagHandler,
   });
   const pluginHandler = createBcmsPluginHandler({ send });
-  const backupHandler = createBcmsBackupHandler({ send, mediaHandler });
+  const backupHandler = createBcmsBackupHandler({ send, mediaHandler, cache });
 
   return {
     send,

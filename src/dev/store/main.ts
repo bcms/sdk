@@ -14,6 +14,7 @@ import * as EntryStore from './entry';
 import * as TempOrgStore from './template-organizer';
 import * as ColorStore from './color';
 import * as TagStore from './tag';
+import * as BackupItemStore from './backup-item';
 
 export const store: BCMSStore = {
   state: {
@@ -31,6 +32,7 @@ export const store: BCMSStore = {
     templateOrganizer: [],
     color: [],
     tag: [],
+    backupItem: [],
   },
   mutations: {
     ...UserStore.mutations,
@@ -47,6 +49,7 @@ export const store: BCMSStore = {
     ...TempOrgStore.mutations,
     ...ColorStore.mutations,
     ...TagStore.mutations,
+    ...BackupItemStore.mutations,
   },
   getters: {
     ...UserStore.getters,
@@ -63,5 +66,6 @@ export const store: BCMSStore = {
     ...TempOrgStore.getters,
     ...ColorStore.getters,
     ...TagStore.getters,
+    ...BackupItemStore.getters,
   },
 };

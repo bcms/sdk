@@ -1,6 +1,8 @@
 import type {
   BCMSBackupHandler,
+  BCMSBackupListItem,
   BCMSMediaHandler,
+  BCMSSdkCache,
   SendFunction,
 } from '../types';
 import * as FormData from 'form-data';
@@ -8,16 +10,43 @@ import * as FormData from 'form-data';
 export function createBcmsBackupHandler({
   send,
   mediaHandler,
+  cache,
 }: {
   send: SendFunction;
   mediaHandler: BCMSMediaHandler;
+  cache: BCMSSdkCache;
 }): BCMSBackupHandler {
   const baseUri = '/backup';
 
   return {
-    async create(data) {
+    async list() {
+      const res = await send<{
+        items: BCMSBackupListItem[];
+      }>({
+        url: `${baseUri}/list`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      cache.mutations.set({ payload: res.items, name: 'backupItem' });
+      return res.items;
+    },
+    async getDownloadHash(data) {
       const res = await send<{
         hash: string;
+      }>({
+        url: `${baseUri}/${data.fileName}/hash`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      return res.hash;
+    },
+    async create(data) {
+      const res = await send<{
+        item: BCMSBackupListItem;
       }>({
         url: `${baseUri}/create`,
         method: 'POST',
@@ -26,7 +55,8 @@ export function createBcmsBackupHandler({
         },
         data,
       });
-      return res.hash;
+      cache.mutations.set({ payload: res.item, name: 'backupItem' });
+      return res.item;
     },
     async restoreEntities(data) {
       await send({
@@ -64,6 +94,12 @@ export function createBcmsBackupHandler({
           Authorization: '',
         },
         data,
+      });
+      cache.mutations.remove({
+        payload: data.fileNames.map((e) => {
+          return { _id: e };
+        }),
+        name: 'backupItem',
       });
     },
   };

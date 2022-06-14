@@ -1,6 +1,8 @@
-import type { BCMSEntity } from './models';
+export interface BCMSSdkCacheItem {
+  _id: string;
+}
 
-export interface BCMSSdkCacheQuery<Item extends BCMSEntity> {
+export interface BCMSSdkCacheQuery<Item extends BCMSSdkCacheItem> {
   (item: Item): boolean;
 }
 
@@ -19,6 +21,7 @@ export const BCMSSdkCacheDataNames = [
   'user',
   'widget',
   'tag',
+  'backupItem',
 ];
 export type BCMSSdkCacheDataName =
   | 'apiKey'
@@ -34,7 +37,8 @@ export type BCMSSdkCacheDataName =
   | 'template'
   | 'user'
   | 'widget'
-  | 'tag';
+  | 'tag'
+  | 'backupItem';
 
 export interface BCMSSdkCacheData {
   name: BCMSSdkCacheDataName;
@@ -48,21 +52,21 @@ export interface BCMSSdkCacheConfig {
 
 export interface BCMSSdkCache {
   mutations: {
-    set<Item extends BCMSEntity>(
+    set<Item extends BCMSSdkCacheItem>(
       data: {
         payload: Item | Item[];
       } & BCMSSdkCacheData,
     ): void;
-    remove<Item extends BCMSEntity>(
+    remove<Item extends BCMSSdkCacheItem>(
       data: { payload: Item | Item[] } & BCMSSdkCacheData,
     ): void;
   };
   getters: {
-    items<Item extends BCMSEntity>(data: BCMSSdkCacheData): Item[];
-    find<Item extends BCMSEntity>(
+    items<Item extends BCMSSdkCacheItem>(data: BCMSSdkCacheData): Item[];
+    find<Item extends BCMSSdkCacheItem>(
       data: { query: BCMSSdkCacheQuery<Item> } & BCMSSdkCacheData,
     ): Item[];
-    findOne<Item extends BCMSEntity>(
+    findOne<Item extends BCMSSdkCacheItem>(
       data: {
         query: BCMSSdkCacheQuery<Item>;
       } & BCMSSdkCacheData,

@@ -14,12 +14,28 @@ export enum BCMSSocketEventName {
   TAG = 'TAG',
   REFRESH = 'REFRESH',
   SIGN_OUT = 'SIGN_OUT',
+  BACKUP = 'BACKUP',
 }
 
 // eslint-disable-next-line no-shadow
 export enum BCMSSocketEventType {
   UPDATE = 'UPDATE',
   REMOVE = 'REMOVE',
+}
+
+export interface BCMSSocketBackupEvent {
+  /**
+   * File name.
+   */
+  f: string;
+  /**
+   * Size
+   */
+  s: number;
+  /**
+   * Event type.
+   */
+  t: BCMSSocketEventType;
 }
 
 export interface BCMSSocketApiKeyEvent {
@@ -190,4 +206,5 @@ export type BCMSSocketEvent =
   | BCMSSocketColorEvent
   | BCMSSocketTagEvent
   | BCMSSocketRefreshEvent
-  | BCMSSocketSignOutEvent;
+  | BCMSSocketSignOutEvent
+  | BCMSSocketBackupEvent;

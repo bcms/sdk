@@ -1,14 +1,15 @@
 import type { BCMSStoreColorGetters, BCMSStoreColorMutations } from '.';
 import type {
   BCMSApiKey,
+  BCMSBackupListItem,
   BCMSColor,
-  BCMSEntity,
   BCMSEntry,
   BCMSEntryLite,
   BCMSGroup,
   BCMSGroupLite,
   BCMSLanguage,
   BCMSMedia,
+  BCMSSdkCacheItem,
   BCMSStatus,
   BCMSTag,
   BCMSTemplate,
@@ -20,6 +21,10 @@ import type {
   BCMSStoreApiKeyGetters,
   BCMSStoreApiKeyMutations,
 } from './api-key';
+import type {
+  BCMSStoreBackupItemGetters,
+  BCMSStoreBackupItemMutations,
+} from './backup-item';
 import type { BCMSStoreEntryGetters, BCMSStoreEntryMutations } from './entry';
 import type {
   BCMSStoreEntryLiteGetters,
@@ -54,7 +59,7 @@ import type {
   BCMSStoreWidgetMutations,
 } from './widget';
 
-export interface BCMSStoreGetterQuery<Item extends BCMSEntity> {
+export interface BCMSStoreGetterQuery<Item extends BCMSSdkCacheItem> {
   (item: Item): boolean;
 }
 
@@ -73,6 +78,7 @@ export interface BCMSStoreState {
   templateOrganizer: BCMSTemplateOrganizer[];
   color: BCMSColor[];
   tag: BCMSTag[];
+  backupItem: BCMSBackupListItem[];
 }
 
 export type BCMSStoreMutations = BCMSStoreUserMutations &
@@ -88,7 +94,8 @@ export type BCMSStoreMutations = BCMSStoreUserMutations &
   BCMSStoreEntryMutations &
   BCMSStoreTemplateOrganizerMutations &
   BCMSStoreColorMutations &
-  BCMSStoreTagMutations;
+  BCMSStoreTagMutations &
+  BCMSStoreBackupItemMutations;
 
 export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreApiKeyGetters &
@@ -103,7 +110,8 @@ export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreEntryGetters &
   BCMSStoreTemplateOrganizerGetters &
   BCMSStoreColorGetters &
-  BCMSStoreTagGetters;
+  BCMSStoreTagGetters &
+  BCMSStoreBackupItemGetters;
 
 export interface BCMSStore {
   state: BCMSStoreState;

@@ -1,6 +1,13 @@
+export interface BCMSBackupListItem {
+  _id: string;
+  size: number;
+  available: boolean;
+}
 export interface BCMSBackupHandler {
-  create(data: { media?: boolean }): Promise<string>;
-  delete(data: { hash: string }): Promise<void>;
+  list(): Promise<BCMSBackupListItem[]>;
+  getDownloadHash(data: { fileName: string }): Promise<string>;
+  create(data: { media?: boolean }): Promise<BCMSBackupListItem>;
+  delete(data: { fileNames: string[] }): Promise<void>;
   restoreEntities(data: {
     type:
       | 'apiKey'

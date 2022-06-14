@@ -41,6 +41,9 @@ export enum BCMSStoreMutationTypes {
 
   tag_set = 'tag_set',
   tag_remove = 'tag_remove',
+
+  backupItem_set = 'backupItem_set',
+  backupItem_remove = 'backupItem_remove',
 }
 
 // eslint-disable-next-line no-shadow
@@ -101,6 +104,10 @@ export enum BCMSStoreGetterTypes {
   tag_items = 'tag_items',
   tag_find = 'tag_find',
   tag_findOne = 'tag_findOne',
+
+  backupItem_items = 'backupItem_items',
+  backupItem_find = 'backupItem_find',
+  backupItem_findOne = 'backupItem_findOne',
 }
 
 // eslint-disable-next-line no-shadow
@@ -146,4 +153,7 @@ export enum BCMSStoreActionTypes {
 
   tag_set = 'tag_set',
   tag_remove = 'tag_remove',
+
+  backupItem_set = 'backupItem_set',
+  backupItem_remove = 'backupItem_remove',
 }
