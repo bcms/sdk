@@ -22,6 +22,7 @@ export interface BCMSEntryLite extends BCMSEntity {
   cid: string;
   templateId: string;
   userId: string;
+  status?: string;
   meta: BCMSEntryMeta[];
 }
 
