@@ -1,18 +1,32 @@
 import { expect } from 'chai';
-import { Login, ObjectUtil, sdk } from '../util';
+import { before } from 'mocha';
+import {
+  login,
+  ObjectUtil,
+  sdk,
+  setupTemplates,
+  SetupTemplatesResult,
+} from '../util';
 
 describe('Color API', async () => {
-  Login();
   let idColor: string;
   let cIdColor: string;
   let sourceId: string;
   let sourceType: string;
+  let tData: SetupTemplatesResult;
+  before(async () => {
+    await login();
+    tData = await setupTemplates();
+  });
+  after(async () => {
+    await tData.clear();
+  });
   it('should create new color', async () => {
     const result = await sdk.color.create({
       label: 'black',
       value: '#030504',
       source: {
-        id: '618504c1d114b206f56fd6fe',
+        id: tData.templates[0]._id,
         type: 'template',
       },
     });
@@ -32,7 +46,7 @@ describe('Color API', async () => {
         name: 'black',
         value: '#030504',
         userId: '111111111111111111111111',
-        source: { id: '618504c1d114b206f56fd6fe', type: 'template' },
+        source: { id: tData.templates[0]._id, type: 'template' },
       },
       'color',
     );
