@@ -124,7 +124,10 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
       const response = await Axios(conf);
       return response.data;
     } catch (error) {
-      const err = error as AxiosError;
+      const err = error as AxiosError<{
+        message: string;
+        code: string;
+      }>;
       if (err.response) {
         if (err.response.data && err.response.data.message) {
           throw {
