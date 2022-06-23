@@ -84,7 +84,7 @@ export function createBcmsEntryHandler({
         method: 'GET',
         headers: {
           Authorization: '',
-          'X-Bcms-Ids': data.entryIds,
+          'X-Bcms-Ids': data.entryIds.join('-'),
         },
       });
       cache.mutations.set({ payload: result.items, name: 'entryLite' });
