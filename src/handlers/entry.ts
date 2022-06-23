@@ -21,7 +21,7 @@ export function createBcmsEntryHandler({
     getAllParsed: {},
     count: {},
   };
-  return {
+  const self: BCMSEntryHandler = {
     async getAllLite(data) {
       if (getAllLatch.getAllLite[data.templateId]) {
         return cache.getters.find({
@@ -209,22 +209,10 @@ export function createBcmsEntryHandler({
         data,
       });
       cache.mutations.set({ payload: result.item, name: 'entry' });
-      cache.mutations.set<BCMSEntryLite>({
-        payload: {
-          _id: result.item._id,
-          createdAt: result.item.createdAt,
-          updatedAt: result.item.updatedAt,
-          cid: result.item.cid,
-          templateId: result.item.templateId,
-          userId: result.item.userId,
-          meta: result.item.meta.map((meta) => {
-            return {
-              lng: meta.lng,
-              props: meta.props.slice(0, 2),
-            };
-          }),
-        },
-        name: 'entryLite',
+      await self.getLite({
+        templateId: data.templateId,
+        entryId: data._id,
+        skipCache: true,
       });
       return result.item;
     },
@@ -260,4 +248,6 @@ export function createBcmsEntryHandler({
       return result.message;
     },
   };
+
+  return self;
 }
