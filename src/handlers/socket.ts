@@ -129,10 +129,14 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
     });
     soc.on(BCMSSocketEventName.ENTRY, async (data: BCMSSocketEntryEvent) => {
       const eventName = BCMSSocketEventName.ENTRY;
-
       if (data.t === BCMSSocketEventType.UPDATE) {
         await throwable(async () => {
           await entryHandler.get({
+            entryId: data.e,
+            templateId: data.tm,
+            skipCache: true,
+          });
+          await entryHandler.getLite({
             entryId: data.e,
             templateId: data.tm,
             skipCache: true,
