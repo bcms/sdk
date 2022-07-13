@@ -118,6 +118,12 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
         };
       }
     }
+    if (socketHandler.id()) {
+      if (!conf.headers) {
+        conf.headers = {};
+      }
+      conf.headers['X-Bcms-Sid'] = socketHandler.id() as string;
+    }
     conf.url = `${origin ? origin : ''}/api${conf.url}`;
     try {
       conf.maxBodyLength = 100000000;
