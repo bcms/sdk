@@ -21,6 +21,7 @@ import {
   createBcmsSearchHandler,
   createBcmsPluginHandler,
   createBcmsBackupHandler,
+  createBcmsRouteTrackerHandler,
 } from './handlers';
 import { createBcmsStorage } from './storage';
 import {
@@ -333,6 +334,10 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
   });
   const typeConverterHandler = createBcmsTypeConverterHandler({ send });
   const searchHandler = createBcmsSearchHandler({ send });
+  const routeTrackerController = createBcmsRouteTrackerHandler({
+    send,
+    userHandler,
+  });
   const socketHandler = createBcmsSocketHandler({
     origin,
     cache,
@@ -386,6 +391,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     search: searchHandler,
     plugin: pluginHandler,
     backup: backupHandler,
+    routeTracker: routeTrackerController,
     util: {
       string: stringUtil,
       date: dateUtil,

@@ -8,6 +8,7 @@ export * from './group';
 export * from './language';
 export * from './media';
 export * from './plugin';
+export * from './route-tracker';
 export * from './search';
 export * from './shim';
 export * from './socket';

@@ -21,6 +21,7 @@ import type {
   BCMSColorHandler,
   BCMSPluginHandler,
   BCMSBackupHandler,
+  BCMSRouteTrackerHandler,
 } from './handlers';
 import type { BCMSJwt } from './models';
 import type { BCMSStorage } from './storage';
@@ -62,6 +63,7 @@ export interface BCMSSdk<CustomSocketEventsData = unknown> {
   search: BCMSSearchHandler;
   plugin: BCMSPluginHandler;
   backup: BCMSBackupHandler;
+  routeTracker: BCMSRouteTrackerHandler;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;
