@@ -334,6 +334,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
   const typeConverterHandler = createBcmsTypeConverterHandler({ send });
   const searchHandler = createBcmsSearchHandler({ send });
   const socketHandler = createBcmsSocketHandler({
+    send,
     origin,
     cache,
     storage,

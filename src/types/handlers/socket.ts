@@ -1,4 +1,5 @@
 import type { BCMSSdkCache } from '../cache';
+import type { SendFunction } from '../main';
 import type { BCMSSocketEvent, BCMSSocketEventName } from '../models';
 import type { BCMSStorage } from '../storage';
 import type { BCMSThrowable } from '../util';
@@ -16,6 +17,7 @@ import type { BCMSUserHandler } from './user';
 import type { BCMSWidgetHandler } from './widget';
 
 export interface BCMSSocketHandlerConfig {
+  send: SendFunction;
   origin?: string;
   cache: BCMSSdkCache;
   storage: BCMSStorage;
@@ -46,6 +48,9 @@ export interface BCMSSocketHandler<CustomEventsData = unknown> {
     event: BCMSSocketEventName | string | 'ANY',
     callback: BCMSSocketSubscriptionCallback<CustomEventsData>,
   ): () => void;
+  calls: {
+    entrySync(path?: string): Promise<string[]>;
+  };
 }
 
 export interface BCMSSocketSubscriptionCallback<CustomEventsData = unknown> {

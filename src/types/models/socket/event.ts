@@ -15,12 +15,70 @@ export enum BCMSSocketEventName {
   REFRESH = 'REFRESH',
   SIGN_OUT = 'SIGN_OUT',
   BACKUP = 'BACKUP',
+  SYNC_TSERV = 'ST',
+  UNSYNC_TSERV = 'UST',
+  SYNC_CHANGE_TSERV = 'SCT',
+  SYNC_FSERV = 'SF',
+  UNSYNC_FSERV = 'USF',
+  SYNC_CHANGE_FSERV = 'SCF',
 }
 
 // eslint-disable-next-line no-shadow
 export enum BCMSSocketEventType {
   UPDATE = 'UPDATE',
   REMOVE = 'REMOVE',
+}
+
+// eslint-disable-next-line no-shadow
+export enum BCMSSocketSyncChangeType {
+  MOUSE = 'M',
+  PROP = 'P',
+}
+
+export interface BCMSSocketSyncChangeDataMouse {
+  x: number;
+  y: number;
+}
+
+export interface BCMSSocketSyncChangeStringDelta {
+  /**
+   * Add [char_index, char_value].
+   */
+  a?: [number, string];
+  /**
+   * Remove char at index.
+   */
+  r?: number;
+}
+
+export interface BCMSSocketSyncChangeDataProp {
+  /**
+   * Prop index.
+   */
+  i: number;
+  /**
+   * Prop value index.
+   */
+  vi: number;
+  /**
+   * Prop ID.
+   */
+  id: string;
+  /**
+   * Language.
+   */
+  l: string;
+  /**
+   * Language index.
+   */
+  li: number;
+  /**
+   * String deltas.
+   */
+  sd?: BCMSSocketSyncChangeStringDelta[];
+  /**
+   * String delta cursor position
+   */
 }
 
 export interface BCMSSocketBackupEvent {
@@ -192,6 +250,35 @@ export interface BCMSSocketSignOutEvent {
   t: BCMSSocketEventType;
 }
 
+export interface BCMSSocketSyncEvent {
+  /**
+   * URI path.
+   */
+  p: string;
+  connId?: string;
+}
+
+export interface BCMSSocketUnsyncEvent {
+  /**
+   * URI path.
+   */
+  p: string;
+  connId?: string;
+}
+
+export interface BCMSSocketSyncChangeEvent {
+  /**
+   * URI path.
+   */
+  p: string;
+  /**
+   * Sync change type.
+   */
+  sct: BCMSSocketSyncChangeType;
+  data: BCMSSocketSyncChangeDataMouse | BCMSSocketSyncChangeDataProp;
+  connId?: string;
+}
+
 export type BCMSSocketEvent =
   | BCMSSocketApiKeyEvent
   | BCMSSocketEntryEvent
@@ -207,4 +294,5 @@ export type BCMSSocketEvent =
   | BCMSSocketTagEvent
   | BCMSSocketRefreshEvent
   | BCMSSocketSignOutEvent
-  | BCMSSocketBackupEvent;
+  | BCMSSocketBackupEvent
+  | BCMSSocketSyncChangeEvent;
