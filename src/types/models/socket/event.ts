@@ -33,6 +33,14 @@ export enum BCMSSocketEventType {
 export enum BCMSSocketSyncChangeType {
   MOUSE = 'M',
   PROP = 'P',
+  FOCUS = 'F',
+}
+
+export interface BCMSSocketSyncChangeDataFocus {
+  /**
+   * Prop path - can be "n" which means deselect all.
+   */
+  p: string;
 }
 
 export interface BCMSSocketSyncChangeDataMouse {
@@ -76,9 +84,22 @@ export interface BCMSSocketSyncChangeDataProp {
    * String deltas.
    */
   sd?: BCMSSocketSyncChangeStringDelta[];
+}
+
+export interface BCMSSocketSyncChangeEvent {
   /**
-   * String delta cursor position
+   * URI path.
    */
+  p: string;
+  /**
+   * Sync change type.
+   */
+  sct: BCMSSocketSyncChangeType;
+  data:
+    | BCMSSocketSyncChangeDataMouse
+    | BCMSSocketSyncChangeDataProp
+    | BCMSSocketSyncChangeDataFocus;
+  connId?: string;
 }
 
 export interface BCMSSocketBackupEvent {
@@ -263,19 +284,6 @@ export interface BCMSSocketUnsyncEvent {
    * URI path.
    */
   p: string;
-  connId?: string;
-}
-
-export interface BCMSSocketSyncChangeEvent {
-  /**
-   * URI path.
-   */
-  p: string;
-  /**
-   * Sync change type.
-   */
-  sct: BCMSSocketSyncChangeType;
-  data: BCMSSocketSyncChangeDataMouse | BCMSSocketSyncChangeDataProp;
   connId?: string;
 }
 
