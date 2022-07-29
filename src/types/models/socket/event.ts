@@ -61,17 +61,9 @@ export interface BCMSSocketSyncChangeStringDelta {
 
 export interface BCMSSocketSyncChangeDataProp {
   /**
-   * Prop index.
+   * Prop path.
    */
-  i: number;
-  /**
-   * Prop value index.
-   */
-  vi: number;
-  /**
-   * Prop ID.
-   */
-  id: string;
+  p: string;
   /**
    * Language.
    */
@@ -84,6 +76,10 @@ export interface BCMSSocketSyncChangeDataProp {
    * String deltas.
    */
   sd?: BCMSSocketSyncChangeStringDelta[];
+  /**
+   * Replace value.
+   */
+  rep?: unknown;
 }
 
 export interface BCMSSocketSyncChangeEvent {
