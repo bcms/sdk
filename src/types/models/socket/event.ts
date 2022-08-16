@@ -80,6 +80,18 @@ export interface BCMSSocketSyncChangeDataProp {
    * Replace value.
    */
   rep?: unknown;
+  /**
+   * Add item to an array.
+   */
+  addI?: boolean;
+  /**
+   * Remove item from an array.
+   */
+  remI?: boolean;
+  /**
+   * Move item in an array.
+   */
+  movI?: unknown;
 }
 
 export interface BCMSSocketSyncChangeEvent {
