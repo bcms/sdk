@@ -150,6 +150,18 @@ export function createBcmsEntryHandler({
       cache.mutations.set({ payload: result.item, name: 'entry' });
       return result.item;
     },
+    async whereIsItUsed(data) {
+      const result: {
+        entries: Array<{ eid: string; tid: string }>;
+      } = await send({
+        url: `${baseUri}/${data.templateId}/${data.entryId}/where-is-it-used`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      return result.entries;
+    },
     async count(data) {
       if (!getAllLatch.count[data.templateId]) {
         return cache.getters.find<BCMSEntry>({
