@@ -5,8 +5,10 @@ import type {
   BCMSStorageSubscriptionHandler,
 } from './types';
 
-export function createBcmsLocalStorageWrapper(): BCMSLocalStorageWrapper {
-  if (typeof localStorage !== 'undefined') {
+export function createBcmsLocalStorageWrapper(
+  useMemStorage?: boolean,
+): BCMSLocalStorageWrapper {
+  if (!useMemStorage && typeof localStorage !== 'undefined') {
     return {
       all() {
         return JSON.parse(JSON.stringify(localStorage));
@@ -46,8 +48,11 @@ export function createBcmsLocalStorageWrapper(): BCMSLocalStorageWrapper {
     },
   };
 }
-export function createBcmsStorage(config: { prfx: string }): BCMSStorage {
-  const ls = createBcmsLocalStorageWrapper();
+export function createBcmsStorage(config: {
+  prfx: string;
+  useMemStorage?: boolean;
+}): BCMSStorage {
+  const ls = createBcmsLocalStorageWrapper(config.useMemStorage);
   const subs: {
     [id: string]: {
       key: string;

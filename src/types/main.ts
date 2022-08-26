@@ -33,6 +33,13 @@ export interface BCMSSdkConfig {
    */
   origin?: string;
   cache: BCMSSdkCacheConfig;
+  useMemStorage?: boolean;
+  useSocket?: boolean;
+  sendFunction?: SendFunction;
+  tokens?: {
+    access: string;
+    refresh: string;
+  };
 }
 
 export interface BCMSSdk<CustomSocketEventsData = unknown> {

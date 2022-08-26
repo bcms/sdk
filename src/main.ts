@@ -38,6 +38,8 @@ import {
 } from './util';
 
 export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
+  const useSocket =
+    typeof config.useSocket !== 'undefined' ? config.useSocket : true;
   const origin = config.origin;
   const cache: BCMSSdkCache | undefined = config.cache.fromVuex
     ? {
@@ -67,9 +69,14 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
   }
   const storage = createBcmsStorage({
     prfx: 'bcms',
+    useMemStorage: config.useMemStorage,
   });
+  if (config.tokens) {
+    storage.set('at', config.tokens.access);
+    storage.set('rt', config.tokens.refresh);
+  }
   let accessToken: BCMSJwt | null = null;
-  let accessTokenRaw: string | null = storage.get('rt');
+  let accessTokenRaw: string | null = storage.get('at');
 
   if (accessTokenRaw) {
     accessToken = unpackAccessToken(accessTokenRaw);
@@ -106,58 +113,64 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
    * REST API request. It is recommended to use this method
    * for sending requests to the REST API.
    */
-  async function send<T>(
-    conf: AxiosRequestConfig & { doNotAuth?: boolean },
-  ): Promise<T> {
-    if (conf.headers && conf.headers.Authorization === '' && !conf.doNotAuth) {
-      const loggedIn = await isLoggedIn();
-      conf.headers.Authorization = `Bearer ${accessTokenRaw}`;
-      if (!loggedIn || !accessTokenRaw) {
-        throw {
-          status: 401,
-          message: 'Not logged in.',
-        };
-      }
-    }
-    if (socketHandler.id()) {
-      if (!conf.headers) {
-        conf.headers = {};
-      }
-      conf.headers['X-Bcms-Sid'] = socketHandler.id() as string;
-    }
-    conf.url = `${origin ? origin : ''}/api${conf.url}`;
-    try {
-      conf.maxBodyLength = 100000000;
-      const response = await Axios(conf);
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError<{
-        message: string;
-        code: string;
-      }>;
-      if (err.response) {
-        if (err.response.data && err.response.data.message) {
-          throw {
-            status: err.response.status,
-            code: err.response.data.code,
-            message: err.response.data.message,
-          };
-        } else {
-          throw {
-            status: err.response.status,
-            code: '-1',
-            message: err.message,
-          };
+  const send = config.sendFunction
+    ? config.sendFunction
+    : async <T>(
+        conf: AxiosRequestConfig & { doNotAuth?: boolean },
+      ): Promise<T> => {
+        if (
+          conf.headers &&
+          conf.headers.Authorization === '' &&
+          !conf.doNotAuth
+        ) {
+          const loggedIn = await isLoggedIn();
+          conf.headers.Authorization = `Bearer ${accessTokenRaw}`;
+          if (!loggedIn || !accessTokenRaw) {
+            throw {
+              status: 401,
+              message: 'Not logged in.',
+            };
+          }
         }
-      } else {
-        throw {
-          status: -1,
-          code: '-1',
-          message: err.message,
-        };
-      }
-    }
-  }
+        if (socketHandler.id()) {
+          if (!conf.headers) {
+            conf.headers = {};
+          }
+          conf.headers['X-Bcms-Sid'] = socketHandler.id() as string;
+        }
+        conf.url = `${origin ? origin : ''}/api${conf.url}`;
+        try {
+          conf.maxBodyLength = 100000000;
+          const response = await Axios(conf);
+          return response.data;
+        } catch (error) {
+          const err = error as AxiosError<{
+            message: string;
+            code: string;
+          }>;
+          if (err.response) {
+            if (err.response.data && err.response.data.message) {
+              throw {
+                status: err.response.status,
+                code: err.response.data.code,
+                message: err.response.data.message,
+              };
+            } else {
+              throw {
+                status: err.response.status,
+                code: '-1',
+                message: err.message,
+              };
+            }
+          } else {
+            throw {
+              status: -1,
+              code: '-1',
+              message: err.message,
+            };
+          }
+        }
+      };
   /**
    * Check if User is logged in. If this method returns `false`,
    * called to protected resources will fail and User will be
@@ -172,7 +185,9 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
       !socketHandler.connected() &&
       accessTokenRaw
     ) {
-      await socketHandler.connect();
+      if (useSocket) {
+        await socketHandler.connect();
+      }
     }
     return result;
   }
