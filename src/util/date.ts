@@ -13,11 +13,11 @@ export function createBcmsDateUtility({
       const hours = parseInt(`${timeDiff / 3600000}`);
       const minutes = parseInt(`${timeDiff / 60000}`);
       if (days > 0) {
-        return `${days} days ago`;
+        return `${days} ${days > 1 ? 'days' : 'day'} ago`;
       } else if (hours > 0) {
-        return `${hours} hours ago`;
+        return `${hours} ${hours > 1 ? 'hours' : 'hour'} ago`;
       } else if (minutes > 0) {
-        return `${minutes} minutes ago`;
+        return `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ago`;
       } else {
         return `just now`;
       }
