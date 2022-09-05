@@ -31,6 +31,7 @@ export enum BCMSSocketEventType {
 
 // eslint-disable-next-line no-shadow
 export enum BCMSSocketSyncChangeType {
+  CURSOR = 'C',
   MOUSE = 'M',
   PROP = 'P',
   FOCUS = 'F',
@@ -57,6 +58,10 @@ export interface BCMSSocketSyncChangeStringDelta {
    * Remove char at index.
    */
   r?: number;
+}
+
+export interface BCMSSocketSyncChangeContentData {
+  updates: number[];
 }
 
 export interface BCMSSocketSyncChangeDataProp {
@@ -92,6 +97,8 @@ export interface BCMSSocketSyncChangeDataProp {
    * Move item in an array.
    */
   movI?: unknown;
+  cu?: BCMSSocketSyncChangeContentData;
+  cursor?: unknown;
 }
 
 export interface BCMSSocketSyncChangeEvent {

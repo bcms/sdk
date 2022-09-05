@@ -48,8 +48,8 @@ export interface BCMSSocketHandler<CustomEventsData = unknown> {
     event: BCMSSocketEventName | string | 'ANY',
     callback: BCMSSocketSubscriptionCallback<CustomEventsData>,
   ): () => void;
-  calls: {
-    entrySync(path?: string): Promise<string[]>;
+  sync: {
+    connections(path?: string): Promise<string[]>;
   };
 }
 

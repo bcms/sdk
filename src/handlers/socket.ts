@@ -46,7 +46,7 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
   colorHandler,
   tagHandler,
 }: BCMSSocketHandlerConfig): BCMSSocketHandler<CustomEventsData> {
-  const callsBase = '/socket/calls';
+  const syncBase = '/socket/sync';
   const subs: {
     [eventName: string]: {
       [id: string]: BCMSSocketSubscriptionCallback<CustomEventsData>;
@@ -470,8 +470,8 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
       };
     },
 
-    calls: {
-      async entrySync(path) {
+    sync: {
+      async connections(path) {
         if (!path) {
           path = window.location.pathname;
         }
@@ -479,7 +479,7 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
         const result: {
           items: string[];
         } = await send({
-          url: callsBase + `/entry-sync?path=${path}`,
+          url: syncBase + `/connections?path=${path}`,
           method: 'GET',
           headers: {
             Authorization: '',
