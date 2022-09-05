@@ -871,19 +871,13 @@ describe('Template API', async () => {
     const firstColor = await sdk.color.create({
       label: 'red',
       value: '#030504',
-      source: {
-        id: idTemplate,
-        type: 'template',
-      },
+      global: true,
     });
     firstColorId = firstColor._id;
     const secondColor = await sdk.color.create({
       label: 'black',
       value: '#030505',
-      source: {
-        id: idTemplate,
-        type: 'template',
-      },
+      global: true,
     });
     secondColorId = secondColor._id;
     const updateTemplate = await sdk.template.update({
@@ -897,7 +891,7 @@ describe('Template API', async () => {
             array: false,
             defaultData: {
               allowCustom: false,
-              options: [firstColorId, secondColorId],
+              allowGlobal: false,
               selected: [secondColorId],
             },
           },
@@ -978,7 +972,7 @@ describe('Template API', async () => {
             array: true,
             defaultData: {
               allowCustom: false,
-              options: [firstColorId, secondColorId],
+              allowGlobal: false,
               selected: [secondColorId],
             },
           },

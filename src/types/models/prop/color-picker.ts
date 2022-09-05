@@ -1,6 +1,6 @@
 export interface BCMSPropColorPickerData {
   allowCustom: boolean;
-  options: string[];
+  allowGlobal: boolean;
   selected: string[];
 }
 

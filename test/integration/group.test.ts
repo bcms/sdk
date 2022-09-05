@@ -703,46 +703,46 @@ describe('Group API', async () => {
         },
       ],
     });
-    console.log(updateGroup)
-  expect(updateGroup).to.be.instanceOf(Object);
-  expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
-  expect(updateGroup).to.have.property('createdAt').to.be.a('number');
-  expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
-  expect(updateGroup).to.have.property('cid').to.be.a('string');
-  expect(updateGroup).to.have.property('props').to.be.a('array');
-  expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
-  expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
-  //  true,
-  // false
-  // true,
-  //  true
-  ]);
-  ObjectUtil.eq(
-    updateGroup,
-    {
-      desc: 'group testing',
-      label: 'group testing',
-      name: 'group_testing',
-      props: [
+    console.log(updateGroup);
+    expect(updateGroup).to.be.instanceOf(Object);
+    expect(updateGroup).to.have.property('_id').to.be.a('string').eq(idGroup);
+    expect(updateGroup).to.have.property('createdAt').to.be.a('number');
+    expect(updateGroup).to.have.property('updatedAt').to.be.a('number');
+    expect(updateGroup).to.have.property('cid').to.be.a('string');
+    expect(updateGroup).to.have.property('props').to.be.a('array');
+    expect(updateGroup.props[0]).to.have.property('id').to.be.a('string');
+    expect(updateGroup.props[0]).to.have.deep.property('defaultData', [
+      //  true,
+      // false
+      // true,
+      //  true
+    ]);
+    ObjectUtil.eq(
+      updateGroup,
+      {
+        desc: 'group testing',
+        label: 'group testing',
+        name: 'group_testing',
+        props: [
+          {
+            name: 'media',
+            label: 'Media',
+            array: false,
+            required: true,
+            type: 'MEDIA',
+          },
+        ],
+      },
+      'group',
+    );
+    await sdk.group.update({
+      _id: idGroup,
+      propChanges: [
         {
-          name: 'media',
-          label: 'Media',
-          array: false,
-          required: true,
-          type: 'MEDIA',
+          remove: updateGroup.props[0].id,
         },
       ],
-    },
-    'group',
-  );
-  await sdk.group.update({
-    _id: idGroup,
-    propChanges: [
-      {
-        remove: updateGroup.props[0].id,
-      },
-    ],
-  });
+    });
   });
   let firstColorId: string;
   let secondColorId: string;
@@ -772,19 +772,13 @@ describe('Group API', async () => {
     const firstColor = await sdk.color.create({
       label: 'red',
       value: '#030504',
-      source: {
-        id: template._id,
-        type: 'template',
-      },
+      global: true,
     });
     firstColorId = firstColor._id;
     const secondColor = await sdk.color.create({
       label: 'black',
       value: '#030505',
-      source: {
-        id: template._id,
-        type: 'template',
-      },
+      global: true,
     });
     secondColorId = secondColor._id;
     const updateGroup = await sdk.group.update({
@@ -798,7 +792,7 @@ describe('Group API', async () => {
             array: false,
             defaultData: {
               allowCustom: false,
-              options: [firstColor._id, secondColor._id],
+              allowGlobal: false,
               selected: [secondColor._id],
             },
           },
@@ -856,7 +850,7 @@ describe('Group API', async () => {
             array: true,
             defaultData: {
               allowCustom: true,
-              options: [firstColorId],
+              allowGlobal: true,
               selected: [secondColorId, firstColorId],
             },
           },
