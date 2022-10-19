@@ -20,7 +20,7 @@ export interface BCMSSocketHandlerConfig {
   cache: BCMSSdkCache;
   storage: BCMSStorage;
   throwable: BCMSThrowable;
-  refreshAccessToken(): Promise<void>;
+  refreshAccessToken(force?: boolean): Promise<void>;
 
   apiKeyHandler: BCMSApiKeyHandler;
   entryHandler: BCMSEntryHandler;
