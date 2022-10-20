@@ -596,19 +596,13 @@ describe('Widget API', async () => {
     const firstColor = await sdk.color.create({
       label: 'red',
       value: '#030504',
-      source: {
-        id: template._id,
-        type: 'template',
-      },
+      global: true,
     });
     firstColorId = firstColor._id;
     const secondColor = await sdk.color.create({
       label: 'black',
       value: '#030505',
-      source: {
-        id: template._id,
-        type: 'template',
-      },
+      global: true,
     });
     secondColorId = secondColor._id;
     const updateWidget = await sdk.widget.update({
@@ -622,7 +616,7 @@ describe('Widget API', async () => {
             array: false,
             defaultData: {
               allowCustom: false,
-              options: [firstColor._id, secondColor._id],
+              allowGlobal: false,
               selected: [secondColor._id],
             },
           },
@@ -683,7 +677,7 @@ describe('Widget API', async () => {
             array: true,
             defaultData: {
               allowCustom: true,
-              options: [firstColorId],
+              allowGlobal: true,
               selected: [secondColorId, firstColorId],
             },
           },

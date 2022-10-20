@@ -35,6 +35,7 @@ export interface BCMSEntryHandler {
     templateId: string;
     entryId: string;
     skipCache?: boolean;
+    maxDepth?: number;
   }): Promise<BCMSEntryParsed>;
   whereIsItUsed(data: {
     templateId: string;

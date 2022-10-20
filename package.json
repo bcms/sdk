@@ -1,6 +1,6 @@
 {
   "name": "@becomes/cms-sdk",
-  "version": "3.3.0",
+  "version": "3.3.4",
   "description": "SDK for client side of BCMS",
   "main": "./index.js",
   "types": "./index.d.ts",

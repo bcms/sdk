@@ -87,7 +87,7 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
       window.location.href = 'https://cloud.thebcms.com/dashboard';
     });
     soc.on(BCMSSocketEventName.REFRESH, async (data) => {
-      await refreshAccessToken();
+      await refreshAccessToken(true);
       triggerSubs(BCMSSocketEventName.REFRESH, data);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const w = window as any;

@@ -41,12 +41,6 @@ export function createBcmsEntryHandler({
       return result.items;
     },
     async getAllParsed(data) {
-      if (getAllLatch.getAllParsed[data.templateId]) {
-        return cache.getters.find({
-          query: (e) => e.templateId === data.templateId,
-          name: 'entry',
-        });
-      }
       const result: { items: BCMSEntryParsed[] } = await send({
         url: `${baseUri}/all/${data.templateId}/parse`,
         method: 'GET',
@@ -54,8 +48,6 @@ export function createBcmsEntryHandler({
           Authorization: '',
         },
       });
-      getAllLatch.getAllLite[data.templateId] = true;
-      cache.mutations.set({ payload: result.items, name: 'entry' });
       return result.items;
     },
     async getManyLite(data) {
@@ -131,23 +123,15 @@ export function createBcmsEntryHandler({
       return result.item;
     },
     async getOneParsed(data) {
-      if (!data.skipCache) {
-        const cacheHit = cache.getters.findOne<BCMSEntryParsed>({
-          query: (e) => e._id === data.entryId,
-          name: 'entry',
-        });
-        if (cacheHit) {
-          return cacheHit;
-        }
-      }
       const result: { item: BCMSEntryParsed } = await send({
-        url: `${baseUri}/${data.templateId}/${data.entryId}/parse`,
+        url: `${baseUri}/${data.templateId}/${data.entryId}/parse/${
+          typeof data.maxDepth === 'number' ? data.maxDepth : 2
+        }`,
         method: 'GET',
         headers: {
           Authorization: '',
         },
       });
-      cache.mutations.set({ payload: result.item, name: 'entry' });
       return result.item;
     },
     async whereIsItUsed(data) {

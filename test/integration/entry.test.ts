@@ -441,7 +441,6 @@ describe('Entry API', async () => {
   let enumPointerPropId: string;
   let tagPointerPropId: string;
   let idEntryTemplate2: string;
-  let firstColorId: string;
   let secondColorId: string;
   let idMedia: string;
   let idTag: string;
@@ -702,23 +701,10 @@ describe('Entry API', async () => {
       },
       'template',
     );
-    const firstColor = await sdk.color.create({
-      label: 'red',
-      value: '#030504',
-      source: {
-        id: idTemplate,
-        type: 'template',
-      },
-    });
-    firstColorId = firstColor._id;
-
     const secondColor = await sdk.color.create({
       label: 'black',
       value: '#030505',
-      source: {
-        id: idTemplate,
-        type: 'template',
-      },
+      global: true,
     });
     secondColorId = secondColor._id;
     const updateTemplate = await sdk.template.update({
@@ -750,7 +736,7 @@ describe('Entry API', async () => {
             array: false,
             defaultData: {
               allowCustom: false,
-              options: [firstColorId, secondColorId],
+              allowGlobal: false,
               selected: [secondColorId],
             },
           },

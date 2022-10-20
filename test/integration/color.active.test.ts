@@ -25,15 +25,10 @@ describe('Color API', async () => {
     const result = await sdk.color.create({
       label: 'black',
       value: '#030504',
-      source: {
-        id: tData.templates[0]._id,
-        type: 'template',
-      },
+      global: true,
     });
     idColor = result._id;
     cIdColor = result.cid;
-    sourceId = result.source.id;
-    sourceType = result.source.type;
     expect(result).to.be.instanceOf(Object);
     expect(result).to.have.property('_id').to.be.a('string');
     expect(result).to.have.property('createdAt').to.be.a('number');
@@ -46,7 +41,7 @@ describe('Color API', async () => {
         name: 'black',
         value: '#030504',
         userId: '111111111111111111111111',
-        source: { id: tData.templates[0]._id, type: 'template' },
+        global: true,
       },
       'color',
     );
