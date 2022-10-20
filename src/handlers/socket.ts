@@ -367,6 +367,10 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
 
       triggerSubs(eventName, data);
     });
+    soc.on(BCMSSocketEventName.MESSAGE, async (data: BCMSSocketTagEvent) => {
+      const eventName = BCMSSocketEventName.MESSAGE;
+      triggerSubs(eventName, data);
+    });
     for (const event in subs) {
       if (!eventNames.includes(event) && event !== 'ANY') {
         soc.on(event, async (data: CustomEventsData) => {
