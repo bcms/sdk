@@ -23,8 +23,3 @@ Once login, client application wants to get all Widgets. This will be done by ca
 For simplicity reasons, there will be only 2 client applications connected at the same time, called C1 and C2. Both clients will get all widgets. At this point both C1 and C2 have synchronized cache with the Backend, problem arise when C1 updates a widget. Without some mechanism to inform C2 that a widget is updates, C2s cache will not be synchronized with the Backend and weird problems can occur because of this. In BCMS SDK this problem is solved using sockets. Once some sort of an update occurs on the Backend, an event with the update will be sent to all active socket. This way, C2 will be informed that update of a widget has happened and it will fetch it, synchronizing data with the Backend. Client application can also know about this update (for example, this can be important if data on the screen needs to be re-rendered or a user needs to be informed about an update) by subscribing to a socket event using `sdk.socket.subscribe(eventName, handler)`.
 
 In short, caching is tricking and supported by the SDK, therefore client application does not need to worry about it.
-
-## API reference
-
-- Full API reference can be explored at: [https://bcms.com/modules/sdk/api](https://bcms.com/modules/sdk/api)
-
