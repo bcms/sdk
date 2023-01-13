@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Socket, io } from 'socket.io-client';
+import { Buffer } from 'buffer';
 import {
   BCMSApiKey,
   BCMSBackupListItem,
@@ -25,6 +26,7 @@ import {
 } from '../types';
 
 export function createBcmsSocketHandler<CustomEventsData = unknown>({
+  send,
   origin,
   cache,
   storage,
@@ -44,6 +46,7 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
   colorHandler,
   tagHandler,
 }: BCMSSocketHandlerConfig): BCMSSocketHandler<CustomEventsData> {
+  const syncBase = '/socket/sync';
   const subs: {
     [eventName: string]: {
       [id: string]: BCMSSocketSubscriptionCallback<CustomEventsData>;
@@ -77,6 +80,7 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
       }
     }
   }
+
   function initSocket(soc: Socket) {
     soc.on(BCMSSocketEventName.SIGN_OUT, async () => {
       storage.clear();
@@ -363,6 +367,10 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
 
       triggerSubs(eventName, data);
     });
+    soc.on(BCMSSocketEventName.MESSAGE, async (data: BCMSSocketTagEvent) => {
+      const eventName = BCMSSocketEventName.MESSAGE;
+      triggerSubs(eventName, data);
+    });
     for (const event in subs) {
       if (!eventNames.includes(event) && event !== 'ANY') {
         soc.on(event, async (data: CustomEventsData) => {
@@ -379,11 +387,13 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
       }
       return null;
     },
+
     emit(event, data) {
       if (socket) {
         socket.emit(event, data);
       }
     },
+
     async connect() {
       if (!isConnected) {
         isConnected = true;
@@ -436,20 +446,23 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
         });
       }
     },
+
     connected() {
       return isConnected;
     },
+
     disconnect() {
       if (socket && isConnected) {
         socket.disconnect();
         isConnected = false;
       }
     },
+
     subscribe(event, cb) {
       const id = uuidv4();
       if (!subs[event]) {
         subs[event] = {};
-        if (isConnected && socket) {
+        if (socket) {
           socket.on(event, async (data: CustomEventsData) => {
             triggerSubs(event, data);
           });
@@ -459,6 +472,25 @@ export function createBcmsSocketHandler<CustomEventsData = unknown>({
       return () => {
         delete subs[event][id];
       };
+    },
+
+    sync: {
+      async connections(path) {
+        if (!path) {
+          path = window.location.pathname;
+        }
+        path = Buffer.from(path).toString('hex');
+        const result: {
+          items: string[];
+        } = await send({
+          url: syncBase + `/connections?path=${path}`,
+          method: 'GET',
+          headers: {
+            Authorization: '',
+          },
+        });
+        return result.items;
+      },
     },
   };
 }
