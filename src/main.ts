@@ -136,7 +136,9 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
           if (!conf.headers) {
             conf.headers = {};
           }
-          conf.headers['X-Bcms-Sid'] = socketHandler.id() as string;
+          conf.headers['X-Bcms-Sid'] = Buffer.from(
+            socketHandler.id() as string,
+          ).toString('hex');
         }
         conf.url = `${origin ? origin : ''}/api${conf.url}`;
         try {
@@ -354,6 +356,7 @@ export function createBcmsSdk(config: BCMSSdkConfig): BCMSSdk {
     userHandler,
   });
   const socketHandler = createBcmsSocketHandler({
+    send,
     origin,
     cache,
     storage,
