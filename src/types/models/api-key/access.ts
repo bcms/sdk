@@ -10,4 +10,7 @@ export interface BCMSApiKeyAccess {
   functions: Array<{
     name: string;
   }>;
+  plugins?: Array<{
+    name: string;
+  }>;
 }
