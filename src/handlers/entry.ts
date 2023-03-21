@@ -16,12 +16,32 @@ export function createBcmsEntryHandler({
     getAllLite: { [templateId: string]: boolean };
     getAllParsed: { [templateId: string]: boolean };
     count: { [templateId: string]: boolean };
+    getAll: { [templateId: string]: boolean };
   } = {
     getAllLite: {},
     getAllParsed: {},
     count: {},
+    getAll: {},
   };
   const self: BCMSEntryHandler = {
+    async getAllByTemplateId(data) {
+      if (getAllLatch.getAll[data.templateId]) {
+        return cache.getters.find({
+          query: (e) => e.templateId === data.templateId,
+          name: 'entry',
+        });
+      }
+      const result: { items: BCMSEntry[] } = await send({
+        url: `${baseUri}/all/${data.templateId}`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      getAllLatch.getAll[data.templateId] = true;
+      cache.mutations.set({ payload: result.items, name: 'entry' });
+      return result.items;
+    },
     async getAllLite(data) {
       if (getAllLatch.getAllLite[data.templateId]) {
         return cache.getters.find({

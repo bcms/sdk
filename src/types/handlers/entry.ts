@@ -14,6 +14,7 @@ export interface BCMSEntryHandlerConfig {
 }
 
 export interface BCMSEntryHandler {
+  getAllByTemplateId(data: { templateId: string }): Promise<BCMSEntry[]>;
   getAllLite(data: { templateId: string }): Promise<BCMSEntryLite[]>;
   getAllParsed(data: { templateId: string }): Promise<BCMSEntryParsed[]>;
   getManyLite(data: {
