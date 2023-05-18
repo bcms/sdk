@@ -182,6 +182,16 @@ export function createBcmsEntryHandler({
       });
       return result.count;
     },
+    async countByUser() {
+      const result: { count: number } = await send({
+        url: `${baseUri}/count/by-user`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      return result.count;
+    },
     async create(data) {
       const result: {
         item: BCMSEntry;
