@@ -40,5 +40,18 @@ export function createBcmsRouteTrackerHandler({
       }
       return users;
     },
+
+    async getUsers() {
+      const result: {
+        items: Array<{ id: string; path: string }>;
+      } = await send({
+        url: baseUri + `/get-users`,
+        method: 'GET',
+        headers: {
+          Authorization: '',
+        },
+      });
+      return result.items;
+    },
   };
 }
